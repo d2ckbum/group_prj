@@ -59,7 +59,7 @@ public class AdminTabView extends JFrame implements ActionListener {
         jbtnInquiryManage.addActionListener(this);
         jbtnLogout.addActionListener(this);
         
-        setBounds(100, 100, 600, 500);
+        setBounds(100, 100, 1000, 600);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
