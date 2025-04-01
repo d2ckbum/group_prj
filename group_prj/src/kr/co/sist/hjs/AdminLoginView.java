@@ -12,7 +12,7 @@ public class AdminLoginView extends JFrame implements ActionListener {
 
 	public AdminLoginView() {
 		setTitle("관리자 로그인");
-		setSize(1000, 600);
+		setSize(800, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new GridLayout(4, 1));
 

@@ -14,7 +14,7 @@ public class AdminMainView extends JFrame {
 
 	public AdminMainView() {
 		setTitle("관리자 페이지");
-		setSize(1000, 600);
+		setSize(1200, 900);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
