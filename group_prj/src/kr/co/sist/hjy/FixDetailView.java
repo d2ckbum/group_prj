@@ -3,7 +3,6 @@ package kr.co.sist.hjy;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.SwingContainer;
 import javax.swing.border.LineBorder;
 
 
@@ -39,7 +36,7 @@ public class FixDetailView extends JDialog{
 	private final int X=50,Y=20;
 	
 	public FixDetailView(FixPanel fp) {
-		super(fp,"정비 상세",true);
+//		super(fp,"정비 상세",true);
 		
 		this.fp=fp;
 		

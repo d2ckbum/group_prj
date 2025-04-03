@@ -3,13 +3,14 @@ import java.awt.Font;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /*이거 나중에 extends JPanel로 바꿔야 함.*/
 @SuppressWarnings("serial")
-public class FixPanel extends JFrame {
+public class FixPanel extends JPanel {
 	private JTable jtbSummary;
 	
 	public FixPanel() {
@@ -39,15 +40,15 @@ public class FixPanel extends JFrame {
 
 		
 		
-		setTitle("정비");
+//		setTitle("정비");
 		FixEvt fixEvt=new FixEvt(this);
-		addWindowListener(fixEvt);
+//		addWindowListener(fixEvt);
 		jtbSummary.addMouseListener(fixEvt);
 		
 		setBounds(965, 100, 1200, 700);
 		setVisible(true);
 		
-		setResizable(false);
+//		setResizable(false);
 
 	}//make FixView
 	

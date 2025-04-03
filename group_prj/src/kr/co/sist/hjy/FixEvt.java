@@ -16,7 +16,7 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	
 	@Override
 	public void windowClosing(WindowEvent e) {
-		fp.dispose();
+//		fp.dispose();
 	}//windowClosing
 	
 	@Override
