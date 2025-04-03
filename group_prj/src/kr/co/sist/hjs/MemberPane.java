@@ -27,7 +27,7 @@ public class MemberPane extends JPanel {
     private JPanel mainPanel;
     private JScrollPane scrollPane; // 스크롤 페인 멤버 변수로 선언
 
-    public MemberPane() {
+    public void MemberPane() {
         setLayout(new BorderLayout());
         setSize(new Dimension(1200, 700));
         setBorder(BorderFactory.createLineBorder(Color.RED));
