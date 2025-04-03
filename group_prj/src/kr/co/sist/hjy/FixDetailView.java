@@ -3,8 +3,9 @@ package kr.co.sist.hjy;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -19,26 +20,27 @@ import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class FixDetailView extends JDialog{
-	private FixPanel fp;
+	private FixEvt fe;
+	
 	
 	private JLabel jlblItemNameData;
 	private JLabel jlblItemPriceData;
 	private JLabel jlblFixNumData;
 	private JLabel jlblFixRegDateData;
 	private JButton jbtnClose;
+	private JButton jbtnSave;
 	
 	private JTextArea jtaFixMemo;
-	
 
-	private char dStatus='1';//'1','2','3'
-
-	
 	private final int X=50,Y=20;
+	private String status;
 	
-	public FixDetailView(FixPanel fp) {
-//		super(fp,"정비 상세",true);
+	
+	public FixDetailView(FixEvt fe, String status) {
+//		super(fe.getFp(),"정비 상세",true);
+		this.fe=fe;
+		this.status=status;
 		
-		this.fp=fp;
 		
 		makeFixDetailView();
 	}//FixDetailView
@@ -61,42 +63,39 @@ public class FixDetailView extends JDialog{
 
 		
 		
-		defaultView(titleFont, plainFont,lb,labelColor);
+		FixDetailEvt fde=new FixDetailEvt(this, status);
+		defaultView(fde,titleFont, plainFont,lb,labelColor);
 		
 		/*이벤트발생*/
-		FixDetailEvt fde=new FixDetailEvt(this);
 		addWindowListener(fde);
 		jbtnClose.addActionListener(fde);
 		
 		
 		
 		getContentPane().setBackground(Color.WHITE);//다이얼로그 백그라운드 색 지정
-		setBounds(fp.getX()+20,fp.getY()+20,770,750);
+		setBounds(fe.getFp().getX()+20,fe.getFp().getY()+20,770,750);
 		setVisible(true);
 	}//makeFixDetailView
 	
-	private void defaultView(Font titleFont, Font plainFont, LineBorder lb, Color labelColor) {
+	private void defaultView(FixDetailEvt fde, Font titleFont, Font plainFont, LineBorder lb, Color labelColor) {
 		//map '1': 접수완료, '2':정비중, '3':정비완료
-		Map<Character,String> statusMap=new HashMap<Character, String>();
-		statusMap.put('1', "접수완료");
-		statusMap.put('2', "정비중");
-		statusMap.put('3', "정비완료");
-		
+
 		firstView(titleFont,plainFont,lb,labelColor);//접수번호, 접수 일시, 상품명 테이블 처럼 생긴거
 		secondView(titleFont,plainFont,lb,labelColor);//회원 정보관련 View
 		
 		//여기서 statusFlag를 보고 1,2,3 어떤 view를 띄울지 선택하도록 if문을 주자아아아아아
-		if(dStatus=='1' || dStatus=='2') {
-			ingView(plainFont,lb,labelColor,"저장");
+		//System.out.println("status 입니다다아아아아"+status);
+		if(status.compareTo("1")==0 || status.compareTo("2")==0) {
+			ingView(fde,plainFont,lb,labelColor,"저장");
 		}
-		else if(dStatus=='3') {
-			modifyMemoView(plainFont,lb,labelColor,"수정");	
+		else if(status.compareTo("3")==0 ) {
+			modifyMemoView(fde,plainFont,lb,labelColor,"수정");	
 		}else {
-			modifyMemoView(plainFont,lb,labelColor,"수정");
+			modifyMemoView(fde,plainFont,lb,labelColor,"수정");
 		}//end if~else
 		
 		
-		thirdView(titleFont,plainFont,lb,labelColor);//정비 메모 관련 View
+		thirdView(fde,titleFont,plainFont,lb,labelColor);//정비 메모 관련 View
 		
 		
 		
@@ -105,18 +104,21 @@ public class FixDetailView extends JDialog{
 	
 	
 	private void firstView(Font titleFont, Font plainFont, LineBorder lb,Color labelColor) {
-
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DecimalFormat df = new DecimalFormat("#,###,###");
+	
+		
 		JLabel jlblFixNum = new JLabel("접수번호");
-		jlblFixNumData = new JLabel("20240101131114");
+		jlblFixNumData = new JLabel(fe.getTableList().get(fe.getListRowNum()).getFixNum());
 		
 		JLabel jlblFixRegDate=new JLabel("접수일시");
-		jlblFixRegDateData=new JLabel("2025-03-19 19:16:18");
+		jlblFixRegDateData=new JLabel(sdf.format(fe.getTableList().get(fe.getListRowNum()).getFixRegDate()).toString());
 		
 		JLabel jlblItemName=new JLabel("상품명");
-		jlblItemNameData=new JLabel("불스원샷 엔진오일 1L");
+		jlblItemNameData=new JLabel(fe.getTableList().get(fe.getListRowNum()).getItemName());
 		
 		JLabel jlblItemPrice=new JLabel("결제금액");
-		jlblItemPriceData=new JLabel("51,600");
+		jlblItemPriceData=new JLabel(df.format(fe.getTableList().get(fe.getListRowNum()).getTotal()));
 		
 		
 		JLabel jlblWork=new JLabel("작업내역");
@@ -226,13 +228,13 @@ public class FixDetailView extends JDialog{
 		JLabel memInfo = new JLabel("회원 정보");
 		
 		JLabel memNum=new JLabel("회원번호");
-		JLabel memNumData=new JLabel("20230213132521");
+		JLabel memNumData=new JLabel(Integer.toString(fe.getTableList().get(fe.getListRowNum()).getMemNum()));
 		
 		JLabel memName=new JLabel("접수자");
-		JLabel memNameData=new JLabel("홍길동");
+		JLabel memNameData=new JLabel(fe.getTableList().get(fe.getListRowNum()).getMemName());
 		
 		JLabel memTell=new JLabel("전화번호");
-		JLabel memTellData=new JLabel("010-1234-5678");
+		JLabel memTellData=new JLabel(fe.getTableList().get(fe.getListRowNum()).getMemTell());
 		
 		/*Font 설정*/
 		memInfo.setFont(titleFont);
@@ -302,7 +304,15 @@ public class FixDetailView extends JDialog{
 	}//secondView
 
 	
-	private void thirdView(Font titleFont,Font plainFont,LineBorder lb,Color labelColor) {
+	/**
+	 * 정비 메모 관련된 view
+	 * @param fde
+	 * @param titleFont
+	 * @param plainFont
+	 * @param lb
+	 * @param labelColor
+	 */
+	private void thirdView(FixDetailEvt fde,Font titleFont,Font plainFont,LineBorder lb,Color labelColor) {
 		JLabel fixMemo=new JLabel("정비 메모");
 		JLabel fixMemoExplain=new JLabel("(300자 이내)");
 		jbtnClose=new JButton("닫기");
@@ -322,10 +332,26 @@ public class FixDetailView extends JDialog{
 		jbtnClose.setBackground(labelColor);
 		jbtnClose.setFont(plainFont);
 		
+		jbtnClose.setFocusPainted(false);
+		
 		fixMemo.setBounds(X,Y+260,100,30);
 		fixMemoExplain.setBounds(X+93,Y+263,100,30);
 		jspMemo.setBounds(X, Y+300, 650, 300);
 		jbtnClose.setBounds(X+530,Y+620,120,50);
+		
+		
+		//만약 fix_memo data가 null이 아니라면, 화면에 뿌려야지.
+		if(fe.getTableList().get(fe.getListRowNum()).getFixMemo() != null) {
+			String memoText="";
+			try {
+				memoText=fde.readFixMemo(fe.getTableList(),fe.getListRowNum());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			jtaFixMemo.setText(memoText);
+		}//end if
+		
+		jtaFixMemo.addKeyListener(fde);
 		
 		add(fixMemo);
 		add(fixMemoExplain);
@@ -335,11 +361,11 @@ public class FixDetailView extends JDialog{
 	}//thirdView
 
 	
-	private void ingView(Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
+	private void ingView(FixDetailEvt fde,Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
 		DefaultComboBoxModel<String> dcbm=new DefaultComboBoxModel<String>();
 		JComboBox<String> jtbStatus=new JComboBox<String>(dcbm);
 		
-		JButton jbtnSave=new JButton(jbtnText);
+		jbtnSave=new JButton(jbtnText);
 		
 		dcbm.addElement("접수완료");
 		dcbm.addElement("정비중");
@@ -352,10 +378,28 @@ public class FixDetailView extends JDialog{
 		jbtnSave.setBackground(labelColor);
 		jbtnSave.setBorder(lb);
 		jbtnSave.setFont(plainFont);
+		jbtnSave.setFocusable(false);
+	
+		jtbStatus.setFocusable(false);
 		
 		
 		jtbStatus.setBounds(X+497, Y+69, 150,30);
 		jbtnSave.setBounds(X+365,Y+620,120,50);
+		
+		//comboBox는 기존에 눌렀던게 선택되어 있어야 함.
+		String temp=fe.getTableList().get(fe.getListRowNum()).getFixStatus();
+		if(temp.compareTo("1")==0) {
+			jtbStatus.setSelectedIndex(0);
+		}//end if
+		if(temp.compareTo("2")==0) {
+			jtbStatus.setSelectedIndex(1);
+		}//end if
+		
+		
+		jbtnSave.addActionListener(fde);
+		jbtnSave.addKeyListener(fde);
+		
+		
 		
 		
 		add(jtbStatus);
@@ -363,8 +407,8 @@ public class FixDetailView extends JDialog{
 		
 	}//ingView
 	
-	private void modifyMemoView(Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
-		JLabel jlblStatus=new JLabel("접수중");
+	private void modifyMemoView(FixDetailEvt fde,Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
+		JLabel jlblStatus=new JLabel(fe.getStatusMap().get(fe.getTableList().get(fe.getListRowNum()).getFixStatus()));
 		JButton jbtnModifySave=new JButton(jbtnText);
 		
 		jlblStatus.setOpaque(true);
@@ -387,10 +431,20 @@ public class FixDetailView extends JDialog{
 		
 	}//modifyMemoView
 
+	
+	
+	////////getter method///////////////////////////////////////
+	
 	public JButton getJbtnClose() {
 		return jbtnClose;
 	}//getJbtnClose
-	
+
+	public JButton getJbtnSave() {
+		return jbtnSave;
+	}
+
+
+
 	
 	
 	

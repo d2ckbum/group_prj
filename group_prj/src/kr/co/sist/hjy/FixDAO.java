@@ -40,36 +40,14 @@ public class FixDAO {
 		
 		StringBuilder selectAllFix=new StringBuilder();
 		selectAllFix
-		.append("	select	f.FIX_NUM, f.FIX_REG_DATE, i.ITEM_NAME,mf.mfg_name,c.CAR_TYPE,m.MEM_NAME,f.fix_status	")
-		.append("	from	fix f, item i, car c, member m,manufacturer mf														")
+		.append("	select	f.FIX_NUM, f.FIX_REG_DATE,  i.ITEM_NAME,   			")
+		.append("	mf.mfg_name,   c.CAR_TYPE,   m.mem_num,   m.MEM_NAME,		")
+		.append("i.item_price+i.item_repair_cost as total,   f.fix_status, f.fix_memo, m.mem_tell 		")
+		.append("	from	fix f, item i, car c, member m,manufacturer mf		")
 		.append("	where (f.mem_num=m.mem_num and i.item_num=f.item_num and m.car_num=c.car_num and m.mfg_num=mf.mfg_num)		")
+		.append("   order by f.fix_num desc")
 		;
 		
-		ResultSet rs=selectDAO(selectAllFix);
-	
-		FixPanelVO fixPanelVO=null;
-		while(rs.next()) {
-			fixPanelVO=new FixPanelVO(
-					rs.getInt("fix_num"),rs.getDate("fix_reg_date"),
-					rs.getString("item_name"),rs.getString("mfg_name"),
-					rs.getString("car_type"),rs.getString("mem_name"),rs.getString("fix_status"));
-			listAll.add(fixPanelVO);
-			
-		}//end while
-		
-		if(rs != null) {rs.close();}
-		
-		return listAll;
-	}//selectAllList
-	
-	/**
-	 * StringBuilder 형태의 query를 매개변수로 넣으면 ResultSet(커서)을 반환해 준다.
-	 * select 쿼리문만 가능하다.
-	 * @param query
-	 * @return
-	 * @throws SQLException
-	 */
-	private ResultSet selectDAO(StringBuilder query) throws SQLException{
 		Connection con=null;
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -79,18 +57,27 @@ public class FixDAO {
 		try {
 			con=dbCon.getConn();
 						
-			pstmt=con.prepareStatement(query.toString());
+			pstmt=con.prepareStatement(selectAllFix.toString());
 			rs=pstmt.executeQuery();
-			return rs;
+		
+			FixPanelVO fixPanelVO=null;
+			while(rs.next()) {
+				fixPanelVO=new FixPanelVO(
+						rs.getString("fix_num"),rs.getTimestamp("fix_reg_date"),rs.getClob("fix_memo"),
+						rs.getString("item_name"),rs.getString("mfg_name"),
+						rs.getString("car_type"), rs.getInt("mem_num"), rs.getString("mem_name"),
+						rs.getInt("total"),rs.getString("fix_status"),rs.getString("mem_tell"));	
+	
+				listAll.add(fixPanelVO);		
+			}//end while
 		}catch (SQLException se) {
 			se.printStackTrace();
 			dbCon.closeDB(rs, pstmt, con);
-		}			
+		}//end try~catch
 		
-		
-		return rs; /////아 ......................이 부분 생각 좀 필요함.....
-
-	}//selectDAO
+		return listAll;
+	}//selectAllList
 	
+
 	
 }//class
