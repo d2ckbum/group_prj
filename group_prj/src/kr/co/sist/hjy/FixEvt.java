@@ -6,22 +6,22 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class FixEvt extends WindowAdapter implements MouseListener {
-	private FixView fv;
+	private FixPanel fp;
 	
-	public FixEvt(FixView fv) {
-		this.fv=fv;
+	public FixEvt(FixPanel fp) {
+		this.fp=fp;
 	}//FixEvt
 	
 	
 	
 	@Override
 	public void windowClosing(WindowEvent e) {
-		fv.dispose();
+		fp.dispose();
 	}//windowClosing
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		new FixDetailView(fv);
+		new FixDetailView(fp);
 		
 
 	}//mouseClicked
