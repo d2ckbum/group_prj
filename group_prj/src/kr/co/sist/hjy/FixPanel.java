@@ -2,11 +2,12 @@ package kr.co.sist.hjy;
 import java.awt.Font;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 /*이거 나중에 extends JPanel로 바꿔야 함.*/
 @SuppressWarnings("serial")
@@ -18,7 +19,7 @@ public class FixPanel extends JPanel {
 	}//FixView
 	
 	
-	private void makeFixView() {
+private void makeFixView() {
 		
 		setLayout(null);
 
@@ -30,8 +31,13 @@ public class FixPanel extends JPanel {
 		jtbSummary=new JTable(dtm);
 		
 		JScrollPane jsp =new JScrollPane(jtbSummary);
+		JTableHeader tableHeader=jtbSummary.getTableHeader();
+		tableHeader.setFont(new Font("맑은 고딕",Font.BOLD,15));
+		tableHeader.setReorderingAllowed(false);
+		jtbSummary.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jtbSummary.setRowHeight(25);
 		jtbSummary.setFont(new Font("굴림",Font.PLAIN,12));
+		jtbSummary.setDragEnabled(true);
 		
 		jsp.setBounds(100, 0, 1000, 600);
 		
