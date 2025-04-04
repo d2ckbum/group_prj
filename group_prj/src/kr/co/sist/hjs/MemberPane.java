@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import kr.co.sist.kji.MemberDataDTO;
 import kr.co.sist.kji.MemberService;
 import kr.co.sist.kji.MemberVO;
 
@@ -93,23 +95,26 @@ public class MemberPane extends JPanel {
 		memberTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) { // 더블 클릭 시
+				if (e.getClickCount() == 2) {
 					int selectedRow = memberTable.getSelectedRow();
 					if (selectedRow != -1) {
-
-						// 선택된 행의 회원 번호 가져오기
-						int memNum = (int) tableModel.getValueAt(selectedRow, 1);
-
-						// 전체 회원 목록에서 선택된 회원 찾기
-						MemberVO detailMember = findMemberByMemNum(memNum);
-
-						if (detailMember != null) {
-							// MemberDetailView 생성 및 선택된 회원 정보 전달
-							new MemberDetailView(MemberPane.this, detailMember);
-						} else {
-							JOptionPane.showMessageDialog(MemberPane.this, "해당 회원 정보를 찾을 수 없습니다.", "알림",
-									JOptionPane.INFORMATION_MESSAGE);
-						} // end if
+						// 선택된 행에서 회원 ID 가져오기
+						String selectedMemId = (String) tableModel.getValueAt(selectedRow, 2);
+						try {
+							// MemberService를 통해 MemberDataDTO 가져오기
+							MemberDataDTO memberData = memberService.searchOneMemberData(selectedMemId);
+							if (memberData != null) {
+								// MemberDetailView 생성 및 MemberDataDTO 전달
+								new MemberDetailView(MemberPane.this, memberData);
+							} else {
+								JOptionPane.showMessageDialog(MemberPane.this, "해당 회원 정보를 찾을 수 없습니다.", "알림",
+										JOptionPane.INFORMATION_MESSAGE);
+							} // end if
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							JOptionPane.showMessageDialog(MemberPane.this, "데이터베이스 오류 발생: " + ex.getMessage(), "오류",
+									JOptionPane.ERROR_MESSAGE);
+						} // end catch
 					} // end if
 				} // end if
 			}// mouseClicked
@@ -122,7 +127,7 @@ public class MemberPane extends JPanel {
 		// 기존 테이블 데이터 초기화
 		if (tableModel != null) {
 			tableModel.setRowCount(0);
-		}//end if
+		} // end if
 
 		try {
 			// MemberService를 통해 회원 목록 가져오기
@@ -145,20 +150,4 @@ public class MemberPane extends JPanel {
 			JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
 		}
 	}// loadMemberList
-	
-	/**
-	 * 전체 회원 목록에서 회원 번호로 MemberVO 찾기
-	 * @param memNum
-	 * @return
-	 */
-	private MemberVO findMemberByMemNum(int memNum) {
-		if (allMemberList != null) {
-			for (MemberVO member : allMemberList) {
-				if (member.getMemNum() == memNum) {
-					return member;
-				} // end if
-			} // end for
-		} // end if
-		return null;
-	}
 }// class

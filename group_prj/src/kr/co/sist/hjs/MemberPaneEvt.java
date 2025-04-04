@@ -23,7 +23,7 @@ public class MemberPaneEvt extends WindowAdapter implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}// mouseReleased
 
 	@Override

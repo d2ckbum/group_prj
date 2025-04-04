@@ -6,26 +6,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 
+import kr.co.sist.kji.MemberDataDTO; // MemberDataDTO 사용
 import kr.co.sist.kji.MemberVO;
 
 public class MemberDetailView extends JDialog {
     private MemberPane mp;
     private MemberVO mVO;
-    private JLabel jlblNum, jlblId, jlblPass, jlblName, jlblEmail, jlblTell, jlblZipcode, jlblAddr1,
-            jlblAddr2, jlblRegDate, jlblFlag, jlblCarNum, jlblMfgNum;
-    private JPasswordField  jtfPass;
-    private JTextField jtfNum, jtfId, jtfName, jtfEmail, jtfTell, jtfZipcode, jtfAddr1,
-            jtfAddr2, jtfRegDate, jtfFlag, jtfCarNum, jtfMfgNum;
+    private MemberDataDTO mDTO; // MemberDataDTO 추가
+    private JLabel jlblNum, jlblId, jlblPass, jlblName, jlblEmail, jlblTell, jlblZipcode, jlblAddr1, jlblAddr2,
+            jlblRegDate, jlblFlag, jlblCarType, jlblMfgName; // 라벨 이름 변경
+    private JPasswordField jtfPass;
+    private JTextField jtfNum, jtfId, jtfName, jtfEmail, jtfTell, jtfZipcode, jtfAddr1, jtfAddr2, jtfRegDate, jtfFlag,
+            jtfCarType, jtfMfgName; // 텍스트 필드 이름 변경
     private JButton jbtnOk;
 
     // private 폰트 선언
     private Font labelFont = new Font("맑은 고딕", Font.BOLD, 15);
     private Font textFont = new Font("맑은 고딕", Font.BOLD, 15);
 
-    public MemberDetailView(MemberPane mp, MemberVO mVO) {
-//        super("회원 상세 정보", true); // true: 모달 다이얼로그
+    public MemberDetailView(MemberPane mp, MemberDataDTO mDTO) { // 생성자 파라미터 변경
+        // super("회원 상세 정보", true); // true: 모달 다이얼로그
         this.mp = mp;
-        this.mVO = mVO;
+        this.mVO = mDTO.getmVO(); // MemberVO는 DTO에서 가져옴
+        this.mDTO = mDTO; // MemberDataDTO 저장
 
         // UI 컴포넌트 초기화
         jlblNum = new JLabel("회원번호 :");
@@ -39,8 +42,8 @@ public class MemberDetailView extends JDialog {
         jlblAddr2 = new JLabel("주소2 :");
         jlblRegDate = new JLabel("생성일 :");
         jlblFlag = new JLabel("탈퇴 Y/N :");
-        jlblCarNum = new JLabel("차량번호 :");
-        jlblMfgNum = new JLabel("제조번호 :");
+        jlblCarType = new JLabel("차량 종류 :"); // 라벨 이름 변경
+        jlblMfgName = new JLabel("제조사 :"); // 라벨 이름 변경
 
         jtfNum = new JTextField(15);
         jtfId = new JTextField(15);
@@ -53,13 +56,13 @@ public class MemberDetailView extends JDialog {
         jtfAddr2 = new JTextField(15);
         jtfRegDate = new JTextField(15);
         jtfFlag = new JTextField(15);
-        jtfCarNum = new JTextField(15);
-        jtfMfgNum = new JTextField(15);
+        jtfCarType = new JTextField(15); // 텍스트 필드 이름 변경
+        jtfMfgName = new JTextField(15); // 텍스트 필드 이름 변경
 
         jbtnOk = new JButton("확인");
         jbtnOk.setFont(labelFont);
-        jbtnOk.setBackground(new Color(217,217,217));
-        jbtnOk.setPreferredSize(new Dimension(120,60));
+        jbtnOk.setBackground(new Color(217, 217, 217));
+        jbtnOk.setPreferredSize(new Dimension(120, 60));
 
         // 텍스트 필드에 회원 정보 설정
         jtfNum.setText(String.valueOf(mVO.getMemNum()));
@@ -75,8 +78,8 @@ public class MemberDetailView extends JDialog {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         jtfRegDate.setText(mVO.getMemRegDate() != null ? sdf.format(mVO.getMemRegDate()) : "");
         jtfFlag.setText(mVO.getMemFlag());
-        jtfCarNum.setText(String.valueOf(mVO.getCarNum()));
-        jtfMfgNum.setText(String.valueOf(mVO.getMfgNum()));
+        jtfCarType.setText(mDTO.getCarType()); // DTO에서 차량 종류 가져오기
+        jtfMfgName.setText(mDTO.getMfgName()); // DTO에서 제조사 가져오기
 
         // 텍스트 필드 편집 불가능하도록 설정 (상세 정보 확인용)
         jtfNum.setEditable(false);
@@ -90,8 +93,8 @@ public class MemberDetailView extends JDialog {
         jtfAddr2.setEditable(false);
         jtfRegDate.setEditable(false);
         jtfFlag.setEditable(false);
-        jtfCarNum.setEditable(false);
-        jtfMfgNum.setEditable(false);
+        jtfCarType.setEditable(false);
+        jtfMfgName.setEditable(false);
 
         // 레이아웃 설정
         setLayout(new GridBagLayout());
@@ -103,7 +106,7 @@ public class MemberDetailView extends JDialog {
         gbc.gridx = 0;
         gbc.gridy = 0;
         jlblNum.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblNum.setFont(labelFont); 
+        jlblNum.setFont(labelFont);
         add(jlblNum, gbc);
         gbc.gridx = 1;
         jtfNum.setHorizontalAlignment(JTextField.CENTER);
@@ -123,17 +126,17 @@ public class MemberDetailView extends JDialog {
         gbc.gridx = 0;
         gbc.gridy++;
         jlblPass.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblPass.setFont(labelFont); 
+        jlblPass.setFont(labelFont);
         add(jlblPass, gbc);
         gbc.gridx = 1;
         jtfPass.setHorizontalAlignment(JTextField.CENTER);
-        jtfPass.setFont(textFont); 
+        jtfPass.setFont(textFont);
         add(jtfPass, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         jlblName.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblName.setFont(labelFont); 
+        jlblName.setFont(labelFont);
         add(jlblName, gbc);
         gbc.gridx = 1;
         jtfName.setHorizontalAlignment(JTextField.CENTER);
@@ -143,7 +146,7 @@ public class MemberDetailView extends JDialog {
         gbc.gridx = 0;
         gbc.gridy++;
         jlblEmail.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblEmail.setFont(labelFont); 
+        jlblEmail.setFont(labelFont);
         add(jlblEmail, gbc);
         gbc.gridx = 1;
         jtfEmail.setHorizontalAlignment(JTextField.CENTER);
@@ -153,17 +156,17 @@ public class MemberDetailView extends JDialog {
         gbc.gridx = 0;
         gbc.gridy++;
         jlblTell.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblTell.setFont(labelFont); 
+        jlblTell.setFont(labelFont);
         add(jlblTell, gbc);
         gbc.gridx = 1;
         jtfTell.setHorizontalAlignment(JTextField.CENTER);
-        jtfTell.setFont(textFont); 
+        jtfTell.setFont(textFont);
         add(jtfTell, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         jlblZipcode.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblZipcode.setFont(labelFont); 
+        jlblZipcode.setFont(labelFont);
         add(jlblZipcode, gbc);
         gbc.gridx = 1;
         jtfZipcode.setHorizontalAlignment(JTextField.CENTER);
@@ -173,21 +176,21 @@ public class MemberDetailView extends JDialog {
         gbc.gridx = 0;
         gbc.gridy++;
         jlblAddr1.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblAddr1.setFont(labelFont); 
+        jlblAddr1.setFont(labelFont);
         add(jlblAddr1, gbc);
         gbc.gridx = 1;
         jtfAddr1.setHorizontalAlignment(JTextField.CENTER);
-        jtfAddr1.setFont(textFont); 
+        jtfAddr1.setFont(textFont);
         add(jtfAddr1, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         jlblAddr2.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblAddr2.setFont(labelFont); 
+        jlblAddr2.setFont(labelFont);
         add(jlblAddr2, gbc);
         gbc.gridx = 1;
         jtfAddr2.setHorizontalAlignment(JTextField.CENTER);
-        jtfAddr2.setFont(textFont); 
+        jtfAddr2.setFont(textFont);
         add(jtfAddr2, gbc);
 
         gbc.gridx = 0;
@@ -197,38 +200,38 @@ public class MemberDetailView extends JDialog {
         add(jlblRegDate, gbc);
         gbc.gridx = 1;
         jtfRegDate.setHorizontalAlignment(JTextField.CENTER);
-        jtfRegDate.setFont(textFont); 
+        jtfRegDate.setFont(textFont);
         add(jtfRegDate, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         jlblFlag.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblFlag.setFont(labelFont); 
+        jlblFlag.setFont(labelFont);
         add(jlblFlag, gbc);
         gbc.gridx = 1;
         jtfFlag.setHorizontalAlignment(JTextField.CENTER);
-        jtfFlag.setFont(textFont); 
+        jtfFlag.setFont(textFont);
         add(jtfFlag, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        jlblCarNum.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblCarNum.setFont(labelFont); 
-        add(jlblCarNum, gbc);
+        jlblCarType.setHorizontalAlignment(SwingConstants.CENTER); // 라벨 이름 변경
+        jlblCarType.setFont(labelFont);
+        add(jlblCarType, gbc);
         gbc.gridx = 1;
-        jtfCarNum.setHorizontalAlignment(JTextField.CENTER);
-        jtfCarNum.setFont(textFont);
-        add(jtfCarNum, gbc);
+        jtfCarType.setHorizontalAlignment(JTextField.CENTER); // 텍스트 필드 이름 변경
+        jtfCarType.setFont(textFont);
+        add(jtfCarType, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        jlblMfgNum.setHorizontalAlignment(SwingConstants.CENTER);
-        jlblMfgNum.setFont(labelFont); 
-        add(jlblMfgNum, gbc);
+        jlblMfgName.setHorizontalAlignment(SwingConstants.CENTER); // 라벨 이름 변경
+        jlblMfgName.setFont(labelFont);
+        add(jlblMfgName, gbc);
         gbc.gridx = 1;
-        jtfMfgNum.setHorizontalAlignment(JTextField.CENTER);
-        jtfMfgNum.setFont(textFont); 
-        add(jtfMfgNum, gbc);
+        jtfMfgName.setHorizontalAlignment(JTextField.CENTER); // 텍스트 필드 이름 변경
+        jtfMfgName.setFont(textFont);
+        add(jtfMfgName, gbc);
 
         // 확인 버튼 하단 가운데 정렬
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -257,4 +260,4 @@ public class MemberDetailView extends JDialog {
         setResizable(false);
         setVisible(true);
     }
-}//class
+}// class
