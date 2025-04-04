@@ -38,8 +38,8 @@ public class MemberDetailView extends JDialog {
         jlblEmail = new JLabel("이메일 :");
         jlblTell = new JLabel("전화번호 :");
         jlblZipcode = new JLabel("우편번호 :");
-        jlblAddr1 = new JLabel("주소1 :");
-        jlblAddr2 = new JLabel("주소2 :");
+        jlblAddr1 = new JLabel("주소 :");
+        jlblAddr2 = new JLabel("상세주소 :");
         jlblRegDate = new JLabel("생성일 :");
         jlblFlag = new JLabel("탈퇴 Y/N :");
         jlblCarType = new JLabel("차량 종류 :"); // 라벨 이름 변경

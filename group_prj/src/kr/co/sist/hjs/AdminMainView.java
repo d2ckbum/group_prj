@@ -1,9 +1,15 @@
 package kr.co.sist.hjs;
 
 import javax.swing.*;
+
+import kr.co.sist.kji.MemberVO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class AdminMainView extends JFrame {
 	private JButton jbtnMember;
@@ -14,7 +20,7 @@ public class AdminMainView extends JFrame {
 	private JLabel welcomeLabel;
 	private JButton jbtnLogout;
 	private AdminMainViewEvt amve; // 이벤트 처리 클래스
-
+	
 	public AdminMainView() {
 		setTitle("관리자 페이지");
 		setSize(1200, 900); // 창 크기 설정
@@ -38,10 +44,10 @@ public class AdminMainView extends JFrame {
 
 		JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		welcomeLabel = new JLabel("관리자님 어서오세요");
-		welcomeLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+		welcomeLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 
 		jbtnLogout = new JButton("로그아웃");
-		jbtnLogout.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+		jbtnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 
 		rightPanel.add(welcomeLabel);
 		rightPanel.add(jbtnLogout);
@@ -124,6 +130,7 @@ public class AdminMainView extends JFrame {
 
 		setVisible(true);
 	}
+	
 
 	public static void main(String[] args) {
 		new AdminMainView();

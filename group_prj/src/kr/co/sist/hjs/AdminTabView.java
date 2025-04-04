@@ -7,15 +7,16 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import kr.co.sist.hjy.FixPanel;
+import kr.co.sist.pib.ItemManagementMainView;
 
 public class AdminTabView extends JFrame {
 	private CardLayout cl;
 	private JPanel mainPanel;
 	private MemberPane memp;
-	private ItemPane itemp;
+	private ItemManagementMainView itemp;
 	private FixPanel fixp;
 	private SalesPane salesp;
-	private InquiryPane inquiryp;
+//	private InquiryPane inquiryp;
 	private JButton jbtnLogout;
 	private JButton jbtnMember, jbtnItemManage, jbtnFixManage, jbtnSales, jbtnInquiryManage;
 	private JButton[] buttons;
@@ -87,16 +88,16 @@ public class AdminTabView extends JFrame {
 		mainPanel.setPreferredSize(new Dimension(1200, 700));
 
 		memp = new MemberPane();
-		itemp = new ItemPane();
+		itemp = new ItemManagementMainView();
 		fixp = new FixPanel();
 		salesp = new SalesPane();
-		inquiryp = new InquiryPane();
+//		inquiryp = new InquiryPane();
 
 		mainPanel.add(memp, "memp");
 		mainPanel.add(itemp, "itemp");
 		mainPanel.add(fixp, "fixp");
 		mainPanel.add(salesp, "salesp");
-		mainPanel.add(inquiryp, "inquiryp");
+//		mainPanel.add(inquiryp, "inquiryp");
 
 		add("North", jpTop);
 		add("Center", jpNorth);
@@ -128,6 +129,10 @@ public class AdminTabView extends JFrame {
 			dispose();
 		});
 	}// AdminTabView
+	
+	private void MemberCount() {
+		
+	}//MemberCount
 
 	public JButton getJbtnLogout() {
 		return jbtnLogout;

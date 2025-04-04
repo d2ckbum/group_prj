@@ -33,7 +33,7 @@ public class DbConnection {
 		//properties 파일 사용 ( 소스코드에 계정정보를 하드코딩하지 않는다. )
 		
 		String currentDir = System.getProperty("user.dir");
-		File file = new File(currentDir + "/group_prj/src/properties/database.properties");
+		File file = new File(currentDir + "/src/properties/database.properties");
 		System.out.println(file.exists());
 		if( !file.exists()) {
 			throw new SQLException("database.properties가 지정된 경로에 존재하지 않습니다.");
