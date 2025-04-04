@@ -4,13 +4,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import kr.co.sist.hjy.FixPanel;
 
 public class AdminTabView extends JFrame {
     private CardLayout cl;
     private JPanel mainPanel;
     private MemberPane memp;
     private ItemPane itemp;
-    private FixPane fixp;
+    private FixPanel fixp;
     private SalesPane salesp;
     private InquiryPane inquiryp;
     private JButton jbtnLogout;
@@ -22,6 +25,7 @@ public class AdminTabView extends JFrame {
     private Dimension buttonSize = new Dimension(180, 50); // 원하는 버튼 크기 설정
 
     public AdminTabView() {
+    	
         // 이벤트 처리 객체 생성
         ate = new AdminTabViewEvt(this);
 
@@ -29,6 +33,7 @@ public class AdminTabView extends JFrame {
         JPanel jpTop = new JPanel(new BorderLayout());
         jlblAdminTitle = new JLabel("관리자 페이지", SwingConstants.CENTER);
         jlblAdminTitle.setFont(new Font("맑은 고딕", Font.BOLD, 24)); // 타이틀 폰트 설정
+        jpTop.add("North",jlblAdminTitle);
 
         JPanel jpTopRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         jlblWelcomeAdmin = new JLabel("관리자님 어서오세요");
@@ -37,9 +42,9 @@ public class AdminTabView extends JFrame {
         jbtnLogout.setPreferredSize(new Dimension(100,40));
         jpTopRight.add(jlblWelcomeAdmin);
         jpTopRight.add(jbtnLogout);
-
-        jpTop.add("North", jlblAdminTitle);
         jpTop.add("East", jpTopRight);
+        
+        jpTop.setBorder(new EmptyBorder(0, 0, 0, 76)); // 상단 여백 추가
 
         // 메뉴 버튼 패널
         JPanel jpNorth = new JPanel();
@@ -83,7 +88,7 @@ public class AdminTabView extends JFrame {
 
         memp = new MemberPane();
         itemp = new ItemPane();
-        fixp = new FixPane();
+        fixp = new FixPanel();
         salesp = new SalesPane();
         inquiryp = new InquiryPane();
 
@@ -96,9 +101,10 @@ public class AdminTabView extends JFrame {
         add("North", jpTop);
         add("Center", jpNorth);
         add("South", mainPanel);
-
+        
         setSize(defaultSize); // 초기 창 크기 설정
         setVisible(true);
+        setResizable(false); // 창 크기 고정
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // 이벤트 등록
@@ -109,9 +115,46 @@ public class AdminTabView extends JFrame {
         jbtnInquiryManage.addActionListener(ate);
         jbtnLogout.addActionListener(ate); // 로그아웃 버튼에도 이벤트 등록 (필요한 경우)
         
+        
+        // 클릭 시 생기는 테두리 없애기
+        jbtnMember.setFocusPainted(false);          
+        jbtnItemManage.setFocusPainted(false);          
+        jbtnFixManage.setFocusPainted(false);          
+        jbtnSales.setFocusPainted(false);          
+        jbtnInquiryManage.setFocusPainted(false); 
+        
+        // 로그아웃 버튼 기능 추가
+        jbtnLogout.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.");
+            dispose();
+        });
     }//AdminTabView
     
-    public CardLayout getCl() {
+    public JButton getJbtnLogout() {
+		return jbtnLogout;
+	}
+
+	public JButton getJbtnMember() {
+		return jbtnMember;
+	}
+
+	public JButton getJbtnItemManage() {
+		return jbtnItemManage;
+	}
+
+	public JButton getJbtnFixManage() {
+		return jbtnFixManage;
+	}
+
+	public JButton getJbtnSales() {
+		return jbtnSales;
+	}
+
+	public JButton getJbtnInquiryManage() {
+		return jbtnInquiryManage;
+	}
+
+	public CardLayout getCl() {
         return cl;
     }
 
