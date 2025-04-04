@@ -25,7 +25,43 @@ private static MemberDAO mDAO;
 		return mDAO;
 	}//getInstance
 	
-	
+	public void insertMember(MemberVO mVO) throws SQLException {
+		// 1. 드라이버로딩
+		// 2. 커넥션 얻기
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+		try {
+			con = dbCon.getConn();
+			// 3. 쿼리문을 넣어서 쿼리문 생성객체 얻기
+			StringBuilder insertMember = new StringBuilder();
+			insertMember
+			.append("insert into member(mem_num,mem_id,mem_pass,mem_name,mem_email,mem_tell,")
+			.append("mem_zipcode,mem_addr1,mem_addr2,car_num,mfg_num)	")
+			.append("values(seq_mem_num.nextval, ?,?,?,?,?,?,?,?,?,?)");
+			pstmt = con.prepareStatement(insertMember.toString());
+			// 4. 바인드변수에 값 할당
+			pstmt.setString(1, mVO.getMemId());
+			pstmt.setString(2, mVO.getMemPass());
+			pstmt.setString(3, mVO.getMemName());
+			pstmt.setString(4, mVO.getMemEmail());
+			pstmt.setString(5, mVO.getMemTell());
+			pstmt.setString(6, mVO.getMemZipcode());
+			pstmt.setString(7, mVO.getMemAddr1());
+			pstmt.setString(8, mVO.getMemAddr2());
+			pstmt.setInt(9, mVO.getCarNum());
+			pstmt.setInt(10, mVO.getMfgNum());
+
+			// 5. 쿼리문 수행 후 결과 얻기
+			pstmt.executeUpdate();
+		} finally {
+			// 6. 연결 끊기
+			dbCon.closeDB(null, pstmt, con);
+
+		} // end finally
+
+	}// insertPstmtMember
 	
 	
 	
@@ -133,10 +169,65 @@ private static MemberDAO mDAO;
 
 	}// selectOneMember
 	
+	public MemberDataDTO selectOneMemberData(String memId) throws SQLException {
+		MemberDataDTO mDTO = null;
+
+		// 1.
+		// 2.
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+
+		try {
+			con = dbCon.getConn();
+
+			// 3.
+			StringBuilder selectOneMember = new StringBuilder();
+			selectOneMember
+			.append("	select mem.MEM_NUM, mem.MEM_ID, mem.MEM_PASS, mem.MEM_NAME, mem.MEM_EMAIL,")
+			.append("mem.MEM_TELL, mem.MEM_ZIPCODE, mem.MEM_ADDR1, mem.MEM_ADDR2, mem.MEM_REG_DATE, ")
+			.append("mem.MEM_FLAG,car.CAR_TYPE ,mfg.MFG_NAME		")
+			.append("	from member mem, car car, MANUFACTURER mfg					")
+			.append("	where(car.car_num=mem.car_num and mfg.mfg_num = mem.mfg_num)and mem_id =?						 		");
+			pstmt = con.prepareStatement(selectOneMember.toString());
+			System.out.println(pstmt);
+			// 4.
+			pstmt.setString(1, memId);
+			// 5.
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				mDTO = new MemberDataDTO();
+				
+				mDTO.getmVO().setMemNum(rs.getInt("mem_num"));
+				mDTO.getmVO().setMemId(rs.getString("mem_id"));
+				mDTO.getmVO().setMemPass(rs.getString("mem_pass"));
+				mDTO.getmVO().setMemName(rs.getString("mem_name"));
+				mDTO.getmVO().setMemEmail(rs.getString("mem_email"));
+				mDTO.getmVO().setMemTell(rs.getString("mem_tell"));
+				mDTO.getmVO().setMemZipcode(rs.getString("mem_zipcode"));	
+				mDTO.getmVO().setMemAddr1(rs.getString("mem_addr1"));	
+				mDTO.getmVO().setMemAddr2(rs.getString("mem_addr2"));	
+				mDTO.getmVO().setMemRegDate(rs.getDate("mem_reg_date"));	
+				mDTO.getmVO().setMemFlag(rs.getString("mem_flag"));	
+				mDTO.setCarType(rs.getString("car_type"));
+				mDTO.setMfgName(rs.getString("mfg_name"));
+			} // end if
+		} finally {
+			// 6.
+			dbCon.closeDB(rs, pstmt, con);
+		} // end finally
+
+		return mDTO;
+
+	}// selectOneMember
+	
 	public static void main(String[] args) {
 		MemberDAO mDAO = MemberDAO.getInstance();
 		try {
-			System.out.println(mDAO.selectOneMember("kkk").toString());
+			System.out.println(mDAO.selectOneMemberData("kkk").toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

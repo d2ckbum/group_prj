@@ -8,6 +8,21 @@ public class MemberService {
 	public MemberService() {
 	}//MemberService
 	
+	
+	public boolean addMember(MemberVO mVO) {
+		boolean flag = false;
+		MemberDAO  mDAO = MemberDAO.getInstance();
+		
+		try {
+			mDAO.insertMember(mVO);
+			flag = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		return flag;
+	}// addPstmtMember
+	
 	public List<MemberVO> searchAllMember(){
 		List<MemberVO> list = null;
 		
@@ -36,4 +51,18 @@ public class MemberService {
 		
 		return mVO;
 	}//searchOneMember
+	
+	public MemberDataDTO searchOneMemberData(String id) {
+		MemberDataDTO mDTO = null;
+		MemberDAO mDAO = MemberDAO.getInstance();
+		try {
+			mDTO = mDAO.selectOneMemberData(id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//end catch
+		
+		return mDTO;
+	}//searchOneMemberData
+	
 }//class
