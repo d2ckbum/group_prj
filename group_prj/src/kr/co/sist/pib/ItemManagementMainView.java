@@ -35,15 +35,15 @@ public class ItemManagementMainView extends JPanel {
         setVisible(true);
         
         
-        JFrame testFrame = new JFrame();
-        testFrame.setTitle("상품 관리");
-//        setTitle("상품 관리");
-        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        testFrame.setLayout(null);
-        testFrame.setSize(1200,900);
-        testFrame.add(this); // JFrame에 패널 추가
-        testFrame.setVisible(true);
-        System.out.println((JFrame)getRootPane().getParent() == testFrame);
+//        JFrame testFrame = new JFrame();
+//        testFrame.setTitle("상품 관리");
+////        setTitle("상품 관리");
+//        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        testFrame.setLayout(null);
+//        testFrame.setSize(1200,900);
+//        testFrame.add(this); // JFrame에 패널 추가
+//        testFrame.setVisible(true);
+//        System.out.println((JFrame)getRootPane().getParent() == testFrame);
     }
 
     private void initializeUI() {
