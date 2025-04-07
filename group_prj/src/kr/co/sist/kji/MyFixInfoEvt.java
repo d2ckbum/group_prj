@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 public class MyFixInfoEvt implements ActionListener{
 	
 	private MyFixInfoView mfiv;
+	
 	public MyFixInfoEvt(MyFixInfoView mfiv) {
 		this.mfiv = mfiv;
 	}

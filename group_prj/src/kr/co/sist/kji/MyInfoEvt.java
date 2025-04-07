@@ -111,7 +111,7 @@ public class MyInfoEvt implements ActionListener, DocumentListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		MemberService ms = new MemberService();
-		if(e.getSource()== miv.getListBtn()) {
+		if(e.getSource()== miv.getInquiryBtn()) {
 			//new view 
 			new MyFixInfoView(id);
 			miv.dispose();

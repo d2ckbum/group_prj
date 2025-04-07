@@ -250,6 +250,9 @@ public class JoinMemberView extends JFrame {
 	public JLabel getIdAvailable() {
 		return idAvailable;
 	}
+	public static void main(String[] args) {
+		new JoinMemberView();
+	}//main
 	
 	
 }//class
