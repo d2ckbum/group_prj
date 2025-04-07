@@ -198,10 +198,10 @@ public class MyInfoView extends JFrame {
 
         
 
-        mVO = new MemberVO();;
+        mVO = new MemberVO();
         mVO = ms.searchOneMember(id);
         
-        myPassTF.setText(mVO.getMemPass().toString());
+        myPassTF.setText(mVO.getMemPass());
         myPassConfirmTF.setText(mVO.getMemPass());
         myNameTF.setText(mVO.getMemName());
         myEmailTF.setText(mVO.getMemEmail());
@@ -225,7 +225,7 @@ public class MyInfoView extends JFrame {
         
         
         MyInfoEvt mie = new MyInfoEvt(this);
-        inquiryBtn.addActionListener(mie);
+        listBtn.addActionListener(mie);
         updateBtn.addActionListener(mie); 
         deleteBtn.addActionListener(mie);
 //        deleteBtn;

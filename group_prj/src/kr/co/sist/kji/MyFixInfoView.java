@@ -19,6 +19,8 @@ public class MyFixInfoView extends JFrame {
 	private JButton confirmBtn;
 
 	public MyFixInfoView(String id) {
+		this.id = id;
+		
 		setTitle("내 정비 목록");
 		setSize(1080, 700);
 		setLayout(null);
@@ -91,6 +93,10 @@ public class MyFixInfoView extends JFrame {
 		confirmBtn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		add(confirmBtn);
 
+		MyFixInfoEvt mfie =new MyFixInfoEvt(this);
+		confirmBtn.addActionListener(mfie);
+		
+		
 		setVisible(true);
 	}//MyFixInfoView
 
