@@ -38,7 +38,7 @@ public class MemberPane extends JPanel {
 	public MemberPane() {
 		setLayout(new BorderLayout());
 		setSize(new Dimension(1200, 700));
-		setBorder(BorderFactory.createLineBorder(Color.RED));
+//		setBorder(BorderFactory.createLineBorder(Color.RED));
 
 		mainPanel = new JPanel(null);
 		add(mainPanel, BorderLayout.CENTER);

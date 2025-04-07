@@ -1,6 +1,5 @@
 package kr.co.sist.hjs;
 
-import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -16,25 +15,27 @@ public class AdminTabViewEvt implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == view.getJbtnMember()) {
+		JButton clickedButton = (JButton) e.getSource();
+
+		if (clickedButton == view.getJbtnMember()) {
 			view.getCl().show(view.getMainPanel(), "memp");
-		}
-		if (e.getSource() == view.getJbtnItemManage()) {
+			view.setButtonSelected(view.getJbtnMember());
+		} else if (clickedButton == view.getJbtnItemManage()) {
 			view.getCl().show(view.getMainPanel(), "itemp");
-		}
-		if (e.getSource() == view.getJbtnFixManage()) {
+			view.setButtonSelected(view.getJbtnItemManage());
+		} else if (clickedButton == view.getJbtnFixManage()) {
 			view.getCl().show(view.getMainPanel(), "fixp");
-		}
-		if (e.getSource() == view.getJbtnSales()) {
+			view.setButtonSelected(view.getJbtnFixManage());
+		} else if (clickedButton == view.getJbtnSales()) {
 			view.getCl().show(view.getMainPanel(), "salesp");
-		}
-		if (e.getSource() == view.getJbtnInquiryManage()) {
+			view.setButtonSelected(view.getJbtnSales());
+		} else if (clickedButton == view.getJbtnInquiryManage()) {
 			// 문의관리 버튼 클릭 시 새 창 열기
 			Admin_Inquiry_View inquiryView = new Admin_Inquiry_View();
 			inquiryView.admin_Inquiry_Main_View(); // 새 창 열기
-		}
-		if (e.getSource() == view.getJbtnLogout()) {
-			JOptionPane.showMessageDialog(null, "로그아웃 되었습니다.");
+			view.setButtonSelected(view.getJbtnInquiryManage());
+		} else if (clickedButton == view.getJbtnLogout()) {
+			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
 			view.dispose();
 		}
 		// 다른 버튼에 대한 이벤트 처리 추가
