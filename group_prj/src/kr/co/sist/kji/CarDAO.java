@@ -9,24 +9,24 @@ import java.util.List;
 
 import kr.co.sist.hjs.DbConnection;
 
-public class carDAO {
+public class CarDAO {
 
-	private static carDAO cDAO;
+	private static CarDAO cDAO;
 
-	private carDAO() {
+	private CarDAO() {
 			}// MemberDAO
 
-	public static carDAO getInstance() {
+	public static CarDAO getInstance() {
 
 		if (cDAO == null) {
-			cDAO = new carDAO();
+			cDAO = new CarDAO();
 		} // end if
 
 		return cDAO;
 	}// getInstance
 
-	public List<carVO> selectAllMember() throws SQLException {
-		List<carVO> list = new ArrayList<carVO>();
+	public List<CarVO> selectAllMember() throws SQLException {
+		List<CarVO> list = new ArrayList<CarVO>();
 
 		// 1.
 		// 2.
@@ -48,10 +48,10 @@ public class carDAO {
 			// 5.
 			rs = pstmt.executeQuery();
 
-			carVO cVO = null;
+			CarVO cVO = null;
 			while (rs.next()) {// 레코드가 존재하는지?
 				// 레코드의 컬럼 값을 VO에 저장하고
-				cVO = new carVO();
+				cVO = new CarVO();
 
 				cVO.setCarNum(rs.getInt("car_num"));
 				cVO.setCarType(rs.getString("car_type"));
@@ -66,8 +66,8 @@ public class carDAO {
 		return list;
 	}// selectAllMember
 
-	public carVO selectOneMember(String car_type) throws SQLException {
-		carVO cVO = null;
+	public int selectOneCarNum(String car_type) throws SQLException {
+		int carNum=-1;
 
 		// 1.
 		// 2.
@@ -83,7 +83,7 @@ public class carDAO {
 			// 3.
 			StringBuilder selectOneMember = new StringBuilder();
 			selectOneMember
-			.append("	select *		")
+			.append("	select car_num		")
 			.append("	from car						")
 			.append("	where car_type =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
@@ -94,53 +94,9 @@ public class carDAO {
 
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				cVO = new carVO();
+				
 
-				cVO.setCarNum(rs.getInt("car_num"));
-				cVO.setCarType(rs.getString("car_type"));
-
-			} // end if
-		} finally {
-			// 6.
-			dbCon.closeDB(rs, pstmt, con);
-		} // end finally
-
-		return cVO;
-
-	}// selectOneMember
-
-	public carVO selectOneMember(int car_num) throws SQLException {
-		carVO cVO = null;
-
-		// 1.
-		// 2.
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		DbConnection dbCon = DbConnection.getInstance();
-
-		try {
-			con = dbCon.getConn();
-
-			// 3.
-			StringBuilder selectOneMember = new StringBuilder();
-			selectOneMember
-			.append("	select *		")
-			.append("	from car						")
-			.append("	where car_num =?						 		");
-			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
-			// 4.
-			pstmt.setInt(1, car_num);
-			// 5.
-
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				cVO = new carVO();
-
-				cVO.setCarNum(rs.getInt("car_num"));
-				cVO.setCarType(rs.getString("car_type"));
+				carNum =rs.getInt("car_num");
 
 			} // end if
 		} finally {
@@ -148,16 +104,18 @@ public class carDAO {
 			dbCon.closeDB(rs, pstmt, con);
 		} // end finally
 
-		return cVO;
+		return carNum;
 
 	}// selectOneMember
+	
 public static void main(String[] args) {
-	carDAO cDAO = carDAO.getInstance();
+	CarDAO cDAO = CarDAO.getInstance();
 	try {
-		System.out.println(cDAO.selectOneMember("대형"));
+		System.out.println(cDAO.selectOneCarNum("대형"));
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-}
+}//main
+
 }// class

@@ -9,9 +9,9 @@ import javax.swing.JTextField;
 
 public class LoginFormEvt  implements ActionListener {
 
-	private String name;
+	private String id;
 	private LoginpageView mpv;
-	private LoginVO lVO;
+	private MemberVO mVO;
 	private JTextField jtfId;
 	private JPasswordField jpfPass;
 
@@ -67,16 +67,38 @@ public class LoginFormEvt  implements ActionListener {
 		// 로그인 수행
 		String id = jtfId.getText();
 		
-		lVO = new LoginVO(id, pass);
+		LoginVO lVO = new LoginVO(id, pass);
 		
-		LoginService ls = new LoginService();
-		name = ls.login(lVO);
-		if (!name.isEmpty()) {
-			System.out.println(name + "님 어서오고! ");
+		MemberService ms = new MemberService();
+		mVO = ms.login(lVO);
+		if (!(mVO.getMemName()==null)) {
+			
 			flag = true;
 		}//end if
+		System.out.println(mVO.getMemFlag());
+		
 		return flag;
 	}// passChk
+	
+	private boolean deleteAccount() {
+	boolean flag = false;
+			
+			String pass = new String(jpfPass.getPassword());
+			// 로그인 수행
+			String id = jtfId.getText();
+			
+			LoginVO lVO = new LoginVO(id, pass);
+			
+			MemberService ms = new MemberService();
+			mVO = ms.login(lVO);
+			if(mVO.getMemFlag()==null) {
+				return flag;
+			}
+			if(mVO.getMemFlag().equals("Y")) {
+				flag = true;
+		}//end if
+		return flag;
+	}//deleteAccount
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -91,26 +113,45 @@ public class LoginFormEvt  implements ActionListener {
 				JOptionPane.showMessageDialog(mpv, "비밀번호를 넣어주세요.");
 				return;
 			}//end if
+			if(deleteAccount()) { 
+				JOptionPane.showMessageDialog(mpv, "탈퇴한 회원입니다.");
+				return;
+			}//end if
 			
 			if(loginChk()) {
-				JOptionPane.showMessageDialog(mpv, name+"님 어서오세요.");
+				id = mpv.getIdField().getText();
+				JOptionPane.showMessageDialog(mpv, mVO.getMemName()+"님 어서오세요.");
 				///////////////////////////////////////////////////
 				//로그인 성공 했을 때 엔진오일 창으로 넘어가게
+				//일시적으로 내 정보뷰로 넘어가세 설정
+				new MyInfoView(id);
+				mpv.dispose();
 				
 				
 				//////////////////////////////////////////////////
-			}else {
+			}
+			
+			
+			if(!loginChk()) {
 				JOptionPane.showMessageDialog(mpv, "로그인 실패");
-			}//end else
+				return;
+			}//end if
+			
 				
 //			passChk();
 		}//end if
 		
 		if(ae.getSource() == mpv.getJbtnJoin()) {
-			System.out.println("조인");
 			new JoinMemberView();
 			mpv.dispose();
 		}
 	}// actionPerformed
+
+
+	public String getId() {
+		return id;
+	}
+
+
 
 }// class

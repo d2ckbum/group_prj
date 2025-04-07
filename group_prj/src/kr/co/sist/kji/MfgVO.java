@@ -1,14 +1,14 @@
 package kr.co.sist.kji;
 
-public class mfgVO {
+public class MfgVO {
 
 	private int mfgNum;
 	private String mfgName;
 	
-	public mfgVO() {
+	public MfgVO() {
 	}
 
-	public mfgVO(int mfgNum, String mfgName) {
+	public MfgVO(int mfgNum, String mfgName) {
 		super();
 		this.mfgNum = mfgNum;
 		this.mfgName = mfgName;

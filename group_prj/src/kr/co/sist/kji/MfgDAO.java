@@ -9,25 +9,25 @@ import java.util.List;
 
 import kr.co.sist.hjs.DbConnection;
 
-public class mfgDAO {
+public class MfgDAO {
 
-private static mfgDAO mfgDAO;
+private static MfgDAO mfgDAO;
 	
-	private mfgDAO() {
+	private MfgDAO() {
 	}//MemberDAO
 	
-	public static mfgDAO getInstance() {
+	public static MfgDAO getInstance() {
 		
 		if(mfgDAO == null) {
-			mfgDAO = new mfgDAO();
+			mfgDAO = new MfgDAO();
 		}//end if
 		
 		return mfgDAO;
 	}//getInstance
 	
 	
-	public List<mfgVO> selectAllMember() throws SQLException {
-		List<mfgVO> list = new ArrayList<mfgVO>();
+	public List<MfgVO> selectAllMember() throws SQLException {
+		List<MfgVO> list = new ArrayList<MfgVO>();
 
 		// 1.
 		// 2.
@@ -48,10 +48,10 @@ private static mfgDAO mfgDAO;
 			// 5.
 			rs = pstmt.executeQuery();
 
-			mfgVO mfgVO = null;
+			MfgVO mfgVO = null;
 			while (rs.next()) {// 레코드가 존재하는지?
 				// 레코드의 컬럼 값을 VO에 저장하고
-				mfgVO = new mfgVO();
+				mfgVO = new MfgVO();
 				
 				mfgVO.setMfgNum(rs.getInt("mfg_num"));
 				mfgVO.setMfgName(rs.getString("mfg_name"));
@@ -67,8 +67,8 @@ private static mfgDAO mfgDAO;
 	}// selectAllMember
 	
 	
-	public mfgVO selectOneMember(String mfg_name) throws SQLException {
-		mfgVO mfgVO = null;
+	public int selectOneMfgNum(String mfg_name) throws SQLException {
+		int mfgNum = -1;
 
 		// 1.
 		// 2.
@@ -84,7 +84,7 @@ private static mfgDAO mfgDAO;
 			// 3.
 			StringBuilder selectOneMember = new StringBuilder();
 			selectOneMember
-			.append("	select *		")
+			.append("	select mfg_num		")
 			.append("	from manufacturer						")
 			.append("	where mfg_name =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
@@ -95,10 +95,8 @@ private static mfgDAO mfgDAO;
 
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				mfgVO = new mfgVO();
 				
-				mfgVO.setMfgNum(rs.getInt("mfg_num"));
-				mfgVO.setMfgName(rs.getString("mfg_name"));
+				mfgNum=rs.getInt("mfg_num");
 				
 			} // end if
 		} finally {
@@ -106,50 +104,7 @@ private static mfgDAO mfgDAO;
 			dbCon.closeDB(rs, pstmt, con);
 		} // end finally
 
-		return mfgVO;
-
-	}// selectOneMember
-	
-	public mfgVO selectOneMember(int mfg_num) throws SQLException {
-		mfgVO mfgVO = null;
-
-		// 1.
-		// 2.
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		DbConnection dbCon = DbConnection.getInstance();
-
-		try {
-			con = dbCon.getConn();
-
-			// 3.
-			StringBuilder selectOneMember = new StringBuilder();
-			selectOneMember
-			.append("	select *		")
-			.append("	from manufacturer						")
-			.append("	where mfg_num =?						 		");
-			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
-			// 4.
-			pstmt.setInt(1, mfg_num);
-			// 5.
-
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				mfgVO = new mfgVO();
-				
-				mfgVO.setMfgNum(rs.getInt("mfg_num"));
-				mfgVO.setMfgName(rs.getString("mfg_name"));
-				
-			} // end if
-		} finally {
-			// 6.
-			dbCon.closeDB(rs, pstmt, con);
-		} // end finally
-
-		return mfgVO;
+		return mfgNum;
 
 	}// selectOneMember
 	

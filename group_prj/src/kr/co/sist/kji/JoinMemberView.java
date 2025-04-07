@@ -1,6 +1,9 @@
 package kr.co.sist.kji;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,11 +19,12 @@ public class JoinMemberView extends JFrame {
 	private JPasswordField pwField, pwConfirmField;
 	private JButton checkBtn,signupBtn,cancelBtn;
 	private JComboBox<String> makerBox, modelBox;
+	JLabel pwMatch, idUnavailable,idAvailable;
 	public JoinMemberView() {
 
 		setTitle("회원가입");
 		setSize(800, 700);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // X 버튼 눌러도 종료 안됨
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X 버튼 눌러도 종료 안됨
 		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();
@@ -38,7 +42,7 @@ public class JoinMemberView extends JFrame {
 		idLabel.setBounds(150, 80, 60, 25);
 		panel.add(idLabel);
 
-		idField = new JTextField();
+		idField = new JTextField(20);
 		idField.setBounds(210, 80, 200, 25);
 		panel.add(idField);
 
@@ -46,15 +50,17 @@ public class JoinMemberView extends JFrame {
 		checkBtn.setBounds(420, 80, 100, 25);
 		panel.add(checkBtn);
 
-//		JLabel idAvailable = new JLabel("사용 가능한 ID");
-//		idAvailable.setForeground(Color.BLUE);
-//		idAvailable.setBounds(510, 80, 100, 25);
-//		panel.add(idAvailable);
-//
-//		JLabel idUnavailable = new JLabel("중복된 ID");
-//		idUnavailable.setForeground(Color.RED);
-//		idUnavailable.setBounds(620, 80, 100, 25);
-//		panel.add(idUnavailable);
+		idAvailable = new JLabel("사용 가능한 ID");
+		idAvailable.setForeground(Color.BLUE);
+		idAvailable.setBounds(550, 80, 100, 25);
+		idAvailable.setVisible(false);
+		panel.add(idAvailable);
+
+		idUnavailable = new JLabel("중복된 ID");
+		idUnavailable.setForeground(Color.RED);
+		idUnavailable.setBounds(550, 80, 100, 25);
+		idUnavailable.setVisible(false);
+		panel.add(idUnavailable);
 
 		// 이름
 		JLabel nameLabel = new JLabel("이름");
@@ -83,15 +89,10 @@ public class JoinMemberView extends JFrame {
 		pwConfirmField.setBounds(210, 200, 360, 25);
 		panel.add(pwConfirmField);
 
-//		JLabel pwMatch = new JLabel("비밀번호 일치");
-//		pwMatch.setForeground(Color.BLUE);
-//		pwMatch.setBounds(420, 200, 100, 25);
-//		panel.add(pwMatch);
-//
-//		JLabel pwNotMatch = new JLabel("비밀번호 불일치");
-//		pwNotMatch.setForeground(Color.RED);
-//		pwNotMatch.setBounds(530, 200, 150, 25);
-//		panel.add(pwNotMatch);
+		pwMatch = new JLabel();
+		pwMatch.setBounds(580, 200, 100, 25);
+		panel.add(pwMatch);
+
 
 		// 이메일
 		JLabel emailLabel = new JLabel("이메일");
@@ -119,8 +120,17 @@ public class JoinMemberView extends JFrame {
 		JLabel makerLabel = new JLabel("제조사");
 		makerLabel.setBounds(220, 320, 50, 25);
 		panel.add(makerLabel);
-
-		makerBox = new JComboBox<>(new String[] { "현대", "기아", "삼성", "쉐보레" });
+		
+		MfgService mfgs = new MfgService();
+		List<MfgVO> mfgVO = new ArrayList<MfgVO>();
+		mfgVO = mfgs.searchAllMember();
+		String[] mfgName = new String[mfgVO.size()];
+		for(int i =0; i< mfgVO.size(); i++) {
+			mfgName[i] = mfgVO.get(i).getMfgName();
+		}//end for
+		
+		
+		makerBox = new JComboBox<>(mfgName);
 		makerBox.setBounds(270, 320, 80, 25);
 		panel.add(makerBox);
 
@@ -128,7 +138,16 @@ public class JoinMemberView extends JFrame {
 		modelLabel.setBounds(360, 320, 40, 25);
 		panel.add(modelLabel);
 
-		modelBox = new JComboBox<>(new String[] { "소나타", "K5", "SM6" });
+		CarService cs = new CarService();
+		List<CarVO> cVO = new ArrayList<CarVO>();
+		cVO = cs.searchAllMember();
+		String[] carType = new String[cVO.size()];
+		
+		for(int i =0; i< cVO.size(); i++) {
+			carType[i] = cVO.get(i).getCarType();
+		}//end for
+		
+		modelBox = new JComboBox<>(carType);
 		modelBox.setBounds(400, 320, 120, 25);
 		panel.add(modelBox);
 
@@ -169,19 +188,12 @@ public class JoinMemberView extends JFrame {
 		panel.add(cancelBtn);
 
 		JoinMemberEvt jme = new JoinMemberEvt(this);
-		signupBtn.addActionListener(jme);;
+		signupBtn.addActionListener(jme);
 		checkBtn.addActionListener(jme);
-		//이거 보류
-		cancelBtn.addActionListener(e -> {
-			new LoginpageView();
-			dispose();
-			
-			
-		});
-		makerBox.addActionListener(e -> {
-		    String selectedMaker = (String) makerBox.getSelectedItem();
-		    System.out.println("선택한 제조사: " + selectedMaker);
-		});
+		cancelBtn.addActionListener(jme);
+		pwField.getDocument().addDocumentListener(jme);
+		pwConfirmField.getDocument().addDocumentListener(jme);
+		
 		
 		add(panel);
 		setVisible(true);
@@ -229,9 +241,15 @@ public class JoinMemberView extends JFrame {
 		return modelBox;
 	}
 
-	public static void main(String[] args) {
-		new JoinMemberView();
-	}//main
+	public JLabel getPwMatch() {
+		return pwMatch;
+	}
+	public JLabel getIdUnavailable() {
+		return idUnavailable;
+	}
+	public JLabel getIdAvailable() {
+		return idAvailable;
+	}
 	
 	
 }//class

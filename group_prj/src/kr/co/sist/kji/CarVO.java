@@ -1,12 +1,12 @@
 package kr.co.sist.kji;
 
-public class carVO {
+public class CarVO {
 	private int carNum;
 	private String carType;
-	public carVO() {
+	public CarVO() {
 		super();
 	}
-	public carVO(int carNum, String carType) {
+	public CarVO(int carNum, String carType) {
 		super();
 		this.carNum = carNum;
 		this.carType = carType;

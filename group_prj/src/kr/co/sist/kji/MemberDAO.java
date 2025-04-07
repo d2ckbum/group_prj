@@ -61,7 +61,170 @@ private static MemberDAO mDAO;
 
 		} // end finally
 
-	}// insertPstmtMember
+	}// insertMember
+	
+//	public int updateMember(MemberVO mVO) throws SQLException {
+//		
+//		int rowCnt = 0;
+//		// 1. 드라이버로딩
+//		// 2. 커넥션 얻기
+//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//
+//		DbConnection dbCon = DbConnection.getInstance();
+//		try {
+//			con = dbCon.getConn();
+//			// 3. 쿼리문을 넣어서 쿼리문 생성객체 얻기
+//			StringBuilder updateMember = new StringBuilder();
+//			updateMember
+//			.append("	update member	")
+//			.append("	set mem_name=?,mem_pass=?,mem_email=?,mem_tell=?,mem_zipcode=?, 	")
+//			.append("	mem_addr1=?,mem_addr2=?,car_num=?,mfg_num=?	")
+//			.append("	where mem_id =?	");
+//			pstmt = con.prepareStatement(updateMember.toString());
+//			// 4. 바인드변수에 값 할당
+//			pstmt.setString(1, mVO.getMemName());
+//			pstmt.setString(2, mVO.getMemPass());
+//			pstmt.setString(3, mVO.getMemEmail());
+//			pstmt.setString(4, mVO.getMemTell());
+//			pstmt.setString(5, mVO.getMemZipcode());
+//			pstmt.setString(6, mVO.getMemAddr1());
+//			pstmt.setString(7, mVO.getMemAddr2());
+//			pstmt.setInt(8, mVO.getCarNum()+1);
+//			pstmt.setInt(9, mVO.getMfgNum()+1);
+//			pstmt.setString(10, mVO.getMemId());
+//
+//			System.out.println(mVO.getMemId());
+//			System.out.println(updateMember.toString());
+//			// 5. 쿼리문 수행 후 결과 얻기
+//			rowCnt= pstmt.executeUpdate();
+//		} finally {
+//			// 6. 연결 끊기
+//			dbCon.closeDB(null, pstmt, con);
+//
+//		} // end finally
+//
+//		return rowCnt;
+//	}// updateMember
+	
+	
+	
+	public int updateMember(MemberVO mVO) throws SQLException {
+		int rowCnt = 0;
+
+		// 1.드라이버 로딩
+		// 2.커넥션 얻기
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+		try {
+
+			// 3.쿼리문 생성객체 얻기
+			con = dbCon.getConn();
+				// 3. 쿼리문을 넣어서 쿼리문 생성객체 얻기
+				StringBuilder updateMember = new StringBuilder();
+				updateMember
+				.append("	update member	")
+				.append("	set mem_name=?,mem_pass=?,mem_email=?,mem_tell=?,mem_zipcode=?, 	")
+				.append("	mem_addr1=?,mem_addr2=?,car_num=?,mfg_num=?	")
+				.append("	where mem_id=?	");
+				pstmt = con.prepareStatement(updateMember.toString());
+				// 4. 바인드변수에 값 할당
+				pstmt.setString(1, mVO.getMemName());
+				pstmt.setString(2, mVO.getMemPass());
+				pstmt.setString(3, mVO.getMemEmail());
+				pstmt.setString(4, mVO.getMemTell());
+				pstmt.setString(5, mVO.getMemZipcode());
+				pstmt.setString(6, mVO.getMemAddr1());
+				pstmt.setString(7, mVO.getMemAddr2());
+				pstmt.setInt(8, mVO.getCarNum());
+				pstmt.setInt(9, mVO.getMfgNum());
+				pstmt.setString(10, mVO.getMemId());
+			// 5.쿼리문 수행 후 결과 얻기
+			rowCnt = pstmt.executeUpdate();
+		} finally {
+			// 6.연결 끊기
+			dbCon.closeDB(null, pstmt, con);
+		} // end finally
+
+		return rowCnt;
+	}// updatePstmtMember
+	
+	
+	public int deleteMember(String id) throws SQLException {
+		int rowCnt = 0;
+
+		// 1.드라이버 로딩
+		// 2.커넥션 얻기
+		Connection con = null;
+		PreparedStatement pstmt = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+		try {
+
+			// 3.쿼리문 생성객체 얻기
+			con = dbCon.getConn();
+				// 3. 쿼리문을 넣어서 쿼리문 생성객체 얻기
+				StringBuilder updateMember = new StringBuilder();
+				updateMember
+				.append("	update member	")
+				.append("	set mem_flag='Y' 	")
+				.append("	where mem_id=?	");
+				pstmt = con.prepareStatement(updateMember.toString());
+				// 4. 바인드변수에 값 할당
+				pstmt.setString(1, id);
+			// 5.쿼리문 수행 후 결과 얻기
+			rowCnt = pstmt.executeUpdate();
+		} finally {
+			// 6.연결 끊기
+			dbCon.closeDB(null, pstmt, con);
+		} // end finally
+
+		return rowCnt;
+	}// updatePstmtMember
+	
+	
+	public MemberVO login(LoginVO lVO) throws SQLException{
+
+		MemberVO mVO = new MemberVO();
+		//1. 드라이버 로딩
+		//2. 커넥션 얻기
+		Connection con=null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		try {
+			con = dbCon.getConn();
+		//3. 쿼리문 생성 객체 얻기
+			StringBuilder selectName=new StringBuilder();
+			
+			selectName
+			.append("	select mem_name, mem_flag	")
+			.append("	from member	")
+			.append("	where mem_id=? and mem_pass =?   ")
+			;
+			pstmt= con.prepareStatement(selectName.toString());
+		//4.바인드 변수에 값 설정
+			pstmt.setString(1, lVO.getId());
+			pstmt.setString(2, lVO.getPass());
+		//5. 쿼리문 수행 후 결과 얻기
+			System.out.println(selectName);
+			
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				mVO.setMemName( rs.getString("mem_name"));
+				mVO.setMemFlag(rs.getString("mem_flag"));
+			}//end if
+		}finally {
+			//5. 연결 끊기
+			dbCon.closeDB(rs, pstmt, con);
+		}//end finally
+		
+		return mVO;
+	}//selectLogin
 	
 	
 	
@@ -231,7 +394,7 @@ private static MemberDAO mDAO;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
+	}//main
 	
 	
 	
