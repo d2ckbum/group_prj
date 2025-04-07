@@ -104,6 +104,7 @@ public class MyFixInfoView extends JFrame {
 
 	
 	private void loadMemberList() {
+		String status ="";
 	      // 기존 테이블 데이터 초기화
 	      if (tableModel != null) {
 	         tableModel.setRowCount(0);
@@ -117,9 +118,15 @@ public class MyFixInfoView extends JFrame {
 	         if (allList != null && !allList.isEmpty()) {
 	            for (int i = 0; i < allList.size(); i++) {
 	               FixPanelVO fix = allList.get(i);
-	               System.out.println(fix.toString());
+	               if(fix.getFixNum().equals("1")) {
+	            	   status="접수완료";
+	               }else if(fix.getFixNum().equals("2")) {
+	            	   status="정비중";
+	               }else {
+	            	   status="정비완료";
+	               }
 	               Object[] rowData = { i + 1, // No.
-	            		   fix.getItemName(), fix.getFixNum(), fix.getTotal(), fix.getFixStatus() };
+	            		   fix.getItemName(), fix.getFixNum(), fix.getTotal(), status };
 	               tableModel.addRow(rowData);
 	            }//end for
 	         } else {
