@@ -9,6 +9,21 @@ public class MemberService {
 	}//MemberService
 	
 	
+	public List<FixPanelVO> searchAllFixinfo(String id) {
+		List<FixPanelVO> list = null;
+		MemberDAO mDAO = MemberDAO.getInstance();
+		
+		try {
+			list=mDAO.selectAllMyFixinfo(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		return list;
+	}//searchOneMember
+	
+	
+	
 	public boolean addMember(MemberVO mVO) {
 		boolean flag = false;
 		MemberDAO  mDAO = MemberDAO.getInstance();

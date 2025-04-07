@@ -18,7 +18,7 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 	private JComboBox<String> makerBox, modelBox;
 	private MemberVO mVO= new MemberVO();
 	boolean idChkFlag = false;
-	boolean emptyField = false;
+	boolean emptyField = false;	
 	
 	
 	public JoinMemberEvt(JoinMemberView jmv) {

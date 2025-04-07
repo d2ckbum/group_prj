@@ -198,10 +198,10 @@ public class MyInfoView extends JFrame {
 
         
 
-        mVO = new MemberVO();
+        mVO = new MemberVO();;
         mVO = ms.searchOneMember(id);
         
-        myPassTF.setText(mVO.getMemPass());
+        myPassTF.setText(mVO.getMemPass().toString());
         myPassConfirmTF.setText(mVO.getMemPass());
         myNameTF.setText(mVO.getMemName());
         myEmailTF.setText(mVO.getMemEmail());
