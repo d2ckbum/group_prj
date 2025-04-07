@@ -35,15 +35,15 @@ public class ItemManagementMainView extends JPanel {
         setVisible(true);
         
         
-//        JFrame testFrame = new JFrame();
-//        testFrame.setTitle("상품 관리");
-////        setTitle("상품 관리");
-//        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        testFrame.setLayout(null);
-//        testFrame.setSize(1200,900);
-//        testFrame.add(this); // JFrame에 패널 추가
-//        testFrame.setVisible(true);
-//        System.out.println((JFrame)getRootPane().getParent() == testFrame);
+        JFrame testFrame = new JFrame();
+        testFrame.setTitle("상품 관리");
+//        setTitle("상품 관리");
+        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        testFrame.setLayout(null);
+        testFrame.setSize(1200,900);
+        testFrame.add(this); // JFrame에 패널 추가
+        testFrame.setVisible(true);
+        System.out.println((JFrame)getRootPane().getParent() == testFrame);
     }
 
     private void initializeUI() {
@@ -65,11 +65,11 @@ public class ItemManagementMainView extends JPanel {
         // JTable 생성
         item_management_table = new JTable(dtm);
         item_management_table.setShowGrid(true);
-        item_management_table.setBackground(Color.WHITE);
         item_management_table.setFocusable(false);
         setColumnSize();
         JTableHeader tableHeader = item_management_table.getTableHeader();
         tableHeader.setFont(new Font("맑은 고딕", Font.BOLD, 15)); // 폰트 설정
+        tableHeader.setBackground(new Color(217, 217, 217));
         item_management_table.setRowHeight(30);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -80,7 +80,8 @@ public class ItemManagementMainView extends JPanel {
         }
 //        item_management_table.setPreferredScrollableViewportSize(new Dimension(1000, 600));
         item_management_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        item_management_table.setBackground(new Color(240, 240, 240));
+//        item_management_table.setBackground(new Color(240, 240, 240));
+        
         item_management_table.setGridColor(Color.BLACK);
 //        item_management_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 //        item_management_table.getTableHeader().setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 1));
@@ -98,7 +99,7 @@ public class ItemManagementMainView extends JPanel {
 
         // 중앙 정렬을 위한 패널 설정
         JPanel centerPanel = new JPanel(null);
-        centerPanel.setBackground(Color.WHITE);
+//        centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(new LineBorder(Color.RED, 2));
 //        JPanel centerPanel = new JPanel(new GridBagLayout());
 //        JPanel centerPanel = new JPanel(new BorderLayout());
@@ -116,7 +117,7 @@ public class ItemManagementMainView extends JPanel {
 
         // 버튼 패널 생성
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Color.WHITE);
+//        buttonPanel.setBackground(Color.WHITE);
 //        buttonPanel.setBorder(new LineBorder(Color.BLACK, 2));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 

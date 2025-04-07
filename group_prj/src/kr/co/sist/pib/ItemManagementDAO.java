@@ -25,8 +25,59 @@ public class ItemManagementDAO {
 	}
 	
 	public void insertImMember(ItemManagementVO imVO) throws SQLException {
-		
+		Connection con = null;
+	    PreparedStatement pstmt = null;
+	    DbConnection dbCon = DbConnection.getInstance();
+	    
+	    try {
+	        con = dbCon.getConn();
+	        
+	        // 자동 커밋을 끄고 트랜잭션을 수동으로 관리
+	        con.setAutoCommit(false); // 자동 커밋 비활성화
+	        
+	     
+	        StringBuilder insertMember = new StringBuilder();
+	        insertMember
+	        .append("INSERT INTO item ")
+	        .append("(ITEM_NUM, ITEM_NAME, ITEM_STOCK, ITEM_COST, ITEM_PRICE, ITEM_REPAIR_COST, CAR_NUM) ")
+	        .append("SELECT ")
+	        .append("seq_item_num.nextval, ") // 시퀀스
+	        .append("?, ?, ?, ?, ?, ")      // 바인딩 파라미터들
+	        .append("car_num ")
+	        .append("FROM car ")
+	        .append("WHERE car_type = ? ");
+	        
+	        
+	        
+	        pstmt = con.prepareStatement(insertMember.toString());
+	        pstmt.setString(1, imVO.getItem_name());
+	        pstmt.setInt(2, imVO.getItem_stock());
+	        pstmt.setInt(3, imVO.getItem_cost());
+	        pstmt.setInt(4, imVO.getItem_price());
+	        pstmt.setInt(5, imVO.getItem_repair_cost());
+	        pstmt.setString(6, imVO.getCar_type());
+	        
+	        // executeUpdate() 실행 (커밋은 하지 않음)
+	        pstmt.executeUpdate();
+	        
+	        // 트랜잭션을 커밋하지 않으므로, commit() 호출 안 함
+	        // con.commit(); <- 이 줄은 주석 처리 또는 삭제
+	        
+	    } catch (SQLException e) {
+	        // 예외 발생 시 롤백
+	        if (con != null) {
+	            con.rollback(); // 롤백 호출
+	        }
+	        throw e; // 예외를 다시 던짐
+	    } finally {
+	        // DB 연결 자원 정리
+	        if (con != null) {
+	            con.setAutoCommit(true); // 다시 자동 커밋 모드로 복귀
+	        }
+	        dbCon.closeDB(null, pstmt, con);
+	    }
 	}
+	
 	
 	public int updateImMember(ItemManagementVO imVO) throws SQLException {
 		Connection con = null;
@@ -96,8 +147,8 @@ public class ItemManagementDAO {
 	        con.setAutoCommit(false); // 자동 커밋 비활성화
 	        
 	        StringBuilder deleteMember = new StringBuilder();
-//	        deleteMember.append("DELETE FROM item ")
-//	                    .append("WHERE item_num = ?");
+	        deleteMember.append("DELETE FROM item ")
+	                    .append("WHERE item_num = ?");
 	        
 	        pstmt = con.prepareStatement(deleteMember.toString());
 	        pstmt.setInt(1, productnum);

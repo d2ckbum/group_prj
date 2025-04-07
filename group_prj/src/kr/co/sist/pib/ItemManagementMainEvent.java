@@ -24,7 +24,9 @@ public class ItemManagementMainEvent implements ActionListener, ListSelectionLis
 
 		if(e.getSource() == itemMV.getRegisterButton()) {
 			
-			   JOptionPane.showMessageDialog(itemMV, "미구현 기능입니다.");
+			JFrame parentFrame = (JFrame)itemMV.getRootPane().getParent();
+			new itemRegView(parentFrame, itemMV);		
+//			   JOptionPane.showMessageDialog(itemMV, "미구현 기능입니다.");
 //			   String[] newProduct = {"1", "상품1", "소형", "100", "3000", "5000", "2025-04-01"};
 //               itemMV.getDtm().addRow(newProduct); // 예시 데이터 추가
               
@@ -38,12 +40,12 @@ public class ItemManagementMainEvent implements ActionListener, ListSelectionLis
                if (selectedRow != -1) {
                    // 예시로 상품명을 수정
 //                   itemMV.getDtm().setValueAt("수정된 상품명", selectedRow, 1);
+            	   JFrame parentFrame = (JFrame)itemMV.getRootPane().getParent();
+            	   new itemModifyView(itemMV.getDtm(), itemMV.getItem_management_table().getSelectedRow(), parentFrame, itemMV);
                } else {
                    JOptionPane.showMessageDialog(itemMV, "수정할 상품을 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
                }
                
-               JFrame parentFrame = (JFrame)itemMV.getRootPane().getParent();
-               new itemModifyView(itemMV.getDtm(), itemMV.getItem_management_table().getSelectedRow(), parentFrame, itemMV);
 			
 			
 			
