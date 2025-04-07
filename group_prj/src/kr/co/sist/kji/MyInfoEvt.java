@@ -133,8 +133,10 @@ public class MyInfoEvt implements ActionListener, DocumentListener{
 			}
 			if(realUpdateNum == 0) {
 				updateMember();
-				ms.modifyMember(mVO);
-				JOptionPane.showMessageDialog(miv, "수정 되었습니다.");
+				if(ms.modifyMember(mVO)) {
+					JOptionPane.showMessageDialog(miv, "수정 되었습니다.");
+				}
+				
 			}//end if
 			
 				

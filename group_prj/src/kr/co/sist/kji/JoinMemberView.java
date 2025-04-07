@@ -197,6 +197,7 @@ public class JoinMemberView extends JFrame {
 		
 		add(panel);
 		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	public JTextField getIdField() {
 		return idField;
