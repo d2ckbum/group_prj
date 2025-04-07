@@ -2,10 +2,12 @@ package kr.co.sist.kji;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -14,11 +16,15 @@ import javax.swing.table.DefaultTableModel;
 
 public class MyFixInfoView extends JFrame {
 
+	private DefaultTableModel tableModel;
+	private MemberService memberService = new MemberService();
+	private List<FixPanelVO> allList; // 전체 회원 목록 저장
 	private String id;
 	private JButton logoutBtn;
 	private JButton confirmBtn;
 
 	public MyFixInfoView(String id) {
+		this.id = id;
 		setTitle("내 정비 목록");
 		setSize(1080, 700);
 		setLayout(null);
@@ -52,18 +58,17 @@ public class MyFixInfoView extends JFrame {
 		add(separator);
 
 		// JTable 정비 목록
-		String[] columnNames = { "이미지", "상품", "접수번호", "견적금액", "정비 현황" };
-		Object[][] data = { { "이미지", "상품명", "20250322", "90,000 원", "정비 중" },
-				{ "이미지", "상품명", "20250222", "30,000 원", "정비 완료" }, { "이미지", "상품명", "20241212", "30,000 원", "정비 완료" } };
+		String[] columnNames = { "No","상품", "접수번호", "견적금액", "정비 현황" };
 
-		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+		tableModel = new DefaultTableModel(columnNames, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false; // 수정 불가
 			}
 		};
+		loadMemberList();
 
-		JTable fixTable = new JTable(model);
+		JTable fixTable = new JTable(tableModel);
 		fixTable.setRowHeight(60);
 		fixTable.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
 		fixTable.getTableHeader().setFont(new Font("맑은 고딕", Font.BOLD, 14));
@@ -91,11 +96,40 @@ public class MyFixInfoView extends JFrame {
 		confirmBtn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		add(confirmBtn);
 
+		MyFixInfoEvt mfie =new MyFixInfoEvt(this);
+		confirmBtn.addActionListener(mfie);
+		logoutBtn.addActionListener(mfie);
 		setVisible(true);
 	}//MyFixInfoView
 
 	
-	
+	private void loadMemberList() {
+	      // 기존 테이블 데이터 초기화
+	      if (tableModel != null) {
+	         tableModel.setRowCount(0);
+	      } // end if
+
+	      try {
+	         // MemberService를 통해 회원 목록 가져오기
+	    	  allList = memberService.searchAllFixinfo(id);
+
+	         // 가져온 회원 목록을 테이블 모델에 추가
+	         if (allList != null && !allList.isEmpty()) {
+	            for (int i = 0; i < allList.size(); i++) {
+	               FixPanelVO fix = allList.get(i);
+	               System.out.println(fix.toString());
+	               Object[] rowData = { i + 1, // No.
+	            		   fix.getItemName(), fix.getFixNum(), fix.getTotal(), fix.getFixStatus() };
+	               tableModel.addRow(rowData);
+	            }//end for
+	         } else {
+	            JOptionPane.showMessageDialog(this, "정비 정보가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+	         }//end else
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	         JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+	      }
+	   }// loadMemberList
 	
 	
 	public String getId() {

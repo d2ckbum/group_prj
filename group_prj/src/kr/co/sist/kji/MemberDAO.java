@@ -62,52 +62,59 @@ private static MemberDAO mDAO;
 		} // end finally
 
 	}// insertMember
-	
-//	public int updateMember(MemberVO mVO) throws SQLException {
-//		
-//		int rowCnt = 0;
-//		// 1. 드라이버로딩
-//		// 2. 커넥션 얻기
-//		Connection con = null;
-//		PreparedStatement pstmt = null;
-//
-//		DbConnection dbCon = DbConnection.getInstance();
-//		try {
-//			con = dbCon.getConn();
-//			// 3. 쿼리문을 넣어서 쿼리문 생성객체 얻기
-//			StringBuilder updateMember = new StringBuilder();
-//			updateMember
-//			.append("	update member	")
-//			.append("	set mem_name=?,mem_pass=?,mem_email=?,mem_tell=?,mem_zipcode=?, 	")
-//			.append("	mem_addr1=?,mem_addr2=?,car_num=?,mfg_num=?	")
-//			.append("	where mem_id =?	");
-//			pstmt = con.prepareStatement(updateMember.toString());
-//			// 4. 바인드변수에 값 할당
-//			pstmt.setString(1, mVO.getMemName());
-//			pstmt.setString(2, mVO.getMemPass());
-//			pstmt.setString(3, mVO.getMemEmail());
-//			pstmt.setString(4, mVO.getMemTell());
-//			pstmt.setString(5, mVO.getMemZipcode());
-//			pstmt.setString(6, mVO.getMemAddr1());
-//			pstmt.setString(7, mVO.getMemAddr2());
-//			pstmt.setInt(8, mVO.getCarNum()+1);
-//			pstmt.setInt(9, mVO.getMfgNum()+1);
-//			pstmt.setString(10, mVO.getMemId());
-//
-//			System.out.println(mVO.getMemId());
-//			System.out.println(updateMember.toString());
-//			// 5. 쿼리문 수행 후 결과 얻기
-//			rowCnt= pstmt.executeUpdate();
-//		} finally {
-//			// 6. 연결 끊기
-//			dbCon.closeDB(null, pstmt, con);
-//
-//		} // end finally
-//
-//		return rowCnt;
-//	}// updateMember
-	
-	
+
+	public List<FixPanelVO> selectAllMyFixinfo(String memId) throws SQLException {
+		List<FixPanelVO> list = new ArrayList<FixPanelVO>();
+
+		// 1.
+		// 2.
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+
+		try {
+			con = dbCon.getConn();
+
+			// 3.
+			StringBuilder selectOneMember = new StringBuilder();
+			selectOneMember
+			.append("	select f.ITEM_NAME, f.FIX_NUM, f.TOTAL_PRICE, f.FIX_STATUS")
+			.append("	from fix f,member m						")
+			.append("	where (m.mem_num = f.mem_num) and m.mem_id=?				 		");
+			pstmt = con.prepareStatement(selectOneMember.toString());
+			System.out.println(pstmt);
+			// 4.
+			pstmt.setString(1, memId);
+			// 5.
+
+			rs = pstmt.executeQuery();
+			
+			
+			
+			FixPanelVO fVO = null;
+			while (rs.next()) {// 레코드가 존재하는지?
+				fVO = new FixPanelVO();
+				fVO.setItemName(rs.getString("item_name"));
+				fVO.setFixNum(rs.getString("fix_num"));
+				fVO.setTotal(rs.getInt("total_price"));
+				fVO.setFixStatus(rs.getString("fix_status"));
+				list.add(fVO);
+			} // end while
+			if (rs.next()) {
+				
+				
+				
+			} // end if
+		} finally {
+			// 6.
+			dbCon.closeDB(rs, pstmt, con);
+		} // end finally
+
+		return list;
+
+	}// selectOneMember
 	
 	public int updateMember(MemberVO mVO) throws SQLException {
 		int rowCnt = 0;

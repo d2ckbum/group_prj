@@ -225,7 +225,7 @@ public class MyInfoView extends JFrame {
         
         
         MyInfoEvt mie = new MyInfoEvt(this);
-        inquiryBtn.addActionListener(mie);
+        listBtn.addActionListener(mie);
         updateBtn.addActionListener(mie); 
         deleteBtn.addActionListener(mie);
 //        deleteBtn;
