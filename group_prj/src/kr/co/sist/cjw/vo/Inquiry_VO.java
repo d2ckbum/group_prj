@@ -3,107 +3,121 @@ package kr.co.sist.cjw.vo;
 import java.sql.Date;
 
 public class Inquiry_VO {
-	private int inq_id; 
-	private String inq_titile;
-	private String inq_contents;
-	private Date inq_date;
-	private String inq_reply;
-	private Date inq_reply_date;
-	private int mem_num;
+	private int inq_Id; 
+	private String inq_Title;
+	private String inq_Contents;
+	private Date inq_Reg_Date;
+	private String inq_Reply;
+	private Date inq_Reply_Date;
+	private String inq_Status;
+	private int mem_Num;
 	
 	
 	public Inquiry_VO() {
 	}//Inquiry_VO
 
 
-	public Inquiry_VO(int inq_id, String inq_titile, String inq_contents, Date inq_date, String inq_reply,
-			Date inq_reply_date, int mem_num) {
-		this.inq_id = inq_id;
-		this.inq_titile = inq_titile;
-		this.inq_contents = inq_contents;
-		this.inq_date = inq_date;
-		this.inq_reply = inq_reply;
-		this.inq_reply_date = inq_reply_date;
-		this.mem_num = mem_num;
+	public Inquiry_VO(int inq_Id, String inq_Titile, String inq_Contents, Date inq_Reg_Date, String inq_Reply,
+			Date inq_Reply_Date, String inq_Status,int mem_Num) {
+		this.inq_Id = inq_Id;
+		this.inq_Title = inq_Titile;
+		this.inq_Contents = inq_Contents;
+		this.inq_Reg_Date = inq_Reg_Date;
+		this.inq_Reply = inq_Reply;
+		this.inq_Reply_Date = inq_Reply_Date;
+		this.inq_Status=inq_Status;
+		this.mem_Num = mem_Num;
 	}//Inquiry_VO
 
 
-	public int getInq_id() {
-		return inq_id;
+	public int getInq_Id() {
+		return inq_Id;
 	}
 
 
-	public void setInq_id(int inq_id) {
-		this.inq_id = inq_id;
+	public void setInq_Id(int inq_Id) {
+		this.inq_Id = inq_Id;
 	}
 
 
-	public String getInq_titile() {
-		return inq_titile;
+	public String getInq_Title() {
+		return inq_Title;
 	}
 
 
-	public void setInq_titile(String inq_titile) {
-		this.inq_titile = inq_titile;
+	public void setInq_Title(String inq_Title) {
+		this.inq_Title = inq_Title;
 	}
 
 
-	public String getInq_contents() {
-		return inq_contents;
+	public String getInq_Contents() {
+		return inq_Contents;
 	}
 
 
-	public void setInq_contents(String inq_contents) {
-		this.inq_contents = inq_contents;
+	public void setInq_Contents(String inq_Contents) {
+		this.inq_Contents = inq_Contents;
 	}
 
 
-	public Date getInq_date() {
-		return inq_date;
+	public Date getInq_Reg_Date() {
+		return inq_Reg_Date;
 	}
 
 
-	public void setInq_date(Date inq_date) {
-		this.inq_date = inq_date;
+	public void setInq_Reg_Date(Date inq_Reg_Date) {
+		this.inq_Reg_Date = inq_Reg_Date;
 	}
 
 
-	public String getInq_reply() {
-		return inq_reply;
+	public String getInq_Reply() {
+		return inq_Reply;
 	}
 
 
-	public void setInq_reply(String inq_reply) {
-		this.inq_reply = inq_reply;
+
+
+	public void setInq_Reply_Date(Date inq_Reply_Date) {
+		this.inq_Reply_Date = inq_Reply_Date;
 	}
 
 
-	public Date getInq_reply_date() {
-		return inq_reply_date;
+	public int getMem_Num() {
+		return mem_Num;
 	}
 
 
-	public void setInq_reply_date(Date inq_reply_date) {
-		this.inq_reply_date = inq_reply_date;
+	public void setMem_Num(int mem_Num) {
+		this.mem_Num = mem_Num;
+	}
+	
+	
+
+
+	public String getInq_Status() {
+		return inq_Status;
 	}
 
 
-	public int getMem_num() {
-		return mem_num;
+	public void setInq_Status(String inq_Status) {
+		this.inq_Status = inq_Status;
 	}
 
 
-	public void setMem_num(int mem_num) {
-		this.mem_num = mem_num;
+	public Date getInq_Reply_Date() {
+		return inq_Reply_Date;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Inquiry_VO [inq_id=" + inq_id + ", inq_titile=" + inq_titile + ", inq_contents=" + inq_contents
-				+ ", inq_date=" + inq_date + ", inq_reply=" + inq_reply + ", inq_reply_date=" + inq_reply_date
-				+ ", mem_num=" + mem_num + "]";
+		return "Inquiry_VO [inq_Id=" + inq_Id + ", inq_Title=" + inq_Title + ", inq_Contents=" + inq_Contents
+				+ ", inq_Reg_Date=" + inq_Reg_Date + ", inq_Reply=" + inq_Reply + ", inq_Reply_Date=" + inq_Reply_Date
+				+ ", inq_Status=" + inq_Status + ", mem_Num=" + mem_Num + "]";
 	}
+
+
+	
 	
 
 }//class
