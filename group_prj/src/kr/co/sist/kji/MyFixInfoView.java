@@ -36,15 +36,12 @@ public class MyFixInfoView extends JFrame {
 		shopLabel.setBounds(0, 0, 1080, 60);
 		add(shopLabel);
 
-		// 오른쪽 상단
-		JLabel welcomeLabel = new JLabel("000님 어서옵서예!");
-		welcomeLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-		welcomeLabel.setBounds(850, 20, 200, 30);
-		add(welcomeLabel);
+//		// 오른쪽 상단
+//		JLabel welcomeLabel = new JLabel("000님 어서옵서예!");
+//		welcomeLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+//		welcomeLabel.setBounds(850, 20, 200, 30);
+//		add(welcomeLabel);
 
-		logoutBtn = new JButton("로그아웃");
-		logoutBtn.setBounds(970, 20, 80, 25);
-		add(logoutBtn);
 
 		// 정비 목록 타이틀
 		JLabel titleLabel = new JLabel("내 정비 목록");
@@ -98,7 +95,6 @@ public class MyFixInfoView extends JFrame {
 
 		MyFixInfoEvt mfie =new MyFixInfoEvt(this);
 		confirmBtn.addActionListener(mfie);
-		logoutBtn.addActionListener(mfie);
 		setVisible(true);
 	}//MyFixInfoView
 

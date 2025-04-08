@@ -110,6 +110,7 @@ public class MyInfoView extends JPanel {
 
         // 이벤트 연결
         MyInfoEvt mie = new MyInfoEvt(this);
+        listBtn.addActionListener(mie);
         updateBtn.addActionListener(mie);
         deleteBtn.addActionListener(mie);
         myPassTF.getDocument().addDocumentListener(mie);
