@@ -17,7 +17,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 
 	private Map<String, String> statusMap;
 	private String dStatus;// '1','2','3'
-	private int saveBtnFlag;
+//	private int saveBtnFlag;
 	private String strCloseStatus;
 	
 
@@ -30,7 +30,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		FixService fs = new FixService();
-		strCloseStatus=fv.getJtbStatus().getSelectedIndex()+1+"";
+		strCloseStatus=fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixStatus();
 
 		if (ae.getSource() == fv.getJbtnSave()) {
 			// yes:0, no:1
@@ -66,7 +66,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			}//end if
 			
 			//정비완료 화면에서 / 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.
-			if(strCloseStatus.compareTo("3")==0) {
+			if (strCloseStatus.compareTo("3")==0){
 				if(compareMemo()==false) {
 					int ret=JOptionPane.showConfirmDialog(fv, "정비 메모가 수정되었습니다.\n 수정된 것을 저장하지 않고 닫으시겠습니까?","수정",JOptionPane.YES_NO_OPTION);
 					if(ret == 1) {
