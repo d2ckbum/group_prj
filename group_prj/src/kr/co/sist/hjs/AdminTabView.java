@@ -1,9 +1,19 @@
 package kr.co.sist.hjs;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import kr.co.sist.hjy.FixPanel;
@@ -11,6 +21,7 @@ import kr.co.sist.pib.ItemManagementMainView;
 
 public class AdminTabView extends JFrame implements ActionListener { // ActionListener 구현
 	private CardLayout cl;
+	private AdminMainViewEvt amve;
 	private JPanel mainPanel;
 	private MemberPane memp;
 	private ItemManagementMainView itemp;
@@ -44,6 +55,7 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		jlblWelcomeAdmin = new JLabel("관리자님 어서오세요");
 		jlblWelcomeAdmin.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 		jbtnLogout = new JButton("종료");
+		jbtnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 		jbtnLogout.setPreferredSize(new Dimension(100, 40));
 		jbtnLogout.setBackground(defaultButtonColor);
 		jpTopRight.add(jlblWelcomeAdmin);

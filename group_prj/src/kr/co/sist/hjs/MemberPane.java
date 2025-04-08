@@ -95,7 +95,7 @@ public class MemberPane extends JPanel {
 		memberTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
+				if (e.getClickCount() == 1) {
 					int selectedRow = memberTable.getSelectedRow();
 					if (selectedRow != -1) {
 						// 선택된 행에서 회원 ID 가져오기
@@ -124,30 +124,42 @@ public class MemberPane extends JPanel {
 	}// MemberPane
 
 	private void loadMemberList() {
-		// 기존 테이블 데이터 초기화
-		if (tableModel != null) {
-			tableModel.setRowCount(0);
-		} // end if
+	    // 기존 테이블 데이터 초기화
+	    if (tableModel != null) {
+	        tableModel.setRowCount(0);
+	    } // end if
 
-		try {
-			// MemberService를 통해 회원 목록 가져오기
-			allMemberList = memberService.searchAllMember();
+	    try {
+	        // MemberService를 통해 회원 목록 가져오기
+	        allMemberList = memberService.searchAllMember();
 
-			// 가져온 회원 목록을 테이블 모델에 추가
-			if (allMemberList != null && !allMemberList.isEmpty()) {
-				for (int i = 0; i < allMemberList.size(); i++) {
-					MemberVO member = allMemberList.get(i);
-					Object[] rowData = { i + 1, // No.
-							member.getMemNum(), member.getMemId(), member.getMemName(), member.getMemEmail(),
-							member.getMemTell(), member.getMemRegDate(), member.getMemFlag() };
-					tableModel.addRow(rowData);
-				}
-			} else {
-				JOptionPane.showMessageDialog(this, "회원 정보가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-		}
-	}// loadMemberList
+	        // 활성 회원 (memFlag = 'n') 목록을 먼저 추가
+	        if (allMemberList != null && !allMemberList.isEmpty()) {
+	            int rowNumber = 1; // 테이블에 표시될 순번
+	            for (MemberVO member : allMemberList) {
+	                if ("n".equalsIgnoreCase(member.getMemFlag())) {
+	                    Object[] rowData = { rowNumber++, // No.
+	                            member.getMemNum(), member.getMemId(), member.getMemName(), member.getMemEmail(),
+	                            member.getMemTell(), member.getMemRegDate(), member.getMemFlag() };
+	                    tableModel.addRow(rowData);
+	                }
+	            }
+
+	            // 탈퇴 회원 (memFlag = 'y') 목록을 추가
+	            for (MemberVO member : allMemberList) {
+	                if ("y".equalsIgnoreCase(member.getMemFlag())) {
+	                    Object[] rowData = { rowNumber++, // No. (계속 증가)
+	                            member.getMemNum(), member.getMemId(), member.getMemName(), member.getMemEmail(),
+	                            member.getMemTell(), member.getMemRegDate(), member.getMemFlag() };
+	                    tableModel.addRow(rowData);
+	                }
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(this, "회원 정보가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
 }// class

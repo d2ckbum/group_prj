@@ -26,7 +26,7 @@ public class AdminMainViewEvt implements ActionListener {
 			CardLayout cl = atv.getCl();
 			JPanel mainPanel = atv.getMainPanel();
 			cl.show(mainPanel, "memp");
-			
+
 			amv.closeAdminMainView();
 
 		} else if (e.getSource() == amv.getJbtnItemManage()) {
@@ -57,7 +57,7 @@ public class AdminMainViewEvt implements ActionListener {
 			// 문의관리 버튼 클릭 시 AdminTabView를 보여주고 InquiryPane을 활성화
 			Admin_Inquiry_View inquiryView = new Admin_Inquiry_View();
 			inquiryView.admin_Inquiry_Main_View(); // 새 창 열기
-			amv.closeAdminMainView();
+//			amv.closeAdminMainView();
 		}
 	}
 }

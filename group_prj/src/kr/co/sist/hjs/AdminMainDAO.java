@@ -27,7 +27,7 @@ public class AdminMainDAO {
 			dbConn.closeDB(rs, pstmt, con);
 		}
 		return memberCount;
-	}//getMemberCount
+	}// getMemberCount
 
 	public int getItemCount() throws SQLException {
 		int itemCount = 0;
@@ -43,13 +43,12 @@ public class AdminMainDAO {
 			dbConn.closeDB(rs, pstmt, con);
 		}
 		return itemCount;
-	}//getItemCount
+	}// getItemCount
 
 	/**
-	 * 정비 상태별 건수를 배열로 반환합니다.
-	 * 인덱스 0: 접수 완료 건수 (fix_status = 1)
-	 * 인덱스 1: 정비 중 건수 (fix_status = 2)
-	 * 인덱스 2: 정비 완료 건수 (fix_status = 3)
+	 * 정비 상태별 건수를 배열로 반환합니다. 인덱스 0: 접수 완료 건수 (fix_status = 1) 인덱스 1: 정비 중 건수
+	 * (fix_status = 2) 인덱스 2: 정비 완료 건수 (fix_status = 3)
+	 * 
 	 * @return 정비 상태별 건수를 담은 int 배열
 	 * @throws SQLException
 	 */
@@ -75,23 +74,24 @@ public class AdminMainDAO {
 			dbConn.closeDB(rs, pstmt, con);
 		}
 		return counts;
-	}//getFixCounts
-	
-	public int getSalesCount()throws SQLException{
+	}// getFixCounts
+
+	public int getSalesCount() throws SQLException {
 		int salesCount = 0;
 		try {
 			con = dbConn.getConn();
-			String sql = "select sales_day_total from sales";
+			String sql = "select sum(sales_day_total) from sales";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				salesCount = rs.getInt(1); // 첫 번째 컬럼 값 가져오기
+			}
 		} finally {
 			dbConn.closeDB(rs, pstmt, con);
-		}//end finally
-		
+		} // end finally
+
 		return salesCount;
 	}
-	
-	
 
 	public int getInquiryCount() throws SQLException {
 		int inquiryCount = 0;
@@ -103,12 +103,12 @@ public class AdminMainDAO {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				inquiryCount = rs.getInt(1);
-			}//end if
+			} // end if
 		} finally {
 			dbConn.closeDB(rs, pstmt, con);
-		}//end finally
+		} // end finally
 
 		return inquiryCount;
-	}//getInquiryCount
+	}// getInquiryCount
 
-}//class
+}// class
