@@ -1,7 +1,9 @@
 package kr.co.sist.cjw.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,6 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+
+import kr.co.sist.cjw.event.Admin_Inquiry_Event;
+import kr.co.sist.cjw.service.Admin_Inquiry_Service;
+import kr.co.sist.cjw.vo.FAQ_VO;
 
 public class Admin_Inquiry_View extends JFrame {
 	//button
@@ -51,6 +58,13 @@ public class Admin_Inquiry_View extends JFrame {
 	private JTextArea replyConfirmJta;
 	
 
+	//Frame
+	private JFrame admin_Inquiry_Main_View;
+	private JFrame admin_FAQ_Write_View;
+	private JFrame admin_FAQ_Confirm_View;
+	private JFrame admin_Inquiry_Write_View;
+	private JFrame admin_Inquiry_Confirm_View;
+	
 	/**
 	 * 
 	 */
@@ -59,11 +73,12 @@ public class Admin_Inquiry_View extends JFrame {
 
 	public void admin_Inquiry_Main_View() {
 		//프레임
-	    JFrame admin_Inquiry_Main_View = new JFrame("문의게시판");
-	    admin_Inquiry_Main_View.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    admin_Inquiry_Main_View = new JFrame("문의게시판");
+	    admin_Inquiry_Main_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	    admin_Inquiry_Main_View.setLayout(null);
 	    admin_Inquiry_Main_View.setResizable(false);
 	    admin_Inquiry_Main_View.setBounds(800, 600, 1200, 900); 
+	    admin_Inquiry_Main_View.setLocationRelativeTo(null);
 
 	    //라벨
 	    JLabel adminJlbl = new JLabel("관리자 페이지");
@@ -106,31 +121,73 @@ public class Admin_Inquiry_View extends JFrame {
 
 	    //FAQ 테이블
 	    faqTable = new JTable(); 
+	    faqTable.setDefaultEditor(Object.class, null);
+	    faqTable.setShowGrid(false);
+	    faqTable.setIntercellSpacing(new Dimension(0, 0));
 	    JScrollPane faqScrollPane = new JScrollPane(faqTable);
 	    faqScrollPane.setBounds(50, 90, 1100, 260); 
 	    faqScrollPane.setBorder(new LineBorder(Color.lightGray));
 	    admin_Inquiry_Main_View.add(faqScrollPane);
+	    
+	    
+	    Admin_Inquiry_Service faqService = new Admin_Inquiry_Service();
+	    List<FAQ_VO> faqList = faqService.searchFAQ();
+
+	    DefaultTableModel faqModel = new DefaultTableModel(new String[]{"", "", ""}, 0);
+	    faqTable.setModel(faqModel);
+        for (FAQ_VO faq : faqList) {
+            faqModel.addRow(new Object[]{
+                faq.getFaq_title(), 
+                "⇒ " + faq.getFaq_contents(), 
+                faq.getFaq_reg_date() 
+            });
+        }
+        
+        
+        faqTable.getColumnModel().getColumn(0).setPreferredWidth(400); 
+        faqTable.getColumnModel().getColumn(1).setPreferredWidth(600); 
+        faqTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        faqTable.setModel(faqModel);
+        
 
 	    //문의 목록 테이블
 	    inqTable = new JTable(); 
+	    inqTable.setDefaultEditor(Object.class, null);
+	    inqTable.setShowGrid(false);
+	    inqTable.setIntercellSpacing(new Dimension(0, 0));
 	    JScrollPane inqScrollPane = new JScrollPane(inqTable);
 	    inqScrollPane.setBounds(50, 380, 1100, 410); 
 	    inqScrollPane.setBorder(new LineBorder(Color.lightGray));
 	    admin_Inquiry_Main_View.add(inqScrollPane);
+	    
+	    
+	    //이벤트 추가
+	    Admin_Inquiry_Event eventHandler = new Admin_Inquiry_Event(this);
+	    addJbtn.addActionListener(eventHandler);
+	    cnlJbtn.addActionListener(eventHandler);
+	    admin_Inquiry_Main_View.addWindowListener(eventHandler);
+	    
 
 
 	    admin_Inquiry_Main_View.setVisible(true); 
 		
-	}//admin_Inquiry_View
+	}//admin_Inquiry_Main_View
 	
 	
 	
+	public JFrame getAdmin_Inquiry_Main_View() {
+		return admin_Inquiry_Main_View;
+	}
+
+
+
 	public void admin_FAQ_Write_View() {
-		JFrame admin_FAQ_Write_View = new JFrame("FAQ 등록");
-		admin_FAQ_Write_View.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		admin_FAQ_Write_View = new JFrame("FAQ 등록");
+		admin_FAQ_Write_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		admin_FAQ_Write_View.setLayout(null);
 		admin_FAQ_Write_View.setResizable(false);
 		admin_FAQ_Write_View.setBounds(800, 600, 1200, 900); 
+		admin_FAQ_Write_View.setLocationRelativeTo(null); 
 		
 		
 		//라벨
@@ -189,16 +246,30 @@ public class Admin_Inquiry_View extends JFrame {
 	    cnlFAQBtn.setBounds(1030, 800, 100, 40); 
 	    admin_FAQ_Write_View.add(cnlFAQBtn);
 	    
+	    Admin_Inquiry_Event eventHandler = new Admin_Inquiry_Event(this);
+	    subFAQJta.addKeyListener(eventHandler);
+	    saveFAQBtn.addActionListener(eventHandler);
+	    cnlFAQBtn.addActionListener(eventHandler);
+	    
 	    admin_FAQ_Write_View.setVisible(true);
 		
 	}//admin_FAQ_Write_View
 	
+	public JFrame getAdminFAQWriteView() {
+        return admin_FAQ_Write_View; // admin_FAQ_Write_View 반환
+    }
+	
+	
+	
+	
+	
 	public void admin_FAQ_Confirm_View() {
-		JFrame admin_FAQ_Confirm_View = new JFrame("FAQ 수정/삭제");
-		admin_FAQ_Confirm_View.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		admin_FAQ_Confirm_View = new JFrame("FAQ 수정/삭제");
+		admin_FAQ_Confirm_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		admin_FAQ_Confirm_View.setLayout(null);
 		admin_FAQ_Confirm_View.setResizable(false);
 		admin_FAQ_Confirm_View.setBounds(800, 600, 1200, 900); 
+		admin_FAQ_Confirm_View.setLocationRelativeTo(null);
 		
 		
 		//라벨
@@ -267,11 +338,12 @@ public class Admin_Inquiry_View extends JFrame {
 	}//admin_FAQ_Confirm_View
 	
 	public void admin_Inquiry_Write_View() {
-		JFrame admin_Inquiry_Write_View = new JFrame("답변 등록");
-		admin_Inquiry_Write_View.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		admin_Inquiry_Write_View = new JFrame("답변 등록");
+		admin_Inquiry_Write_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		admin_Inquiry_Write_View.setLayout(null);
 		admin_Inquiry_Write_View.setResizable(false);
 		admin_Inquiry_Write_View.setBounds(800, 600, 1200, 900); 
+		admin_Inquiry_Write_View.setLocationRelativeTo(null);
 		
 		
 		//라벨
@@ -348,11 +420,12 @@ public class Admin_Inquiry_View extends JFrame {
 	}//admin_Inquiry_Write_View
 	
 	public void admin_Inquiry_Confirm_View() {
-		JFrame admin_Inquiry_Confirm_View = new JFrame("답변 수정");
-		admin_Inquiry_Confirm_View.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		admin_Inquiry_Confirm_View = new JFrame("답변 수정");
+		admin_Inquiry_Confirm_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		admin_Inquiry_Confirm_View.setLayout(null);
 		admin_Inquiry_Confirm_View.setResizable(false);
 		admin_Inquiry_Confirm_View.setBounds(800, 600, 1200, 900); 
+		admin_Inquiry_Confirm_View.setLocationRelativeTo(null); 
 		
 		//라벨
 	    JLabel adminJlbl = new JLabel("관리자 페이지");
@@ -426,5 +499,332 @@ public class Admin_Inquiry_View extends JFrame {
 	    admin_Inquiry_Confirm_View.setVisible(true);
 		
 	}//admin_Inquiry_Confirm_View
+
+
+
+	public JButton getAddJbtn() {
+		return addJbtn;
+	}
+
+
+
+	public void setAddJbtn(JButton addJbtn) {
+		this.addJbtn = addJbtn;
+	}
+
+
+
+	public JButton getCnlJbtn() {
+		return cnlJbtn;
+	}
+
+
+
+	public void setCnlJbtn(JButton cnlJbtn) {
+		this.cnlJbtn = cnlJbtn;
+	}
+
+
+
+	public JButton getSaveFAQBtn() {
+		return saveFAQBtn;
+	}
+
+
+
+	public void setSaveFAQBtn(JButton saveFAQBtn) {
+		this.saveFAQBtn = saveFAQBtn;
+	}
+
+
+
+	public JButton getCnlFAQBtn() {
+		return cnlFAQBtn;
+	}
+
+
+
+	public void setCnlFAQBtn(JButton cnlFAQBtn) {
+		this.cnlFAQBtn = cnlFAQBtn;
+	}
+
+
+
+	public JButton getEditFAQBtn() {
+		return editFAQBtn;
+	}
+
+
+
+	public void setEditFAQBtn(JButton editFAQBtn) {
+		this.editFAQBtn = editFAQBtn;
+	}
+
+
+
+	public JButton getDelFAQBtn() {
+		return delFAQBtn;
+	}
+
+
+
+	public void setDelFAQBtn(JButton delFAQBtn) {
+		this.delFAQBtn = delFAQBtn;
+	}
+
+
+
+	public JButton getCnlFAQEditBtn() {
+		return cnlFAQEditBtn;
+	}
+
+
+
+	public void setCnlFAQEditBtn(JButton cnlFAQEditBtn) {
+		this.cnlFAQEditBtn = cnlFAQEditBtn;
+	}
+
+
+
+	public JButton getSaveInqBtn() {
+		return saveInqBtn;
+	}
+
+
+
+	public void setSaveInqBtn(JButton saveInqBtn) {
+		this.saveInqBtn = saveInqBtn;
+	}
+
+
+
+	public JButton getCnlInqBtn() {
+		return cnlInqBtn;
+	}
+
+
+
+	public void setCnlInqBtn(JButton cnlInqBtn) {
+		this.cnlInqBtn = cnlInqBtn;
+	}
+
+
+
+	public JButton getEditInqBtn() {
+		return editInqBtn;
+	}
+
+
+
+	public void setEditInqBtn(JButton editInqBtn) {
+		this.editInqBtn = editInqBtn;
+	}
+
+
+
+	public JButton getCnlInqConfirmBtn() {
+		return cnlInqConfirmBtn;
+	}
+
+
+
+	public void setCnlInqConfirmBtn(JButton cnlInqConfirmBtn) {
+		this.cnlInqConfirmBtn = cnlInqConfirmBtn;
+	}
+
+
+
+	public JTable getFaqTable() {
+		return faqTable;
+	}
+
+
+
+	public void setFaqTable(JTable faqTable) {
+		this.faqTable = faqTable;
+	}
+
+
+
+	public JTable getInqTable() {
+		return inqTable;
+	}
+
+
+
+	public void setInqTable(JTable inqTable) {
+		this.inqTable = inqTable;
+	}
+
+
+
+	public JScrollPane getFaqWriteJsp() {
+		return faqWriteJsp;
+	}
+
+
+
+	public void setFaqWriteJsp(JScrollPane faqWriteJsp) {
+		this.faqWriteJsp = faqWriteJsp;
+	}
+
+
+
+	public JScrollPane getFaqEditJsp() {
+		return faqEditJsp;
+	}
+
+
+
+	public void setFaqEditJsp(JScrollPane faqEditJsp) {
+		this.faqEditJsp = faqEditJsp;
+	}
+
+
+
+	public JScrollPane getInqWriteJsp() {
+		return inqWriteJsp;
+	}
+
+
+
+	public void setInqWriteJsp(JScrollPane inqWriteJsp) {
+		this.inqWriteJsp = inqWriteJsp;
+	}
+
+
+
+	public JScrollPane getInqReplyWriteJsp() {
+		return inqReplyWriteJsp;
+	}
+
+
+
+	public void setInqReplyWriteJsp(JScrollPane inqReplyWriteJsp) {
+		this.inqReplyWriteJsp = inqReplyWriteJsp;
+	}
+
+
+
+	public JScrollPane getInqEditJsp() {
+		return inqEditJsp;
+	}
+
+
+
+	public void setInqEditJsp(JScrollPane inqEditJsp) {
+		this.inqEditJsp = inqEditJsp;
+	}
+
+
+
+	public JScrollPane getInqReplyEditJsp() {
+		return inqReplyEditJsp;
+	}
+
+
+
+	public void setInqReplyEditJsp(JScrollPane inqReplyEditJsp) {
+		this.inqReplyEditJsp = inqReplyEditJsp;
+	}
+
+
+
+	public JTextArea getSubFAQJta() {
+		return subFAQJta;
+	}
+
+
+
+	public void setSubFAQJta(JTextArea subFAQJta) {
+		this.subFAQJta = subFAQJta;
+	}
+
+
+
+	public JTextArea getContentsFAQJta() {
+		return contentsFAQJta;
+	}
+
+
+
+	public void setContentsFAQJta(JTextArea contentsFAQJta) {
+		this.contentsFAQJta = contentsFAQJta;
+	}
+
+
+
+	public JTextArea getSubFAQEditJta() {
+		return subFAQEditJta;
+	}
+
+
+
+	public void setSubFAQEditJta(JTextArea subFAQEditJta) {
+		this.subFAQEditJta = subFAQEditJta;
+	}
+
+
+
+	public JTextArea getContentsFAQEditJta() {
+		return contentsFAQEditJta;
+	}
+
+
+
+	public void setContentsFAQEditJta(JTextArea contentsFAQEditJta) {
+		this.contentsFAQEditJta = contentsFAQEditJta;
+	}
+
+
+
+	public JTextArea getSubInqJta() {
+		return subInqJta;
+	}
+
+
+
+	public void setSubInqJta(JTextArea subInqJta) {
+		this.subInqJta = subInqJta;
+	}
+
+
+
+	public JTextArea getReplyInqJta() {
+		return replyInqJta;
+	}
+
+
+
+	public void setReplyInqJta(JTextArea replyInqJta) {
+		this.replyInqJta = replyInqJta;
+	}
+
+
+
+	public JTextArea getSubConfirmJta() {
+		return subConfirmJta;
+	}
+
+
+
+	public void setSubConfirmJta(JTextArea subConfirmJta) {
+		this.subConfirmJta = subConfirmJta;
+	}
+
+
+
+	public JTextArea getReplyConfirmJta() {
+		return replyConfirmJta;
+	}
+
+
+
+	public void setReplyConfirmJta(JTextArea replyConfirmJta) {
+		this.replyConfirmJta = replyConfirmJta;
+	}
+	
+	
+	
 	
 }//class
