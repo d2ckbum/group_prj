@@ -25,6 +25,7 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 	
 	public Mem_Inquiry_Event(Mem_Inquiry_View miv) {
 		this.miv=miv;
+//		
 		
 	}
 	
