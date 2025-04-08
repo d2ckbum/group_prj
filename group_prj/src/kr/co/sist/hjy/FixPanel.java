@@ -1,8 +1,6 @@
 package kr.co.sist.hjy;
 import java.awt.Font;
-import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,20 +14,30 @@ import javax.swing.table.JTableHeader;
 @SuppressWarnings("serial")
 public class FixPanel extends JPanel {
 	private JTable jtbSummary;
+	private DefaultTableModel dtm;
+	
+	private FixEvt fixEvt;
 	
 	public FixPanel() {
+//		System.out.println("FixPanel 생성자");
 		makeFixView();
 	}//FixView
 	
 	
-	private void makeFixView() {
+	public void makeFixView() {
 		
 		setLayout(null);
-
-		FixEvt fixEvt=new FixEvt(this);
-		String[] columnNames= {"접수번호","접수일","상품명","차량정보","접수자","결제금액","처리상태"};
+//		System.out.println("FixPanel의 makeFixView 메소드 처음  "+fixEvt.getListRowNum());
 		
-		DefaultTableModel dtm=new DefaultTableModel(fixEvt.tableRecord(columnNames),columnNames);
+		
+		String[] columnNames= {"접수번호","접수일","상품명","차량정보","접수자","결제금액","처리상태"};
+
+		fixEvt=new FixEvt(this);
+		fixEvt.tableRow();
+//		System.out.println("FixPanel refreshFlag 0 listRowNum=="+fixEvt.getListRowNum());
+		dtm=new DefaultTableModel(columnNames,fixEvt.getTableList().size());
+		fixEvt.tableRow();
+		
 		DefaultTableCellRenderer dtcr=new DefaultTableCellRenderer();
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -54,24 +62,24 @@ public class FixPanel extends JPanel {
 		jsp.setBounds(100, 0, 1000, 600);
 		
 		
-		add(jsp);
-
 		
 		
-//		setTitle("정비");
+//		System.out.println("FixPanel listRowNum  " + fixEvt.getListRowNum());
 		
-//		addWindowListener(fixEvt);
 		jtbSummary.addMouseListener(fixEvt);
-		
-		setBounds(965, 100, 1200, 700);
+		add(jsp);
+//		addWindowListener(fixEvt);		
+//		setTitle("정비");
+		setBounds(700, 100, 1200, 700);
 		setVisible(true);
 		
 //		setResizable(false);
-
+		
 	}//make FixView
-	
 
 	
+	
+////////////////main/////////////////////////////////////////////////////////////////////
 	public static void main(String[] args) {
 		new FixPanel();
 	}
@@ -80,6 +88,11 @@ public class FixPanel extends JPanel {
 
 	public JTable getJtbSummary() {
 		return jtbSummary;
+	}
+
+
+	public DefaultTableModel getDtm() {
+		return dtm;
 	}
 	
 	

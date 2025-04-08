@@ -3,7 +3,6 @@ package kr.co.sist.hjy;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
@@ -29,12 +28,16 @@ public class FixDetailView extends JDialog{
 	private JLabel jlblFixRegDateData;
 	private JButton jbtnClose;
 	private JButton jbtnSave;
+	private JButton jbtnModifySave;
+	private JLabel jlblKeyCount;
+	
+	private JComboBox<String> jtbStatus;
 	
 	private JTextArea jtaFixMemo;
 
 	private final int X=50,Y=20;
 	private String status;
-	
+	private int keySum;
 	
 	public FixDetailView(FixEvt fe, String status) {
 //		super(fe.getFp(),"정비 상세",true);
@@ -65,6 +68,7 @@ public class FixDetailView extends JDialog{
 		
 		FixDetailEvt fde=new FixDetailEvt(this, status);
 		defaultView(fde,titleFont, plainFont,lb,labelColor);
+		keyCountView();
 		
 		/*이벤트발생*/
 		addWindowListener(fde);
@@ -91,7 +95,7 @@ public class FixDetailView extends JDialog{
 		else if(status.compareTo("3")==0 ) {
 			modifyMemoView(fde,plainFont,lb,labelColor,"수정");	
 		}else {
-			modifyMemoView(fde,plainFont,lb,labelColor,"수정");
+			ingView(fde,plainFont,lb,labelColor,"저장");
 		}//end if~else
 		
 		
@@ -313,11 +317,12 @@ public class FixDetailView extends JDialog{
 	 * @param labelColor
 	 */
 	private void thirdView(FixDetailEvt fde,Font titleFont,Font plainFont,LineBorder lb,Color labelColor) {
+	
 		JLabel fixMemo=new JLabel("정비 메모");
-		JLabel fixMemoExplain=new JLabel("(300자 이내)");
+		JLabel fixMemoExplain=new JLabel("/1000byte (300자 이내)");
 		jbtnClose=new JButton("닫기");
 		
-		jtaFixMemo=new JTextArea();
+		jtaFixMemo=new JTextArea("내용을 입력해 주세요.");
 		
 		JScrollPane jspMemo=new JScrollPane(jtaFixMemo);
 		
@@ -335,23 +340,25 @@ public class FixDetailView extends JDialog{
 		jbtnClose.setFocusPainted(false);
 		
 		fixMemo.setBounds(X,Y+260,100,30);
-		fixMemoExplain.setBounds(X+93,Y+263,100,30);
+		fixMemoExplain.setBounds(X+130,Y+263,110,30);
 		jspMemo.setBounds(X, Y+300, 650, 300);
 		jbtnClose.setBounds(X+530,Y+620,120,50);
 		
 		
 		//만약 fix_memo data가 null이 아니라면, 화면에 뿌려야지.
-		if(fe.getTableList().get(fe.getListRowNum()).getFixMemo() != null) {
-			String memoText="";
-			try {
-				memoText=fde.readFixMemo(fe.getTableList(),fe.getListRowNum());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			jtaFixMemo.setText(memoText);
-		}//end if
+//		System.out.println("fe.getListRowNum() ==="+fe.getListRowNum());
+		String memoContent=fde.returnMemoContents(fe.getListRowNum());
+		if(!memoContent.isEmpty()) {
+			jtaFixMemo.setText(memoContent);
+		}else {
+			//이 경우에는 화면에 약간 회색으로, "내용을 입력해주세요, 라고 띄우는거지"
+//			jtaFixMemo.setText("내용을 입력해 주세요.");
+			
+		}//end if~else
+		
 		
 		jtaFixMemo.addKeyListener(fde);
+//		jtaFixMemo.addMouseListener(fde);
 		
 		add(fixMemo);
 		add(fixMemoExplain);
@@ -361,9 +368,17 @@ public class FixDetailView extends JDialog{
 	}//thirdView
 
 	
+	/**
+	 * 접수완료, 정비중 상태일 때의 화면
+	 * @param fde
+	 * @param plainFont
+	 * @param lb
+	 * @param labelColor
+	 * @param jbtnText
+	 */
 	private void ingView(FixDetailEvt fde,Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
 		DefaultComboBoxModel<String> dcbm=new DefaultComboBoxModel<String>();
-		JComboBox<String> jtbStatus=new JComboBox<String>(dcbm);
+		jtbStatus=new JComboBox<String>(dcbm);
 		
 		jbtnSave=new JButton(jbtnText);
 		
@@ -395,9 +410,9 @@ public class FixDetailView extends JDialog{
 			jtbStatus.setSelectedIndex(1);
 		}//end if
 		
-		
+//		System.out.println("FixDetailView의 ingView 메소드에서 listRowNum은  "+fe.getListRowNum());
 		jbtnSave.addActionListener(fde);
-		jbtnSave.addKeyListener(fde);
+//		jbtnSave.addKeyListener(fde);
 		
 		
 		
@@ -407,9 +422,17 @@ public class FixDetailView extends JDialog{
 		
 	}//ingView
 	
+	/**
+	 * 정비완료일 때의 창화면
+	 * @param fde
+	 * @param plainFont
+	 * @param lb
+	 * @param labelColor
+	 * @param jbtnText
+	 */
 	private void modifyMemoView(FixDetailEvt fde,Font plainFont,LineBorder lb,Color labelColor,String jbtnText) {
 		JLabel jlblStatus=new JLabel(fe.getStatusMap().get(fe.getTableList().get(fe.getListRowNum()).getFixStatus()));
-		JButton jbtnModifySave=new JButton(jbtnText);
+		jbtnModifySave=new JButton(jbtnText);
 		
 		jlblStatus.setOpaque(true);
 		jlblStatus.setBackground(Color.WHITE);
@@ -424,12 +447,25 @@ public class FixDetailView extends JDialog{
 		jlblStatus.setBounds(X+497, Y+69, 150,30);
 		jbtnModifySave.setBounds(X+365,Y+620,120,50);
 		
+		jbtnModifySave.addActionListener(fde);
 		
 		 add(jlblStatus);
 		 add(jbtnModifySave);
 		
 		
 	}//modifyMemoView
+	
+	public void keyCountView() {
+		jlblKeyCount=new JLabel();
+		jlblKeyCount.setBounds(X+93,Y+263,30,30);
+		jlblKeyCount.setOpaque(true);
+		Color backgroundColor=new Color(255,255,255);
+		jlblKeyCount.setBackground(backgroundColor);
+		
+		
+		add(jlblKeyCount);
+		
+	}//keyCount
 
 	
 	
@@ -443,8 +479,36 @@ public class FixDetailView extends JDialog{
 		return jbtnSave;
 	}
 
+	public JComboBox<String> getJtbStatus() {
+		return jtbStatus;
+	}
+
+	public FixEvt getFe() {
+		return fe;
+	}
+
+	public JButton getJbtnModifySave() {
+		return jbtnModifySave;
+	}
+
+	public JTextArea getJtaFixMemo() {
+		return jtaFixMemo;
+	}
+
+	public JLabel getJlblKeyCount() {
+		return jlblKeyCount;
+	}
+
+	public int getKeySum() {
+		return keySum;
+	}
+
+	public void setKeySum(int keySum) {
+		this.keySum += keySum;
+	}
 
 
+	
 	
 	
 	

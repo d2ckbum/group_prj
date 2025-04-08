@@ -13,9 +13,15 @@ public class FixPanelVO {
 	private String memName;
 	private int total;//결제금액
 	private String fixStatus;
-	
+
 	private String memTell;
 	private Clob fixMemo;
+	
+	public FixPanelVO() {
+		
+	}
+	
+	
 	public FixPanelVO(String fixNum, Timestamp fixRegDate, Clob fixMemo, String itemName, String mfgName, String carType, int memNum,
 			String memName, int total, String fixStatus, String memTell) {
 		super();
@@ -101,6 +107,9 @@ public class FixPanelVO {
 	}
 	
 	
+
+
+
 	@Override
 	public String toString() {
 		return "FixPanelVO [fixNum=" + fixNum + ", fixRegDate=" + fixRegDate + ", itemName=" + itemName + ", mfgName="

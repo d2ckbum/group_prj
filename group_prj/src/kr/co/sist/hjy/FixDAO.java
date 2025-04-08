@@ -1,5 +1,9 @@
 package kr.co.sist.hjy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +13,7 @@ import java.util.List;
 
 public class FixDAO {
 	private static FixDAO fDAO;
+
 	
 	public FixDAO() {
 	
@@ -37,6 +42,7 @@ public class FixDAO {
 	 */
 	public List<FixPanelVO> selectAllList() throws SQLException{
 		List<FixPanelVO> listAll=new ArrayList<FixPanelVO>();
+		
 		
 		StringBuilder selectAllFix=new StringBuilder();
 		selectAllFix
@@ -68,15 +74,148 @@ public class FixDAO {
 						rs.getString("car_type"), rs.getInt("mem_num"), rs.getString("mem_name"),
 						rs.getInt("total"),rs.getString("fix_status"),rs.getString("mem_tell"));	
 	
-				listAll.add(fixPanelVO);		
+				
+				
+				listAll.add(fixPanelVO);
 			}//end while
 		}catch (SQLException se) {
 			se.printStackTrace();
 			dbCon.closeDB(rs, pstmt, con);
 		}//end try~catch
 		
+
 		return listAll;
 	}//selectAllList
+	
+	
+
+	
+	
+	public StringBuilder clobConvert(Clob clob) {
+		StringBuilder sb=null;
+		String memo="";
+		
+		Reader reader=null;
+		BufferedReader br=null;
+		
+		try {
+			reader=clob.getCharacterStream();
+			br=new BufferedReader(reader);
+			
+			while((memo=br.readLine())!=null){
+				sb.append(memo);
+			}//end while
+			
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}finally{
+			if(reader != null) {try {
+				reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}}
+			if(br != null) {try {
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}}
+		}
+		
+		
+		return sb;
+	}//clobConvert
+	
+	/**
+	 * 처리 상태와 정비 메모 수정
+	 * @param fixStatus 처리상태
+	 * @param fixMemo 정비메모
+	 * @param chosenFixNum 선택한 정비접수번호
+	 * @throws SQLException
+	 */
+	public void updateStatusAMemo(String fixStatus, String fixMemo, String chosenFixNum) throws SQLException {
+		//update하고 나서, 해당 List<FixPanelVO>도 바꿔주야한다.
+		//흠...이건 service 부분에서 처리하는게 낫겠다.
+		StringBuilder updateStatusMemo=new StringBuilder();
+
+			updateStatusMemo
+			.append("	update	fix")
+			.append("	set		fix_status=?, fix_memo=?")
+			.append("	where	fix_num=?")
+			;
+
+		
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		
+		DbConnection dbCon=DbConnection.getInstance();
+		
+		try {
+			con=dbCon.getConn();
+						
+			pstmt=con.prepareStatement(updateStatusMemo.toString());
+
+			pstmt.setString(1, fixStatus);//정비 상태 변경
+			pstmt.setString(2, fixMemo);//setStringtoClob
+			pstmt.setString(3, chosenFixNum);//변경할 상태,메모의 정비 접수 번호
+
+			int returnVal=pstmt.executeUpdate(); //업데이트 실행
+//			System.out.println("returnVal   "+returnVal);
+			
+		}catch (SQLException se) {
+			se.printStackTrace();
+			dbCon.closeDB(null, pstmt, con);
+		}//end try~catch
+	
+	
+	}//updateStatusMemo
+	
+	/**
+	 * 정비메모 변경
+	 * @param fixStatus
+	 * @param fixMemo
+	 * @param chosenFixNum
+	 * @throws SQLException
+	 */
+	public void updateMemo(String fixMemo, String chosenFixNum) throws SQLException {
+		//update하고 나서, 해당 List<FixPanelVO>도 바꿔주야한다.
+		//흠...이건 service 부분에서 처리하는게 낫겠다.
+		StringBuilder updateStatusMemo=new StringBuilder();
+		
+
+		updateStatusMemo
+		.append("	update	fix")
+		.append("	set		fix_memo=?")
+		.append("	where	fix_num=?")
+		;
+
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		
+		DbConnection dbCon=DbConnection.getInstance();
+		
+		try {
+			con=dbCon.getConn();
+						
+			pstmt=con.prepareStatement(updateStatusMemo.toString());
+			
+		
+			pstmt.setString(1, fixMemo);//정비 메모 변경
+			pstmt.setString(2, chosenFixNum);//변경할 상태,메모의 정비 접수 번호
+		
+
+			
+			int returnVal=pstmt.executeUpdate(); //업데이트 실행
+//			System.out.println("returnVal   "+returnVal);
+			
+		}catch (SQLException se) {
+			se.printStackTrace();
+			dbCon.closeDB(null, pstmt, con);
+		}//end try~catch
+		
+		
+	}//updateMmemo
 	
 
 	
