@@ -1,18 +1,17 @@
 package kr.co.sist.pib;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class itemModifyView extends JDialog {
+public class itemRegView extends JDialog {
 
-    private DefaultTableModel tableModel;
-    private int selectedRow;
-    private JLabel productNum;
+//    private DefaultTableModel tableModel;
+//    private int selectedRow;
+//    private JLabel productNum;
     private JTextField nameField;
     private JTextField stockField;
     private JTextField quantityField;
@@ -21,21 +20,22 @@ public class itemModifyView extends JDialog {
     private JTextField priceField;
     private JButton decreaseButton;
     private JButton increaseButton;
-    private JButton saveButton;
-    private JButton deleteButton;
+    private JButton registerButton;
+//    private JButton saveButton;
+//    private JButton deleteButton;
     private JButton closeButton;
     private JComboBox<String> carTypeComboBox;
     private JTextField quantityUnitField;
     private JPanel mainPanel;
     
 
-    public itemModifyView(DefaultTableModel tableModel, int selectedRow, JFrame parent, JPanel mainPanel) {
-        super(parent, "상품 수정", true);
-        setTitle("상품 수정");
+    public itemRegView(JFrame parent, JPanel mainPanel) {
+        super(parent, "상품 등록", true);
+        setTitle("상품 등록");
         
         this.mainPanel = mainPanel;
-        this.tableModel = tableModel;
-        this.selectedRow = selectedRow;
+//        this.tableModel = tableModel;
+//        this.selectedRow = selectedRow;
         Font font = new Font("맑은 고딕", Font.BOLD, 20);
         Font buttonFont = new Font("맑은 고딕", Font.BOLD, 10);
         Dimension buttonDimension = new Dimension(40, 30);
@@ -49,7 +49,7 @@ public class itemModifyView extends JDialog {
 
         // Title Panel with Separator
         JPanel titlePanel = new JPanel(new BorderLayout());
-        JLabel titleLabel = new JLabel("상품 정보 수정", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("상품 등록", SwingConstants.CENTER);
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
         titleLabel.setBorder(new EmptyBorder(15, 0, 15, 0));
         titlePanel.add(titleLabel, BorderLayout.CENTER);
@@ -60,32 +60,31 @@ public class itemModifyView extends JDialog {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
         formPanel.setBorder(new EmptyBorder(30, 60, 30, 60));
-       
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-        String productCode = (String) tableModel.getValueAt(selectedRow, 0);
-        String productName = (String) tableModel.getValueAt(selectedRow, 1);
-        String carType = (String) tableModel.getValueAt(selectedRow, 2);
-        String stock = (String) tableModel.getValueAt(selectedRow, 3);
-        String cost = (String) tableModel.getValueAt(selectedRow, 4);
-        String price = (String) tableModel.getValueAt(selectedRow, 5);
+//        String productCode = (String) tableModel.getValueAt(selectedRow, 0);
+//        String productName = (String) tableModel.getValueAt(selectedRow, 1);
+//        String carType = (String) tableModel.getValueAt(selectedRow, 2);
+//        String stock = (String) tableModel.getValueAt(selectedRow, 3);
+//        String cost = (String) tableModel.getValueAt(selectedRow, 4);
+//        String price = (String) tableModel.getValueAt(selectedRow, 5);
 
-        productNum = new JLabel();
-        productNum.setText(productCode);
-        productNum.setFont(new Font("맑은 고딕", Font.BOLD, 25));
-        addLabelAndComponent("상품번호", productNum, formPanel, gbc, 0);
-        nameField = new JTextField(productName, 20);
+//        productNum = new JLabel();
+//        productNum.setText(productCode);
+//        productNum.setFont(new Font("맑은 고딕", Font.BOLD, 25));
+//        addLabelAndComponent("상품번호", productNum, formPanel, gbc, 0);
+        nameField = new JTextField("상품명을 입력해주세요", 20);
         nameField.setFont(font);
         nameField.setForeground(Color.GRAY);
         nameField.setBorder(BorderFactory.createCompoundBorder(
         		new LineBorder(Color.gray, 1), // 기존 테두리 유지
         	    BorderFactory.createEmptyBorder(10, 5, 10, 5) // 내부 패딩 추가
         	));
-        addLabelAndComponent("상품명", nameField, formPanel, gbc, 1);
+        addLabelAndComponent("상품명", nameField, formPanel, gbc, 0);
 
-        stockField = new JTextField(stock, 5);
+        stockField = new JTextField("0", 5);
         stockField.setFont(font);
         stockField.setEditable(false);
         stockField.setFocusable(false);
@@ -95,7 +94,7 @@ public class itemModifyView extends JDialog {
         		BorderFactory.createEmptyBorder(10, 5, 10, 5) // 내부 패딩 추가
         		));
      // 재고 수량 조절 버튼과 텍스트 필드를 아래에 배치
-        addLabelAndComponent("재고", stockField, formPanel, gbc, 2);
+        addLabelAndComponent("재고", stockField, formPanel, gbc, 1);
         
         JPanel stockControlPanel = new JPanel();
         stockControlPanel.setLayout(new FlowLayout(FlowLayout.LEFT));  // 왼쪽 정렬
@@ -149,11 +148,11 @@ public class itemModifyView extends JDialog {
         DefaultListCellRenderer renderer = new DefaultListCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);  // 텍스트를 중앙 정렬로 설정
         carTypeComboBox.setRenderer(renderer);
-        carTypeComboBox.setSelectedItem(carType);
+//        carTypeComboBox.setSelectedItem(carType);
         addLabelAndComponent("차종", carTypeComboBox, formPanel, gbc, 4);
         
         
-        costField = new JTextField(cost, 20);
+        costField = new JTextField("원가를 입력해주세요", 20);
         costField.setForeground(Color.GRAY);
         costField.setFont(font);
         costField.setBorder(BorderFactory.createCompoundBorder(
@@ -165,7 +164,7 @@ public class itemModifyView extends JDialog {
         
 
 
-        priceField = new JTextField(price, 20);
+        priceField = new JTextField("판매가를 입력해주세요", 20);
         priceField.setForeground(Color.GRAY);
         priceField.setFont(font);
         priceField.setBorder(BorderFactory.createCompoundBorder(
@@ -177,7 +176,7 @@ public class itemModifyView extends JDialog {
         add(formPanel, BorderLayout.CENTER);
         
         //이벤트 등록
-        ItemModifyEvent evt = new ItemModifyEvent(this);
+        itemRegViewEvent evt = new itemRegViewEvent(this);
         nameField.addFocusListener(evt);
         costField.addFocusListener(evt);
         priceField.addFocusListener(evt);
@@ -191,17 +190,24 @@ public class itemModifyView extends JDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));  // 오른쪽 정렬로 설정
-        saveButton = new JButton("수정");
-        saveButton.setPreferredSize(new Dimension(70, 35));
-        deleteButton = new JButton("삭제");
-        deleteButton.setPreferredSize(new Dimension(70, 35));
+//        saveButton = new JButton("수정");
+//        saveButton.setPreferredSize(new Dimension(70, 35));
+//        deleteButton = new JButton("삭제");
+//        deleteButton.setPreferredSize(new Dimension(70, 35));
         closeButton = new JButton("닫기");
         closeButton.setPreferredSize(new Dimension(70, 35));
-        saveButton.addActionListener(evt);
-        deleteButton.addActionListener(evt);
+//        saveButton.addActionListener(evt);
+//        deleteButton.addActionListener(evt);
         closeButton.addActionListener(evt);
-        buttonPanel.add(saveButton);
-        buttonPanel.add(deleteButton);
+//        buttonPanel.add(saveButton);
+//        buttonPanel.add(deleteButton);
+        
+        registerButton = new JButton("등록");
+        registerButton.setPreferredSize(new Dimension(70, 35));
+        registerButton.addActionListener(evt);
+        
+        
+        buttonPanel.add(registerButton);
         buttonPanel.add(closeButton);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
@@ -250,21 +256,21 @@ public class itemModifyView extends JDialog {
 		return costField;
 	}
 
-	public JButton getDeleteButton() {
-		return deleteButton;
-	}
+//	public JButton getDeleteButton() {
+//		return deleteButton;
+//	}
 
-	public DefaultTableModel getTableModel() {
-		return tableModel;
-	}
+//	public DefaultTableModel getTableModel() {
+//		return tableModel;
+//	}
+//
+//	public int getSelectedRow() {
+//		return selectedRow;
+//	}
 
-	public int getSelectedRow() {
-		return selectedRow;
-	}
-
-	public JLabel getProductNum() {
-		return productNum;
-	}
+//	public JLabel getProductNum() {
+//		return productNum;
+//	}
 
 	public JTextField getNameField() {
 		return nameField;
@@ -294,9 +300,9 @@ public class itemModifyView extends JDialog {
 		return increaseButton;
 	}
 
-	public JButton getSaveButton() {
-		return saveButton;
-	}
+//	public JButton getSaveButton() {
+//		return saveButton;
+//	}
 
 	public JComboBox<String> getCarTypeComboBox() {
 		return carTypeComboBox;
@@ -305,6 +311,13 @@ public class itemModifyView extends JDialog {
 	public JTextField getQuantityUnitField() {
 		return quantityUnitField;
 	}
+
+	public JButton getRegisterButton() {
+		return registerButton;
+	}
+	
+	
+	
     
     
     

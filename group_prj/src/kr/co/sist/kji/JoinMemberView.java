@@ -24,7 +24,7 @@ public class JoinMemberView extends JFrame {
 
 		setTitle("회원가입");
 		setSize(800, 700);
-//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X 버튼 눌러도 종료 안됨
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // X 버튼 눌러도 종료 안됨
 		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();
@@ -197,6 +197,7 @@ public class JoinMemberView extends JFrame {
 		
 		add(panel);
 		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	public JTextField getIdField() {
 		return idField;

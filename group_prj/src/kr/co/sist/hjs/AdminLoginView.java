@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("serial")
 public class AdminLoginView extends JFrame implements ActionListener {
 	private JTextField jtfId;
 	private JPasswordField jpfPass;
@@ -18,7 +19,7 @@ public class AdminLoginView extends JFrame implements ActionListener {
 
 		// 최상단 라벨
 		JLabel titleLabel = new JLabel("관리자 로그인", JLabel.CENTER);
-		titleLabel.setFont(new Font("Dialog", Font.BOLD, 30));
+		titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
 		add(titleLabel);
 
 		// 아이디 입력
@@ -40,6 +41,7 @@ public class AdminLoginView extends JFrame implements ActionListener {
 		// 로그인 버튼
 		JPanel buttonPanel = new JPanel();
 		jbtnLogin = new JButton("로그인");
+		jbtnLogin.setBackground(new Color(217, 217, 217));
 		buttonPanel.add(jbtnLogin);
 		add(buttonPanel);
 

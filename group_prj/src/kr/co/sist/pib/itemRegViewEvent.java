@@ -10,24 +10,24 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 
-public class ItemModifyEvent implements ActionListener, FocusListener {
+public class itemRegViewEvent implements ActionListener, FocusListener {
     
-    private itemModifyView view;
+    private itemRegView view;
     private String initialProductName;
     private String initialCost;
     private String initialSellPrice;
 
-    public ItemModifyEvent(itemModifyView view) {
+    public itemRegViewEvent(itemRegView view) {
         this.view = view;
         initialProductName = view.getNameField().getText();
         initialCost = view.getCostField().getText();
         initialSellPrice = view.getPriceField().getText();
-        // 메시지 다이얼로그에 사용될 글꼴 설정
+        
+     // 메시지 다이얼로그에 사용될 글꼴 설정
         Font dialogFont = new Font("맑은 고딕", Font.BOLD, 12);
 
         // UIManager를 통해 JOptionPane의 기본 UI 설정을 수정
         UIManager.put("OptionPane.messageFont", dialogFont);
-        
     }
     
     public int getRepairCost(String type) {
@@ -48,68 +48,75 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
 
         if (source == view.getDecreaseButton()) {
             handleDecreaseStock();
-        } 
-        
-        else if (source == view.getIncreaseButton()) {
+        } else if (source == view.getIncreaseButton()) {
             handleIncreaseStock();
         } 
-        
-        else if (source == view.getSaveButton()) {
-        	   
-            int result = JOptionPane.showConfirmDialog(view, "수정하시겠습니까?", "수정", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            
+//        else if (source == view.getSaveButton()) {
+//        	   
+//            int result = JOptionPane.showConfirmDialog(view, "수정하시겠습니까?", "수정", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//            
+//            if(result == JOptionPane.YES_OPTION) {
+//        	ItemManagementVO addImVO = new ItemManagementVO();
+//        	String carType = view.getCarTypeComboBox().getSelectedItem().toString();
+//        	DecimalFormat df = new DecimalFormat("#.##");
+//        	addImVO.setItem_num(Integer.parseInt(view.getProductNum().getText()));
+//        	addImVO.setItem_name(view.getNameField().getText().strip());
+//        	addImVO.setItem_stock(Integer.parseInt(view.getStockField().getText().replace(",", "")));
+////        	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText()));
+//        	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText().replace(",", "")));
+////        	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText()));
+//        	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
+//        	addImVO.setItem_repair_cost(getRepairCost(carType));
+//        	addImVO.setCar_type(carType);
+//        	if(!new ItemManagementService().modifyImMember(addImVO)) {
+//        		JOptionPane.showMessageDialog(view, "수정에 실패하였습니다.");
+//        	}
+//        	System.out.println("업데이트 : " + addImVO);
+//        	ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
+//        	viewPanel.setInitialTableData();
+//            
+//            }else {
+//            	
+//            }
+//            
+//        	
+//        	
+////        	handleSaveChanges();
+//        }
+//        
+//        else if (source == view.getDeleteButton()) {
+//        	System.out.println("삭제 버튼 이벤트");
+//        	new ItemManagementService().removeImMember(Integer.parseInt(view.getProductNum().getText()));
+//        }
+        else if (source == view.getRegisterButton()) {
+        	
+        	int result = JOptionPane.showConfirmDialog(view, "등록하시겠습니까?", "상품등록", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+             
             if(result == JOptionPane.YES_OPTION) {
-        	try {
-            ItemManagementVO addImVO = new ItemManagementVO();
-        	String carType = view.getCarTypeComboBox().getSelectedItem().toString();
-        	DecimalFormat df = new DecimalFormat("#.##");
-        	addImVO.setItem_num(Integer.parseInt(view.getProductNum().getText()));
-        	addImVO.setItem_name(view.getNameField().getText().strip());
-        	addImVO.setItem_stock(Integer.parseInt(view.getStockField().getText().replace(",", "")));
-//        	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText()));
-        	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText().replace(",", "")));
-//        	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText()));
-        	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
-        	addImVO.setItem_repair_cost(getRepairCost(carType));
-        	addImVO.setCar_type(carType);
-        	if(!new ItemManagementService().modifyImMember(addImVO)) {
-        		JOptionPane.showMessageDialog(view, "수정에 실패하였습니다.", "수정실패", JOptionPane.PLAIN_MESSAGE);
-        		return;
-        		
-        	}
-        	System.out.println("업데이트 : " + addImVO);
-        	ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
-        	viewPanel.setInitialTableData();
-        	JOptionPane.showMessageDialog(view, "상품정보를 수정하였습니다.", "수정성공", JOptionPane.PLAIN_MESSAGE);
-        	}catch(NumberFormatException n){
-        		
-        		JOptionPane.showMessageDialog(view, "원가와 판매가에는 숫자만 입력가능합니다", "수정실패", JOptionPane.PLAIN_MESSAGE);
-        		
-        	}
-            
+         	ItemManagementVO addImVO = new ItemManagementVO();
+         	String carType = view.getCarTypeComboBox().getSelectedItem().toString();
+         	DecimalFormat df = new DecimalFormat("#.##");
+         	addImVO.setItem_name(view.getNameField().getText().strip());
+         	addImVO.setItem_stock(Integer.parseInt(view.getStockField().getText().replace(",", "")));
+//         	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText()));
+         	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText().replace(",", "")));
+//         	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText()));
+         	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
+         	addImVO.setItem_repair_cost(getRepairCost(carType));
+         	addImVO.setCar_type(carType);
+         	if(!new ItemManagementService().addImMember(addImVO)) {
+         		JOptionPane.showMessageDialog(view, "상품등록에 실패하였습니다.");
+         	}
+         	System.out.println("상품등록 : " + addImVO);
+         	ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
+         	viewPanel.setInitialTableData();
+         	view.dispose();
+            }else {
+             	
             }
-            
-        	
-        	
-//        	handleSaveChanges();
-        }
-        
-        else if (source == view.getDeleteButton()) {
-        	System.out.println("삭제 버튼 이벤트");
-        	
-        	int optionResult = JOptionPane.showConfirmDialog(view, "상품을 삭제하시겠습니까?", "삭제", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-        	if(optionResult == JOptionPane.YES_OPTION) {
-	        	boolean deleteFlag = new ItemManagementService().removeImMember(Integer.parseInt(view.getProductNum().getText()));
-	        	
-	        	if(deleteFlag) {
-	        		ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
-	        		viewPanel.setInitialTableData();
-	        		view.dispose();
-	        		JOptionPane.showMessageDialog(view, "상품을 삭제하였습니다.", "삭제성공", JOptionPane.PLAIN_MESSAGE);
-	        	}else {
-	        		JOptionPane.showMessageDialog(view, "삭제에 실패하였습니다.", "삭제실패", JOptionPane.PLAIN_MESSAGE);
-	        	}
-        	}
+             
+         	
+         	
         	
         	
         }

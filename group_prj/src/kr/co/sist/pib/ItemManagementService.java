@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
+
 public class ItemManagementService {
 
 	public ItemManagementService() {
@@ -42,9 +43,15 @@ public class ItemManagementService {
 	}
 	
 	//데이터 추가 업무
-	public int addImMember(ItemManagementVO imVO) {
-		
-		return 0;
+	public boolean addImMember(ItemManagementVO imVO) {
+		ItemManagementDAO imDAO = ItemManagementDAO.getInstance();
+		try {
+			imDAO.insertImMember(imVO);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		return false;
 	}
 	
 	//데이터 수정 업무

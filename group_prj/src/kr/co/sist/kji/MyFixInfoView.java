@@ -118,9 +118,9 @@ public class MyFixInfoView extends JFrame {
 	         if (allList != null && !allList.isEmpty()) {
 	            for (int i = 0; i < allList.size(); i++) {
 	               FixPanelVO fix = allList.get(i);
-	               if(fix.getFixNum().equals("1")) {
+	               if(fix.getFixStatus().equals("1")) {
 	            	   status="접수완료";
-	               }else if(fix.getFixNum().equals("2")) {
+	               }else if(fix.getFixStatus().equals("2")) {
 	            	   status="정비중";
 	               }else {
 	            	   status="정비완료";

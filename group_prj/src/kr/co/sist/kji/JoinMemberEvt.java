@@ -118,10 +118,11 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 			}//end if
 			if(realJoinNum == 0) {
 				insertMember();
-				ms.addMember(mVO);
-				JOptionPane.showMessageDialog(jmv, "가입 되었습니다.");
-				new LoginpageView();
-				jmv.dispose();
+				if(ms.addMember(mVO)) {
+					JOptionPane.showMessageDialog(jmv, "가입 되었습니다.");
+					new LoginpageView();
+					jmv.dispose();
+				}
 			}//end if
 			
 		}//end if
