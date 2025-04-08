@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import kr.co.sist.kyh.ItemView;
+
 public class LoginFormEvt  implements ActionListener {
 
 	private String id;
@@ -126,7 +128,6 @@ public class LoginFormEvt  implements ActionListener {
 				//일시적으로 내 정보뷰로 넘어가세 설정
 				new MyInfoView(id);
 				mpv.dispose();
-				
 				
 				//////////////////////////////////////////////////
 			}

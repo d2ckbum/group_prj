@@ -29,18 +29,15 @@ public class OrderEvt implements ActionListener {
             // 접수번호 생성
             String requestId = "REQ" + System.currentTimeMillis();
 
-            // 요청 완료 메시지
             JOptionPane.showMessageDialog(null, 
                 "정비요청이 완료되었습니다.\n접수번호: " + requestId, 
                 "정비요청 완료", 
                 JOptionPane.INFORMATION_MESSAGE
             );
 
-            // 화면을 'EngineOil'로 변경
             cardLayout.show(parentPanel, "EngineOil");
 
         } else if (source.getText().equals("취소")) {
-            // 취소 버튼 클릭 시 'EngineOil' 화면으로 전환
             cardLayout.show(parentPanel, "EngineOil");
         }
     }
