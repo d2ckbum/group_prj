@@ -104,7 +104,7 @@ public class LoginFormEvt  implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		
+		MemberService ms = new MemberService();
 		if(ae.getSource() == mpv.getJbtnLogin()) {
 			if(!idChk()) {
 				JOptionPane.showMessageDialog(mpv, "아이디를 넣어주세요.");
@@ -126,8 +126,10 @@ public class LoginFormEvt  implements ActionListener {
 				///////////////////////////////////////////////////
 				//로그인 성공 했을 때 엔진오일 창으로 넘어가게
 				//일시적으로 내 정보뷰로 넘어가세 설정
-				new MyInfoView(id);
+				mVO=ms.searchOneMember(id);
+				new ItemView(mVO.getCarNum(), mVO, id);
 				mpv.dispose();
+				
 				
 				//////////////////////////////////////////////////
 			}

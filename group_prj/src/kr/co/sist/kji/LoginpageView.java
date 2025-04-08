@@ -77,7 +77,4 @@ public class LoginpageView extends JFrame {
 		return jbtnJoin;
 	}
 
-	public static void main(String[] args) {
-		new LoginpageView();
-	}
 }
