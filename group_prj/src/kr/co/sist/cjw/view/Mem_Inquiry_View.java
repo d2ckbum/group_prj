@@ -27,7 +27,7 @@ public class Mem_Inquiry_View extends JFrame {
 	//button
 		private String id;
 		
-		private JButton addJbtn;
+ 		private JButton addJbtn;
 		private JButton cnlMainJbtn;
 		private JButton saveBtn;
 		private JButton cnlBtn;
@@ -74,13 +74,20 @@ public class Mem_Inquiry_View extends JFrame {
 	
 	
 	
+
+
+
+
+
+
 	public Mem_Inquiry_View(String id) throws HeadlessException {
 		this.id=id;
 	}
 
 
 
-	public void mem_Inquiry_Main_View() {
+	public void mem_Inquiry_Main_View(String id) {
+		
 		mem_Inquiry_Main_View = new JFrame("문의게시판");
 		
 		mem_Inquiry_Main_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -153,7 +160,7 @@ public class Mem_Inquiry_View extends JFrame {
         faqTable.getColumnModel().getColumn(2).setPreferredWidth(100); 
         faqTable.setModel(faqModel);
         
-	    List<Inquiry_VO> inqList = Mem_Inq_Service.searchINQ();
+	    List<Inquiry_VO> inqList = Mem_Inq_Service.searchINQ(id);
 
 	    DefaultTableModel inqModel = new DefaultTableModel(new String[]{"문의번호", "날짜", "제목","상태"}, 0);
 	    inqTable.setModel(inqModel);
@@ -185,7 +192,7 @@ public class Mem_Inquiry_View extends JFrame {
         inqTable.addMouseListener(eventHandler);
         addJbtn.addActionListener(eventHandler);
         cnlMainJbtn.addActionListener(eventHandler);
-	    
+        mem_Inquiry_Main_View.addWindowListener(eventHandler);
 
 
 	    mem_Inquiry_Main_View.setVisible(true); 
@@ -251,6 +258,8 @@ public class Mem_Inquiry_View extends JFrame {
 	    
 	    //이벤트 추가
 	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    saveBtn.addActionListener(eventHandler);
+	    cnlBtn.addActionListener(eventHandler);
 	    
 	    
 	    mem_Inquiry_Write_View.setVisible(true);
@@ -333,6 +342,10 @@ public class Mem_Inquiry_View extends JFrame {
 	    confirmBtn = new JButton("확인");
 	    confirmBtn.setBounds(550, 800, 100, 40); 
 	    mem_Inquiry_Confirm_View.add(confirmBtn);
+	    
+	  //이벤트 추가
+	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    confirmBtn.addActionListener(eventHandler);
 
 	    
 	    mem_Inquiry_Confirm_View.setVisible(true);
@@ -394,6 +407,9 @@ public class Mem_Inquiry_View extends JFrame {
 	    cnlEditBtn = new JButton("취소");
 	    cnlEditBtn.setBounds(1030, 800, 100, 40); 
 	    mem_Inquiry_Edit_View.add(cnlEditBtn);
+	    
+	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    cnlEditBtn.addActionListener(eventHandler);
 	    
 	    mem_Inquiry_Edit_View.setVisible(true);
 	}//mem_Inquiry_Edit_View
@@ -725,6 +741,10 @@ public class Mem_Inquiry_View extends JFrame {
 		return id;
 	}
 
+	public static void main(String[] args) {
+		new Mem_Inquiry_View("choi").mem_Inquiry_Main_View("choi");
+		
+	}
 
 
 }//class

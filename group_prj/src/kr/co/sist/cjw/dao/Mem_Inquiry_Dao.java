@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import kr.co.sist.cjw.view.Mem_Inquiry_View;
 import kr.co.sist.cjw.vo.FAQ_VO;
 import kr.co.sist.cjw.vo.Inquiry_VO;
 
@@ -67,7 +68,7 @@ public class Mem_Inquiry_Dao {
 		return list;
 	}//selectFAQ
 	
-	public List<Inquiry_VO> selectINQ() throws SQLException {
+	public List<Inquiry_VO> selectINQ(String id) throws SQLException {
 		List<Inquiry_VO> list = new ArrayList<Inquiry_VO>();
 
 		// 1.
@@ -83,15 +84,19 @@ public class Mem_Inquiry_Dao {
 		        // SQL 쿼리 수정: 상태 컬럼 추가
 		        StringBuilder selectINQ = new StringBuilder();
 		        selectINQ
-		            .append("	SELECT Inq_Id, Inq_Reg_Date, Inq_Title, REPLY, ")
+		            .append("	SELECT i.Inq_Id, i.Inq_Reg_Date, i.Inq_Title, i.REPLY, ")
 		            .append("           CASE ")
 		            .append("               WHEN REPLY IS NOT NULL THEN '답변 완료' ")
 		            .append("               ELSE '답변 대기' ")
 		            .append("           END AS Inq_Status ")
-		            .append("	FROM INQUIRY	");
+		            .append("	FROM INQUIRY i, Member m	")
+		        	.append("	where (m.mem_num=i.mem_num)and m.mem_id=?	");
 
 		        pstmt = con.prepareStatement(selectINQ.toString());
+		        
+		        pstmt.setString(1, id);
 		        rs = pstmt.executeQuery();
+		        
 
 		        Inquiry_VO iVO = null;
 		        while (rs.next()) {
@@ -112,7 +117,8 @@ public class Mem_Inquiry_Dao {
 		}//selectINQ
 	
 	
-	public void insertInq(Inquiry_VO mIVO) throws SQLException {
+	
+	public void insertInq(Inquiry_VO mIVO, String id) throws SQLException {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 
@@ -125,15 +131,15 @@ public class Mem_Inquiry_Dao {
 	        
 	        StringBuilder insertInq = new StringBuilder();
 	        insertInq
-	            .append("INSERT INTO Inquiry(INQ_ID, inq_title, inq_contents, mem_NUM) ")
-	            .append("VALUES(INQ_SEQ.NEXTVAL, ?, ?, ?)");
+	            .append("INSERT INTO Inquiry(inq_id, inq_title, inq_contents, mem_NUM) ")
+	            .append("select INQ_SEQ.NEXTVAL, ?, ?,  mem_num from MEMBER where MEM_ID=  ? ");
 
+	        
 	        pstmt = con.prepareStatement(insertInq.toString());
-	        pstmt.setInt(1, mIVO.getInq_Id());
-	        pstmt.setString(2, mIVO.getInq_Title());
-	        pstmt.setString(3, mIVO.getInq_Contents());
-	        pstmt.setInt(4, mIVO.getMem_Num());
-
+	        pstmt.setString(1, mIVO.getInq_Title());
+	        pstmt.setString(2, mIVO.getInq_Contents());
+	        pstmt.setString(3, id);
+	        	        
 	        pstmt.executeUpdate();
 	        con.commit(); 
 	    } finally {

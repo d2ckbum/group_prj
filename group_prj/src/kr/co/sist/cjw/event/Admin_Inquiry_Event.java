@@ -53,8 +53,7 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 		}//end if
 		if(ae.getSource() == aiv.getCnlJbtn()) {
 			aiv.getAdmin_Inquiry_Main_View().dispose();
-			new AdminMainView();
-		}
+		}//end if
 		
 		//admin_FAQ_Write_View 영역
 		if(ae.getSource() == aiv.getSaveFAQBtn()) {
@@ -63,7 +62,6 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 		if(ae.getSource() == aiv.getCnlFAQBtn()) {
 			faqCancelConfirmDialog(aiv.getAdminFAQWriteView());
 		}//end if
-		
 		
 		
 	}//actionPerformed
@@ -102,7 +100,7 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 
 	            if (success) {
 	                JOptionPane.showMessageDialog(aiv.getAdminFAQWriteView(), "FAQ가 등록되었습니다.", "등록 성공", JOptionPane.INFORMATION_MESSAGE);
-	                aiv.getAdminFAQWriteView().dispose(); // 등록 후 창 닫기
+	                aiv.getAdminFAQWriteView().dispose(); 
 	                loadFAQData();
 	            } else {
 	                JOptionPane.showMessageDialog(aiv.getAdminFAQWriteView(), "FAQ 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);

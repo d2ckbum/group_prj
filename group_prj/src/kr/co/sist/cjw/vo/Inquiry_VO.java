@@ -18,7 +18,7 @@ public class Inquiry_VO {
 
 
 	public Inquiry_VO(int inq_Id, String inq_Titile, String inq_Contents, Date inq_Reg_Date, String inq_Reply,
-			Date inq_Reply_Date, String inq_Status,int mem_Num) {
+			Date inq_Reply_Date, String inq_Status,int mem_Num, String id) {
 		this.inq_Id = inq_Id;
 		this.inq_Title = inq_Titile;
 		this.inq_Contents = inq_Contents;
@@ -107,6 +107,9 @@ public class Inquiry_VO {
 	public Date getInq_Reply_Date() {
 		return inq_Reply_Date;
 	}
+
+	
+
 
 
 	@Override

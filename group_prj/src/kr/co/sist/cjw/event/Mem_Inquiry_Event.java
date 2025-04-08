@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-import kr.co.sist.cjw.service.Admin_Inquiry_Service;
 import kr.co.sist.cjw.service.Mem_Inquiry_Service;
 import kr.co.sist.cjw.view.Mem_Inquiry_View;
 import kr.co.sist.cjw.vo.FAQ_VO;
@@ -28,6 +27,7 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		this.miv=miv;
 		
 	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -43,12 +43,34 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		}//end if
 		
 		//mem_Inquiry_Write_View
+		if(ae.getSource() == miv.getSaveBtn()) {
+			inqSaveConfirmDialog(miv.getMem_Inquiry_Confirm_View());
+		}//end if
+		
+		if(ae.getSource() == miv.getCnlBtn()) {
+			miv.getMem_Inquiry_Write_View().dispose();
+			miv.getMem_Inquiry_Main_View();
+		}//end if
+		
+		
+		//mem_Inquiry_Confirm_View
+		if(ae.getSource() == miv.getConfirmBtn()) {
+			miv.getMem_Inquiry_Confirm_View().dispose();
+			miv.getMem_Inquiry_Main_View();
+		}//end if
+		
+		//mem_Inquiry_Edit_View
+		if(ae.getSource() == miv.getCnlEditBtn()) {
+			miv.getMem_Inquiry_Edit_View().dispose();
+			miv.getMem_Inquiry_Main_View();
+		}//end if
+		
 	}//actionPerformed
 	
 	
 	//FAQ 목록 최신화 method
 	public void loadFAQData() {
-	    Admin_Inquiry_Service faqService = new Admin_Inquiry_Service();
+	    Mem_Inquiry_Service faqService = new Mem_Inquiry_Service();
 	    List<FAQ_VO> faqList = faqService.searchFAQ(); 
 
 	    DefaultTableModel model = (DefaultTableModel) miv.getFaqTable().getModel();
@@ -62,6 +84,25 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
             });
 	    }//end for
 	}//loadFAQData
+	
+	
+	//inq 목록 최신화 method
+		public void loadINQData() {
+			Mem_Inquiry_Service inqService = new Mem_Inquiry_Service();
+		    List<Inquiry_VO> inqList = inqService.searchINQ(miv.getId()); 
+
+		    DefaultTableModel model = (DefaultTableModel) miv.getInqTable().getModel();
+		    model.setRowCount(0); 
+
+		    for (Inquiry_VO inq : inqList) {
+	        	model.addRow(new Object[]{
+	                inq.getInq_Id(), 
+	                inq.getInq_Reg_Date(), 
+	                inq.getInq_Title(), 
+	                inq.getInq_Status() 
+	            });
+		    }//end for
+		}//loadFAQData
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -117,7 +158,7 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 	
 	
 	//저장 팝업 창
-		public void faqSaveConfirmDialog(JFrame parentFrame) {
+		public void inqSaveConfirmDialog(JFrame parentFrame) {
 		    Object[] options = {"확인", "취소"};
 		    int response = JOptionPane.showOptionDialog(
 		            parentFrame,
@@ -144,24 +185,24 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		            inq.setInq_Contents(contents);
 
 		            Mem_Inquiry_Service inqService = new Mem_Inquiry_Service();
-		            boolean success = inqService.addInq(inq);
+		            boolean success = inqService.addInq(inq, miv.getId());
 
 		            if (success) {
 		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Write_View(), "문의가 등록되었습니다.", "등록 성공", JOptionPane.INFORMATION_MESSAGE);
-		                miv.getMem_Inquiry_Write_View().dispose(); 
-		                loadFAQData();
+		                miv.getMem_Inquiry_Write_View().dispose();
+		                loadINQData();
 		            } else {
 		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Write_View(), "문의 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
 		            }
+		        miv.getMem_Inquiry_Write_View().dispose();
 		        System.out.println("저장 완료");
-		        parentFrame.dispose();
 		    } else {
-		    	faqCancelConfirmDialog(parentFrame);
+		    	inqCancelConfirmDialog(parentFrame);
 		    }//end if
-		}//saveConfirmDialog
+		}//inqSaveConfirmDialog
 
 		//닫기 팝업 창
-		public void faqCancelConfirmDialog(JFrame parentFrame) {
+		public void inqCancelConfirmDialog(JFrame parentFrame) {
 		    Object[] options = {"확인", "취소"};
 		    int response = JOptionPane.showOptionDialog(
 		            parentFrame,
@@ -175,10 +216,10 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		    );
 
 		    if (response == 0) { 
-		        parentFrame.dispose(); 
+		        miv.getMem_Inquiry_Write_View().dispose();
 		        System.out.println("창이 닫혔습니다");
 		    }//end if
-		}//cancelConfirmDialog
+		}//inqCancelConfirmDialog
 	
 	
 
