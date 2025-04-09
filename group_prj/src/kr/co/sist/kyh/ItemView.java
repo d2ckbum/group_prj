@@ -103,6 +103,7 @@ public class ItemView extends JFrame {
         btnRecommended.setFocusPainted(false);
         btnInquiry.setFocusPainted(false);
         btnMyInfo.setFocusPainted(false);
+        btnLogout.setFocusPainted(false);
         
         topPanel.add(titleLabel);
         topPanel.add(welcomeLabel);
@@ -169,6 +170,7 @@ public class ItemView extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
     
