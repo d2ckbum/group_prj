@@ -67,7 +67,7 @@ public class ItemManagementDAO {
 		Connection con = null;
 	    PreparedStatement pstmt = null;
 	    DbConnection dbCon = DbConnection.getInstance();
-	    
+	    int num = 0;
 	    try {
 	        con = dbCon.getConn();
 	        
@@ -93,13 +93,13 @@ public class ItemManagementDAO {
 	        pstmt.setString(6, imVO.getCar_type());
 	        pstmt.setInt(7, imVO.getItem_num());
 	        
-	        int result = pstmt.executeUpdate();
+	        num = pstmt.executeUpdate();
 	        
 	        
-	        return result; // 실행된 결과 반환
 	    } finally {
 	        dbCon.closeDB(null, pstmt, con);
 	    }
+	    return num; // 실행된 결과 반환
 	}//end updateImMember
 	
 	
@@ -107,7 +107,7 @@ public class ItemManagementDAO {
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
 	    DbConnection dbCon = DbConnection.getInstance();
-	    
+	    int num = 0;
 	    try {
 	        con = dbCon.getConn();
 	        
@@ -118,13 +118,13 @@ public class ItemManagementDAO {
 	        pstmt = con.prepareStatement(deleteMember.toString());
 	        pstmt.setInt(1, productnum);
 	        
-	        int result = pstmt.executeUpdate();
+	        num = pstmt.executeUpdate();
 	        
 	        
-	        return result; // 실행된 결과 반환
 	    } finally {
 	        dbCon.closeDB(null, pstmt, con);
 	    }
+	    return num; // 실행된 결과 반환
 	}//end deleteImMember
 	
 	public List<ItemManagementVO> selectAllMember() throws SQLException{
