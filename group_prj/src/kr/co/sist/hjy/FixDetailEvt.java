@@ -1,13 +1,24 @@
 package kr.co.sist.hjy;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -30,7 +41,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		FixService fs = new FixService();
-		strCloseStatus=fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixStatus();
+		strCloseStatus=fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixStatus();	
 
 		if (ae.getSource() == fv.getJbtnSave()) {
 			// yes:0, no:1
@@ -40,6 +51,8 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			if (selectBtnInd == 0) {
 				/* 저장 버튼을 누른 경우, 수정된 처리상태 저장 */
 				saveStatusAMemo(fs);
+				//현재 count된 메모사이즈를, memoList의 size에 넣어준다.
+				fv.getFe().getMemoList().get(fv.getFe().getListRowNum()).setFixMemoSize(fv.getKeySum()); 
 				JOptionPane.showMessageDialog(fv, "저장되었습니다.");
 			} // end if
 		} // end if
@@ -49,13 +62,15 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			int selectedBtnInd=JOptionPane.showConfirmDialog(fv, "수정하시겠습니까?","수정",JOptionPane.YES_NO_OPTION);
 			if(selectedBtnInd==0) {
 				saveMemo(fs);
+				//현재 count된 메모사이즈를, memoList의 size에 넣어준다.
+				fv.getFe().getMemoList().get(fv.getFe().getListRowNum()).setFixMemoSize(fv.getKeySum()); 
 				JOptionPane.showMessageDialog(fv, "수정되었습니다.");
 			}//end if
 		} // end if
 
 		if (ae.getSource() == fv.getJbtnClose()) {
-			System.out.println("strCloseStatus"+strCloseStatus);
-			//접수완료, 정비중 화면에서 / 정비상태와 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.
+//			System.out.println("strCloseStatus"+strCloseStatus);
+			/*접수완료, 정비중 화면에서 / 정비상태와 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
 			if(strCloseStatus.compareTo("1")==0 || strCloseStatus.compareTo("2")==0) { 
 				if(compareSataus()==false || compareMemo()==false) {
 					int ret=JOptionPane.showConfirmDialog(fv, "저장하지 않고 닫으시겠습니까?","저장",JOptionPane.YES_NO_OPTION);
@@ -65,7 +80,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 				}//end if
 			}//end if
 			
-			//정비완료 화면에서 / 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.
+			/*정비완료 화면에서 / 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
 			if (strCloseStatus.compareTo("3")==0){
 				if(compareMemo()==false) {
 					int ret=JOptionPane.showConfirmDialog(fv, "정비 메모가 수정되었습니다.\n 수정된 것을 저장하지 않고 닫으시겠습니까?","수정",JOptionPane.YES_NO_OPTION);
@@ -243,11 +258,42 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 
 	@Override
 	public void keyTyped(KeyEvent ke) {
+		//한글은 keyPressed에서 못잡으니까, keyType으로 옮김.
+		int keyCnt=(int)ke.getKeyChar();
+//		System.out.println(keyCnt);
+		
+		if(keyCnt>44031 && keyCnt<55203) {
+			fv.setKeySum(3);
+			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+			fv.keyCountView();
+
+		}else if(keyCnt>12592 && keyCnt<12644) {
+			fv.setKeySum(3);
+			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+			fv.keyCountView();
+		}//end if ~ else if
+		
+		
+		//1000byte를 넘어가면, 중단.
+		if(fv.getKeySum()>1000) {
+			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
+			
+			return;
+		}//end if
+		
+		
+	}// keyTyped
+
+	@Override
+	public void keyPressed(KeyEvent ke) {
+		
+		
 		// 아 ... 여기서 Stream 쓰면 될 것 같은데....
 		// inputstream으로 count하는거지
 		//0~127까지는 1바이트
 		//44032 ~  50807까지는 한글이므로 3byte
 		int keyCnt=(int)ke.getKeyChar();
+//		System.out.println(keyCnt);
 		
 		if(ke.isControlDown()) {
 			JOptionPane.showMessageDialog(fv, "사용할 수 없는 키입니다.");
@@ -255,42 +301,28 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			fv.getJtaFixMemo().setText(text);
 			return;
 		}//end if
+		
 		if(keyCnt==8) {
 			fv.setKeySum(-1);
-//			fv.keyCountView();
+			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+			fv.keyCountView();
 			return;
 		}//end if
-	
-		if((keyCnt>47 && keyCnt<128)||(keyCnt ==32)) {
-//			System.out.println("1byte 추가"+ke.getKeyChar());
+		
+		if((keyCnt>47 && keyCnt<128)||(keyCnt ==32)||(keyCnt==10)) {
 			fv.setKeySum(1);
 			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
 			fv.keyCountView();
-//			System.out.println("keySum  "+fv.getKeySum()+"");
-		}else if(keyCnt>44031 && keyCnt<55203) {
-//			System.out.println("3byte 추가"+ke.getKeyChar());
-			fv.setKeySum(3);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
-//			System.out.println("keySum  "+fv.getKeySum()+"");
-		}else if(keyCnt>12592 && keyCnt<12644) {
-//			System.out.println("3byte 추가"+ke.getKeyChar());
-			fv.setKeySum(3);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
-//			System.out.println("keySum  "+fv.getKeySum()+"");
-		}//end if ~ else if
+
+		}//end if
+		
+		//1000byte를 넘어가면, 중단.
+		if(fv.getKeySum()>1000) {
+			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
+			return;
+		}//end if
 	
-		System.out.println((int)ke.getKeyChar());
-		
-//		System.out.println("keyCode ====="+ke.getKeyLocation());
-		
-	}// keyTyped
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-
-	}
+	}//keyPressed
 
 	@Override
 	public void keyReleased(KeyEvent e) {

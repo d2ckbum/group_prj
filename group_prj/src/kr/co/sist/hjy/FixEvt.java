@@ -1,5 +1,4 @@
 package kr.co.sist.hjy;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -159,7 +158,9 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 				//만약에 clob의 값이 null이면,
 				StringBuilder sbsb=new StringBuilder();
 				sbsb.append("");
-				memoVO=new MemoVO(tableList.get(row).getFixNum(), sbsb);
+				int size=0;
+				memoVO=new MemoVO(tableList.get(row).getFixNum(), sbsb, size);
+				
 				memoList.add(memoVO);
 				
 				continue;
@@ -175,9 +176,11 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 					sb.append(memo).append("\n");
 				} // end while
 	
-				System.out.println("sb의 length-----------"+sb.length());
+//				System.out.println("sb의 length-----------"+sb.length());
 				//memoList에 넣어주자.
-				memoVO=new MemoVO(tableList.get(row).getFixNum(), sb);
+				int keySize=byteCalculate(sb);
+//				System.out.println("keySize -------------"+keySize);
+				memoVO=new MemoVO(tableList.get(row).getFixNum(), sb, keySize);
 //				System.out.println(sb.toString());
 				memoList.add(memoVO);
 				
@@ -204,10 +207,40 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 		
 	}// readFixMemo
 	
-	private int byteCalculate() {
-		int size=0;
+	private int byteCalculate(StringBuilder sb) {
+		int keySize=0;
 		
-		return size;
+		String str=sb.toString();
+		String[] strArr=str.split("");
+		int[] intArr=new int[strArr.length];
+		
+		
+		
+		for(int i=0; i<strArr.length;i++) {
+			int num=strArr[i].charAt(0);
+			intArr[i]=num;
+//			System.out.println("intArr==============="+intArr[i]);
+		}//end for
+
+		
+		for(int i=0; i<intArr.length;i++) {
+			int compare=intArr[i];
+			if((compare>47 && compare<128)||(compare ==32)) {
+				//1추가
+				keySize+=1;
+	
+			}else if(compare>44031 && compare<55203) {
+				//3추가
+				keySize+=3;
+	
+			}else if(compare>12592 && compare<12644) {
+				//3추가
+				keySize+=3;
+			}//end if ~ else if
+		
+		}//end for
+		return keySize;
+
 	}//byteCalculate
 	
 	////////사용 안하는 method//////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@ package kr.co.sist.hjy;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
@@ -68,7 +69,9 @@ public class FixDetailView extends JDialog{
 		
 		FixDetailEvt fde=new FixDetailEvt(this, status);
 		defaultView(fde,titleFont, plainFont,lb,labelColor);
+			
 		keyCountView();
+		keyView();
 		
 		/*이벤트발생*/
 		addWindowListener(fde);
@@ -322,7 +325,7 @@ public class FixDetailView extends JDialog{
 		JLabel fixMemoExplain=new JLabel("/1000byte (300자 이내)");
 		jbtnClose=new JButton("닫기");
 		
-		jtaFixMemo=new JTextArea("내용을 입력해 주세요.");
+		jtaFixMemo=new JTextArea();
 		
 		JScrollPane jspMemo=new JScrollPane(jtaFixMemo);
 		
@@ -356,6 +359,9 @@ public class FixDetailView extends JDialog{
 			
 		}//end if~else
 		
+		
+//		keyCountView();
+//		keyView();
 		
 		jtaFixMemo.addKeyListener(fde);
 //		jtaFixMemo.addMouseListener(fde);
@@ -456,16 +462,23 @@ public class FixDetailView extends JDialog{
 	}//modifyMemoView
 	
 	public void keyCountView() {
+		Font plainFont=new Font("맑은 고딕",Font.PLAIN,10);
 		jlblKeyCount=new JLabel();
 		jlblKeyCount.setBounds(X+93,Y+263,30,30);
 		jlblKeyCount.setOpaque(true);
 		Color backgroundColor=new Color(255,255,255);
 		jlblKeyCount.setBackground(backgroundColor);
-		
+		jlblKeyCount.setFont(plainFont);
 		
 		add(jlblKeyCount);
 		
 	}//keyCount
+	
+	public void keyView() {
+		int memoSize=getFe().getMemoList().get(getFe().getListRowNum()).getFixMemoSize();
+		getJlblKeyCount().setText(memoSize+"");
+		setKeySum(memoSize);
+	}//keyView
 
 	
 	
@@ -505,7 +518,11 @@ public class FixDetailView extends JDialog{
 
 	public void setKeySum(int keySum) {
 		this.keySum += keySum;
-	}
+		
+		if(this.keySum<0) {
+			this.keySum=0;
+		}//end if
+	}//setKeySum
 
 
 	
