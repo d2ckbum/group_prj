@@ -127,19 +127,30 @@ public class ItemView extends JFrame {
 
         btnRecommended.addActionListener(e -> {
         	setButtonSelected(btnRecommended);
-            if (recommendPanel == null) {
-                recommendPanel = new RecommendItemView(this, carNum);
-                mainPanel.add(recommendPanel, "Recommended");
+            if (recommendPanel != null) {
+            	mainPanel.remove(recommendPanel);
             }
+            
+            recommendPanel = new RecommendItemView(this, carNum);
+            mainPanel.add(recommendPanel, "Recommended");
+            
+            mainPanel.revalidate(); // 레이아웃 갱신
+            mainPanel.repaint();
+            
             cardLayout.show(mainPanel, "Recommended");
         });
 
         btnMyInfo.addActionListener(e -> {
             setButtonSelected(btnMyInfo);
-            if (myInfoPanel == null) {
-            	myInfoPanel = new MyInfoView(id);
-                mainPanel.add(myInfoPanel, "MyInfo");
+            if (myInfoPanel != null) {
+            	mainPanel.remove(myInfoPanel);
             }
+            myInfoPanel = new MyInfoView(id);
+            mainPanel.add(myInfoPanel, "MyInfo");
+            
+            mainPanel.revalidate(); // 레이아웃 갱신
+            mainPanel.repaint();
+            
             cardLayout.show(mainPanel, "MyInfo");
         });
         
