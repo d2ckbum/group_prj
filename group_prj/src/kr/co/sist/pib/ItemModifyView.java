@@ -1,14 +1,14 @@
 package kr.co.sist.pib;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class itemModifyView extends JDialog {
+public class ItemModifyView extends JDialog {
 
     private DefaultTableModel tableModel;
     private int selectedRow;
@@ -29,7 +29,7 @@ public class itemModifyView extends JDialog {
     private JPanel mainPanel;
     
 
-    public itemModifyView(DefaultTableModel tableModel, int selectedRow, JFrame parent, JPanel mainPanel) {
+    public ItemModifyView(DefaultTableModel tableModel, int selectedRow, JFrame parent, JPanel mainPanel) {
         super(parent, "상품 수정", true);
         setTitle("상품 수정");
         
@@ -154,6 +154,7 @@ public class itemModifyView extends JDialog {
         
         
         costField = new JTextField(cost, 20);
+        
         costField.setForeground(Color.GRAY);
         costField.setFont(font);
         costField.setBorder(BorderFactory.createCompoundBorder(
@@ -178,6 +179,9 @@ public class itemModifyView extends JDialog {
         
         //이벤트 등록
         ItemModifyEvent evt = new ItemModifyEvent(this);
+        evt.registerNumericDocumentFilter(costField);
+        evt.registerNumericDocumentFilter(priceField);
+        evt.registerNumericDocumentFilter(quantityUnitField);
         nameField.addFocusListener(evt);
         costField.addFocusListener(evt);
         priceField.addFocusListener(evt);

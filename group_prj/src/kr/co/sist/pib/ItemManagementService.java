@@ -50,6 +50,9 @@ public class ItemManagementService {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println("Error Message: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("Error Code: " + e.getErrorCode());
 		}//end catch
 		return false;
 	}
@@ -64,6 +67,17 @@ public class ItemManagementService {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			  String pattern = "\"([^\"]+)\"\\.\"([^\"]+)\"\\.\"([^\"]+)\".*실제:\\s*(\\d+)";
+		        java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
+		        java.util.regex.Matcher matcher = regex.matcher(e.getMessage());
+		        
+		        if (matcher.find()) {
+		            // 컬럼 이름 (matcher.group(3))을 추출
+		            System.out.println("Error Message Column: " + matcher.group(3));
+		            
+		        } else {
+		            System.out.println("No match found.");
+		        }
 		}
 		return false;
 	}

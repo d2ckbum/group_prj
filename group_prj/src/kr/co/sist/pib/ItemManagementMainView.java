@@ -30,20 +30,19 @@ public class ItemManagementMainView extends JPanel {
 
         // UI 초기화 메서드 호출
         initializeUI();
-        setBorder(new LineBorder(Color.RED, 2));
         // 프레임을 보이도록 설정
         setVisible(true);
         
         
-//        JFrame testFrame = new JFrame();
-//        testFrame.setTitle("상품 관리");
-////        setTitle("상품 관리");
-//        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        testFrame.setLayout(null);
-//        testFrame.setSize(1200,900);
-//        testFrame.add(this); // JFrame에 패널 추가
-//        testFrame.setVisible(true);
-//        System.out.println((JFrame)getRootPane().getParent() == testFrame);
+        JFrame testFrame = new JFrame();
+        testFrame.setTitle("상품 관리");
+//        setTitle("상품 관리");
+        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        testFrame.setLayout(null);
+        testFrame.setSize(1200,900);
+        testFrame.add(this); // JFrame에 패널 추가
+        testFrame.setVisible(true);
+        System.out.println((JFrame)getRootPane().getParent() == testFrame);
     }
 
     private void initializeUI() {
@@ -100,7 +99,6 @@ public class ItemManagementMainView extends JPanel {
         // 중앙 정렬을 위한 패널 설정
         JPanel centerPanel = new JPanel(null);
 //        centerPanel.setBackground(Color.WHITE);
-        centerPanel.setBorder(new LineBorder(Color.RED, 2));
 //        JPanel centerPanel = new JPanel(new GridBagLayout());
 //        JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setSize(1200, 700);
@@ -124,12 +122,14 @@ public class ItemManagementMainView extends JPanel {
         // 상품 등록 버튼
         registerButton = new JButton("상품 등록");
         registerButton.setPreferredSize(new Dimension(90, 35));
+        registerButton.setBackground(new Color(217,217,217));
         registerButton.addActionListener(imEvt);
         registerButton.setFocusPainted(false);
 
         // 수정 버튼
         updateButton = new JButton("수정");
         updateButton.setPreferredSize(new Dimension(70, 35));
+        updateButton.setBackground(new Color(217,217,217));
         updateButton.addActionListener(imEvt);
         updateButton.setFocusPainted(false);
 

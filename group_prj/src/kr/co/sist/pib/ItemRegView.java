@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class itemRegView extends JDialog {
+public class ItemRegView extends JDialog {
 
 //    private DefaultTableModel tableModel;
 //    private int selectedRow;
@@ -29,7 +29,7 @@ public class itemRegView extends JDialog {
     private JPanel mainPanel;
     
 
-    public itemRegView(JFrame parent, JPanel mainPanel) {
+    public ItemRegView(JFrame parent, JPanel mainPanel) {
         super(parent, "상품 등록", true);
         setTitle("상품 등록");
         
@@ -176,7 +176,10 @@ public class itemRegView extends JDialog {
         add(formPanel, BorderLayout.CENTER);
         
         //이벤트 등록
-        itemRegViewEvent evt = new itemRegViewEvent(this);
+        ItemRegViewEvent evt = new ItemRegViewEvent(this);
+        evt.registerNumericDocumentFilter(costField);
+        evt.registerNumericDocumentFilter(priceField);
+        evt.registerNumericDocumentFilter(quantityUnitField);
         nameField.addFocusListener(evt);
         costField.addFocusListener(evt);
         priceField.addFocusListener(evt);
