@@ -48,7 +48,10 @@ public class AdminTabViewEvt implements ActionListener {
 		} else if (clickedButton == view.getJbtnLogout()) {
 			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
 			view.dispose();
-		}//end if
+		}else if(clickedButton == view.getJbtnBack()) {
+			new AdminMainView();
+			view.dispose();
+		}
 		
 	}//actionPerformed
 	

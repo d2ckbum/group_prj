@@ -25,6 +25,7 @@ public class AdminLoginView extends JFrame implements ActionListener {
 		// 아이디 입력
 		JPanel idPanel = new JPanel();
 		JLabel idLabel = new JLabel("아이디 : ");
+		idLabel.setFont(new Font("맑은 고딕",Font.BOLD,15));
 		jtfId = new JTextField(30);
 		idPanel.add(idLabel);
 		idPanel.add(jtfId);
@@ -33,6 +34,7 @@ public class AdminLoginView extends JFrame implements ActionListener {
 		// 비밀번호 입력
 		JPanel passwordPanel = new JPanel();
 		JLabel passwordLabel = new JLabel("비밀번호 : ");
+		passwordLabel.setFont(new Font("맑은 고딕",Font.BOLD,15));
 		jpfPass = new JPasswordField(30);
 		passwordPanel.add(passwordLabel);
 		passwordPanel.add(jpfPass);

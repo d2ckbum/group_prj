@@ -38,6 +38,9 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 	private Color defaultButtonColor = new Color(217, 217, 217); // 기본 버튼 색상
 	private Color selectedButtonColor = new Color(150, 150, 150); // 진한 회색
 	private JButton currentlySelectedButton = null;
+	
+	private JButton jbtnBack;
+	private AdminMainView admv;
 
 	public AdminTabView() {
 		super("관리자 페이지");
@@ -58,11 +61,18 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		jbtnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 		jbtnLogout.setPreferredSize(new Dimension(100, 40));
 		jbtnLogout.setBackground(defaultButtonColor);
+		
+		jbtnBack = new JButton("뒤로가기");
+		jbtnBack.setFont(new Font("맑은 고딕",Font.BOLD,15));
+		jbtnBack.setPreferredSize(new Dimension(100,40) );
+		jbtnBack.setBackground(defaultButtonColor);
+		
 		jpTopRight.add(jlblWelcomeAdmin);
 		jpTopRight.add(jbtnLogout);
+		jpTopRight.add(jbtnBack);
 		jpTop.add("East", jpTopRight);
 
-		jpTop.setBorder(new EmptyBorder(0, 0, 0, 76)); // 상단 여백 추가
+		jpTopRight.setBorder(new EmptyBorder(0, 0, 0, 76)); // 상단 여백 추가
 
 		// 메뉴 버튼 패널
 		JPanel jpNorth = new JPanel();
@@ -132,10 +142,12 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		jbtnSales.addActionListener(ate);
 		jbtnInquiryManage.addActionListener(ate);
 		jbtnLogout.addActionListener(ate);
+		jbtnBack.addActionListener(ate);
 
-		// 초기 선택 버튼 설정 (회원현황)
-		setButtonSelected(jbtnMember);
-		cl.show(mainPanel, "memp");
+//		// 초기 선택 버튼 설정 (회원현황)
+//		setButtonSelected(jbtnMember);
+//		cl.show(mainPanel, "memp");
+
 
 		// 클릭 시 생기는 테두리 없애기
 		jbtnMember.setFocusPainted(false);
@@ -144,6 +156,7 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		jbtnSales.setFocusPainted(false);
 		jbtnInquiryManage.setFocusPainted(false);
 		jbtnLogout.setFocusPainted(false); // 로그아웃 버튼도 추가
+		jbtnBack.setFocusPainted(false);
 	}// AdminTabView
 
 	public void setButtonSelected(JButton button) {
@@ -158,6 +171,10 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		return jbtnLogout;
 	}
 
+	public JButton getJbtnBack() {
+		return jbtnBack;
+	}
+	
 	public JButton getJbtnMember() {
 		return jbtnMember;
 	}
@@ -184,6 +201,10 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 
 	public JPanel getMainPanel() {
 		return mainPanel;
+	}
+	
+	public JFrame getAdminMainView() {
+		return admv;
 	}
 
 	public static void main(String[] args) {

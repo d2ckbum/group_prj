@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class AdminMainView extends JFrame {
@@ -56,7 +57,9 @@ public class AdminMainView extends JFrame {
 		JPanel topPanel = new JPanel(new BorderLayout());
 		JLabel titleLabel = new JLabel("관리자 페이지", SwingConstants.CENTER);
 		titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 26));
-		topPanel.add(titleLabel, BorderLayout.CENTER);
+//		topPanel.add(titleLabel, BorderLayout.CENTER);
+		topPanel.add("North",titleLabel);
+		
 		JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		welcomeLabel = new JLabel("관리자님 어서오세요");
 		welcomeLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
@@ -66,7 +69,9 @@ public class AdminMainView extends JFrame {
 
 		rightPanel.add(welcomeLabel);
 		rightPanel.add(jbtnLogout);
-		topPanel.add(rightPanel, BorderLayout.SOUTH);
+		topPanel.add("East",rightPanel);
+		
+		rightPanel.setBorder(new EmptyBorder(0, 0, 0, 76)); // 상단 여백 추가
 		add(topPanel, BorderLayout.NORTH);
 
 		// 중앙 버튼 패널
@@ -98,6 +103,7 @@ public class AdminMainView extends JFrame {
 		jbtnLogout.addActionListener(e -> {
 			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
 			dispose();
+		
 		});
 
 		// 윈도우가 활성화될 때마다 정보 업데이트
