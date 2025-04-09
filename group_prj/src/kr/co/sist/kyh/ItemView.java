@@ -2,6 +2,7 @@ package kr.co.sist.kyh;
 
 import javax.swing.*;
 
+import kr.co.sist.cjw.view.Mem_Inquiry_View;
 import kr.co.sist.kji.LoginpageView;
 import kr.co.sist.kji.MemberVO;
 import kr.co.sist.kji.MyInfoView;
@@ -22,6 +23,7 @@ public class ItemView extends JFrame {
     private JButton btnInquiry;
     private JButton btnMyInfo;
     private JButton btnLogout;
+    
     private JPanel engineOilPanel;
     private JPanel recommendPanel;
     private JPanel myInfoPanel;
@@ -52,7 +54,7 @@ public class ItemView extends JFrame {
         topPanel.setPreferredSize(new Dimension(1080, 160));
 
         JLabel titleLabel = new JLabel("쌍용 엔진오일 샵", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 28));
+        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
         titleLabel.setBounds(0, 10, 1080, 40);
 
         // 환영 메시지 + 로그아웃
@@ -107,18 +109,19 @@ public class ItemView extends JFrame {
         topPanel.add(btnLogout);
         topPanel.add(buttonPanel);
 
-        JPanel inquiryPanel = new JPanel();
-        inquiryPanel.add(new JLabel("문의게시판"));
-
-
-        mainPanel.add(inquiryPanel, "Inquiry");
-
         btnEngineOil.addActionListener(e -> {
-        	setButtonSelected(btnEngineOil);
-            if (engineOilPanel == null) {
-                engineOilPanel = createEngineOilPanel();
-                mainPanel.add(engineOilPanel, "EngineOil");
+            setButtonSelected(btnEngineOil);
+
+            if (engineOilPanel != null) {
+                mainPanel.remove(engineOilPanel); // 기존 패널 제거
             }
+
+            engineOilPanel = createEngineOilPanel();
+            mainPanel.add(engineOilPanel, "EngineOil");
+            
+            mainPanel.revalidate(); // 레이아웃 갱신
+            mainPanel.repaint();
+
             cardLayout.show(mainPanel, "EngineOil");
         });
 
@@ -140,7 +143,10 @@ public class ItemView extends JFrame {
             cardLayout.show(mainPanel, "MyInfo");
         });
         
-        btnInquiry.addActionListener(e -> cardLayout.show(mainPanel, "Inquiry"));
+        btnInquiry.addActionListener(e -> {
+            setButtonSelected(btnInquiry);
+            new Mem_Inquiry_View(id);
+        });
 
         btnLogout.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "로그아웃되었습니다.");
@@ -173,10 +179,10 @@ public class ItemView extends JFrame {
     // 전체 상품을 가져오는 메서드
     public JPanel createEngineOilPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel listPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        listPanel.setPreferredSize(new Dimension(1080, 300));
 
+        JPanel listPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        
+        listPanel.removeAll();
         ItemRecommendDAO itemDAO = ItemRecommendDAO.getInstance();
         List<ItemVO> items = new ArrayList<>();
 
@@ -185,22 +191,28 @@ public class ItemView extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        int count = 0; // 상품 수
 
         if (!items.isEmpty()) {
             for (ItemVO item : items) {
+            	if(item.getItemStock() <= 0) {
+            		continue;
+            	}
+            	
                 JPanel itemPanel = new JPanel(new BorderLayout());
                 itemPanel.setBackground(Color.WHITE);
-                itemPanel.setPreferredSize(new Dimension(200, 180));
+                itemPanel.setPreferredSize(new Dimension(220, 180)); // 카드 크기
                 itemPanel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(200, 200, 200)),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
                 ));
 
                 JLabel nameLabel = new JLabel(item.getItemName(), SwingConstants.CENTER);
-                nameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+                nameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 
                 JLabel priceLabel = new JLabel("₩" + item.getItemPrice(), SwingConstants.CENTER);
-                priceLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+                priceLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
                 priceLabel.setForeground(new Color(70, 70, 70));
 
                 JPanel textPanel = new JPanel(new GridLayout(2, 1));
@@ -209,16 +221,24 @@ public class ItemView extends JFrame {
                 textPanel.add(priceLabel);
 
                 itemPanel.add(textPanel, BorderLayout.CENTER);
-
                 itemPanel.addMouseListener(new ItemEvt(this, member).getEngineOilClickListener(item));
 
                 listPanel.add(itemPanel);
+                count++;
             }
+            
+            // 아이템 수에 따라 높이 계산
+            int itemRow = 3;
+            int itemHeight = 200;
+            int rows = (int) Math.ceil(count / (double) itemRow);
+            listPanel.setPreferredSize(new Dimension(800, rows * itemHeight));
+            
         }
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(15); // 부드러운 스크롤
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
@@ -258,6 +278,10 @@ public class ItemView extends JFrame {
 
 	public JPanel getRecommendPanel() {
 		return recommendPanel;
+	}
+
+	public JPanel getMyInfoPanel() {
+		return myInfoPanel;
 	}
 
 	public int getCarNum() {

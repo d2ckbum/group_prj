@@ -23,7 +23,7 @@ public class ItemDetailView extends JPanel {
         productPanel.setBackground(new Color(245, 245, 245));
 
         TitledBorder titleBorder = BorderFactory.createTitledBorder("상품정보");
-        titleBorder.setTitleFont(new Font("Dialog", Font.BOLD, 22));
+        titleBorder.setTitleFont(new Font("맑은 고딕", Font.BOLD, 25));
         titleBorder.setTitleJustification(TitledBorder.CENTER);
         productPanel.setBorder(titleBorder);
 
@@ -34,7 +34,12 @@ public class ItemDetailView extends JPanel {
 
         JPanel buttonPanel = new JPanel();
         JButton selectButton = new JButton("선택");
+        selectButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        selectButton.setBackground(new Color(217,217,217));
+        
         JButton backButton = new JButton("돌아가기");
+        backButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        backButton.setBackground(new Color(217,217,217));
 
         buttonPanel.add(selectButton);
         buttonPanel.add(backButton);
@@ -63,7 +68,7 @@ public class ItemDetailView extends JPanel {
     private JPanel infoLabel(String text) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Dialog", Font.BOLD, 17));
+        label.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         panel.setBackground(new Color(245, 245, 245));
         panel.add(label);
         return panel;

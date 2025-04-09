@@ -28,7 +28,7 @@ public class OrderView extends JPanel {
         itemPanel.setPreferredSize(new Dimension(600, 250));
 
         TitledBorder itemBorder = BorderFactory.createTitledBorder("상품정보");
-        itemBorder.setTitleFont(new Font("Dialog", Font.BOLD, 22));
+        itemBorder.setTitleFont(new Font("맑은 고딕", Font.BOLD, 25));
         itemBorder.setTitleJustification(TitledBorder.CENTER);
         itemPanel.setBorder(itemBorder);
 
@@ -44,7 +44,7 @@ public class OrderView extends JPanel {
         memberPanel.setPreferredSize(new Dimension(600, 120));
 
         TitledBorder memberBorder = BorderFactory.createTitledBorder("내정보");
-        memberBorder.setTitleFont(new Font("Dialog", Font.BOLD, 22));
+        memberBorder.setTitleFont(new Font("맑은 고딕", Font.BOLD, 25));
         memberBorder.setTitleJustification(TitledBorder.CENTER);
         memberPanel.setBorder(memberBorder);
 
@@ -52,8 +52,14 @@ public class OrderView extends JPanel {
         memberPanel.add(infoLabel("전화번호: " + member.getMemTell()));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
         JButton requestButton = new JButton("정비요청");
+        requestButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        requestButton.setBackground(new Color(217,217,217));
+        
         JButton cancelButton = new JButton("취소");
+        cancelButton.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        cancelButton.setBackground(new Color(217,217,217));
 
         buttonPanel.add(requestButton);
         buttonPanel.add(cancelButton);
@@ -77,7 +83,7 @@ public class OrderView extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setOpaque(false);
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Dialog", Font.BOLD, 17));
+        label.setFont(new Font("맑은 고딕", Font.BOLD, 20));
         panel.add(label);
         return panel;
     }
