@@ -19,11 +19,6 @@ public class MyFixInfoEvt implements ActionListener{
 			mfiv.dispose();
 			
 		}//end if
-		
-		if(e.getSource()==mfiv.getLogoutBtn()) {
-			new LoginpageView();
-			mfiv.dispose();
-		}//end if
 	}//actionPerformed
 
 }//class

@@ -1,10 +1,17 @@
 package kr.co.sist.kji;
 
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -41,7 +48,10 @@ public class MyInfoEvt implements ActionListener, DocumentListener {
 		MemberService ms = new MemberService();
 
 		if (obj == miv.getListBtn()) {
-			new MyFixInfoView(id);
+			 Window window = SwingUtilities.getWindowAncestor(miv);
+			 if (window instanceof Frame) {
+	                new MyFixInfoView((Frame) window, miv.getId()); // 모달 다이얼로그 호출
+	            }
 			return;
 		}
 

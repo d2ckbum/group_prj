@@ -2,10 +2,11 @@ package kr.co.sist.kji;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -14,34 +15,27 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-public class MyFixInfoView extends JFrame {
+public class MyFixInfoView extends JDialog {
 
 	private DefaultTableModel tableModel;
 	private MemberService memberService = new MemberService();
 	private List<FixPanelVO> allList; // 전체 회원 목록 저장
 	private String id;
-	private JButton logoutBtn;
 	private JButton confirmBtn;
 
-	public MyFixInfoView(String id) {
+	public MyFixInfoView(Frame owner, String id) {
+		super(owner, "내 정비 목록", true); // 모달 설정
 		this.id = id;
-		setTitle("내 정비 목록");
+
 		setSize(1080, 700);
 		setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		// 상단 타이틀
 		JLabel shopLabel = new JLabel("쌍용 엔진오일 샵", SwingConstants.CENTER);
 		shopLabel.setFont(new Font("맑은 고딕", Font.BOLD, 24));
 		shopLabel.setBounds(0, 0, 1080, 60);
 		add(shopLabel);
-
-//		// 오른쪽 상단
-//		JLabel welcomeLabel = new JLabel("000님 어서옵서예!");
-//		welcomeLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-//		welcomeLabel.setBounds(850, 20, 200, 30);
-//		add(welcomeLabel);
-
 
 		// 정비 목록 타이틀
 		JLabel titleLabel = new JLabel("내 정비 목록");
@@ -55,7 +49,7 @@ public class MyFixInfoView extends JFrame {
 		add(separator);
 
 		// JTable 정비 목록
-		String[] columnNames = { "No","상품", "접수번호", "견적금액", "정비 현황" };
+		String[] columnNames = { "No", "상품", "접수번호", "견적금액", "정비 현황" };
 
 		tableModel = new DefaultTableModel(columnNames, 0) {
 			@Override
@@ -93,73 +87,47 @@ public class MyFixInfoView extends JFrame {
 		confirmBtn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		add(confirmBtn);
 
-		MyFixInfoEvt mfie =new MyFixInfoEvt(this);
+		MyFixInfoEvt mfie = new MyFixInfoEvt(this);
 		confirmBtn.addActionListener(mfie);
+
+		setLocationRelativeTo(owner);
 		setVisible(true);
-	}//MyFixInfoView
+	} // MyFixInfoView
 
-	
 	private void loadMemberList() {
-		String status ="";
-	      // 기존 테이블 데이터 초기화
-	      if (tableModel != null) {
-	         tableModel.setRowCount(0);
-	      } // end if
+		String status = "";
+		if (tableModel != null) {
+			tableModel.setRowCount(0);
+		}
+		try {
+			allList = memberService.searchAllFixinfo(id);
+			if (allList != null && !allList.isEmpty()) {
+				for (int i = 0; i < allList.size(); i++) {
+					FixPanelVO fix = allList.get(i);
+					if (fix.getFixStatus().equals("1")) {
+						status = "접수완료";
+					} else if (fix.getFixStatus().equals("2")) {
+						status = "정비중";
+					} else {
+						status = "정비완료";
+					}
+					Object[] rowData = { i + 1, fix.getItemName(), fix.getFixNum(), fix.getTotal(), status };
+					tableModel.addRow(rowData);
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "정비 정보가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
-	      try {
-	         // MemberService를 통해 회원 목록 가져오기
-	    	  allList = memberService.searchAllFixinfo(id);
-
-	         // 가져온 회원 목록을 테이블 모델에 추가
-	         if (allList != null && !allList.isEmpty()) {
-	            for (int i = 0; i < allList.size(); i++) {
-	               FixPanelVO fix = allList.get(i);
-	               if(fix.getFixStatus().equals("1")) {
-	            	   status="접수완료";
-	               }else if(fix.getFixStatus().equals("2")) {
-	            	   status="정비중";
-	               }else {
-	            	   status="정비완료";
-	               }
-	               Object[] rowData = { i + 1, // No.
-	            		   fix.getItemName(), fix.getFixNum(), fix.getTotal(), status };
-	               tableModel.addRow(rowData);
-	            }//end for
-	         } else {
-	            JOptionPane.showMessageDialog(this, "정비 정보가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-	         }//end else
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	         JOptionPane.showMessageDialog(this, "데이터베이스 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-	      }
-	   }// loadMemberList
-	
-	
 	public String getId() {
 		return id;
 	}
 
-
-
-
-
-	public JButton getLogoutBtn() {
-		return logoutBtn;
-	}
-
-
-
-
-
 	public JButton getConfirmBtn() {
 		return confirmBtn;
-	}
-
-
-
-
-
-	public static void main(String[] args) {
-		new MyFixInfoView("kkk");
 	}
 }

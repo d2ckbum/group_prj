@@ -28,137 +28,139 @@ public class MyInfoView extends JPanel {
 	private JButton listBtn;
 	private JButton updateBtn;
 	private JButton deleteBtn;
-	
-    public MyInfoView(String id) {
-        this.id = id;
-        MemberService ms = new MemberService();
-        mVO = ms.searchOneMember(id);
 
-        setLayout(new BorderLayout());
+	public MyInfoView(String id) {
+		this.id = id;
+		MemberService ms = new MemberService();
+		mVO = ms.searchOneMember(id);
 
-        // 메인 정보 패널 (상단 제목 포함)
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(245, 245, 245));
+		setLayout(new BorderLayout());
 
-        TitledBorder border = BorderFactory.createTitledBorder("내 정보");
-        border.setTitleFont(new Font("Dialog", Font.BOLD, 22));
-        border.setTitleJustification(TitledBorder.CENTER);
-        mainPanel.setBorder(border);
+		// 메인 정보 패널 (상단 제목 포함)
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setBackground(new Color(245, 245, 245));
 
-        // 회원 기본정보
-        mainPanel.add(infoPanel("회원번호", String.valueOf(mVO.getMemNum())));
-        mainPanel.add(infoPanel("아이디", mVO.getMemId()));
+		TitledBorder border = BorderFactory.createTitledBorder("내 정보");
+		border.setTitleFont(new Font("맑은 고딕", Font.BOLD, 22));
+		border.setTitleJustification(TitledBorder.CENTER);
+		mainPanel.setBorder(border);
 
-        myNameTF = textFieldWithValue(mainPanel, "이름", mVO.getMemName());
-        myPassTF = passwordFieldWithValue(mainPanel, "비밀번호", mVO.getMemPass());
-        myPassConfirmTF = passwordFieldWithValue(mainPanel, "비밀번호 확인", mVO.getMemPass());
+		// 회원 기본정보
+		mainPanel.add(infoPanel("회원번호", String.valueOf(mVO.getMemNum())));
+		mainPanel.add(infoPanel("아이디", mVO.getMemId()));
 
-        pwMatch = new JLabel();
-        pwMatch.setFont(new Font("Dialog", Font.PLAIN, 12));
-        pwMatch.setForeground(Color.RED);
-        JPanel pwCheckPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        pwCheckPanel.setBackground(new Color(245, 245, 245));
-        pwCheckPanel.add(pwMatch);
-        mainPanel.add(pwCheckPanel);
+		myNameTF = textFieldWithValue(mainPanel, "이름", mVO.getMemName());
+		myPassTF = passwordFieldWithValue(mainPanel, "비밀번호", mVO.getMemPass());
+		myPassConfirmTF = passwordFieldWithValue(mainPanel, "비밀번호 확인", mVO.getMemPass());
 
-        myEmailTF = textFieldWithValue(mainPanel, "이메일", mVO.getMemEmail());
-        myTellTF = textFieldWithValue(mainPanel, "전화번호", mVO.getMemTell());
+		pwMatch = new JLabel();
+		pwMatch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		pwMatch.setForeground(Color.RED);
+		JPanel pwCheckPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		pwCheckPanel.setBackground(new Color(245, 245, 245));
+		pwCheckPanel.add(pwMatch);
+		mainPanel.add(pwCheckPanel);
 
-        // 차량 정보
-        CarService cs = new CarService();
-        List<CarVO> carList = cs.searchAllMember();
-        String[] carTypes = carList.stream().map(CarVO::getCarType).toArray(String[]::new);
+		myEmailTF = textFieldWithValue(mainPanel, "이메일", mVO.getMemEmail());
+		myTellTF = textFieldWithValue(mainPanel, "전화번호", mVO.getMemTell());
 
-        MfgService mfgs = new MfgService();
-        List<MfgVO> mfgList = mfgs.searchAllMember();
-        String[] mfgNames = mfgList.stream().map(MfgVO::getMfgName).toArray(String[]::new);
+		// 차량 정보
+		CarService cs = new CarService();
+		List<CarVO> carList = cs.searchAllMember();
+		String[] carTypes = carList.stream().map(CarVO::getCarType).toArray(String[]::new);
 
-        JPanel carPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        carPanel.setBackground(new Color(245, 245, 245));
-        carPanel.add(new JLabel("제조사"));
-        myMfgCB = new JComboBox<>(mfgNames);
-        myMfgCB.setSelectedIndex(mVO.getMfgNum() - 1);
-        carPanel.add(myMfgCB);
+		MfgService mfgs = new MfgService();
+		List<MfgVO> mfgList = mfgs.searchAllMember();
+		String[] mfgNames = mfgList.stream().map(MfgVO::getMfgName).toArray(String[]::new);
 
-        carPanel.add(new JLabel("차종"));
-        myCarCB = new JComboBox<>(carTypes);
-        myCarCB.setSelectedIndex(mVO.getCarNum() - 1);
-        carPanel.add(myCarCB);
+		JPanel carPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		carPanel.setBackground(new Color(245, 245, 245));
+		carPanel.add(new JLabel("제조사"));
+		myMfgCB = new JComboBox<>(mfgNames);
+		myMfgCB.setSelectedIndex(mVO.getMfgNum() - 1);
+		carPanel.add(myMfgCB);
 
-        mainPanel.add(carPanel);
+		carPanel.add(new JLabel("차종"));
+		myCarCB = new JComboBox<>(carTypes);
+		myCarCB.setSelectedIndex(mVO.getCarNum() - 1);
+		carPanel.add(myCarCB);
 
-        myZipcodeTF = textFieldWithValue(mainPanel, "우편번호", mVO.getMemZipcode());
-        myAddr1TF = textFieldWithValue(mainPanel, "주소", mVO.getMemAddr1());
-        myAddr2TF = textFieldWithValue(mainPanel, "상세주소", mVO.getMemAddr2());
+		mainPanel.add(carPanel);
 
-        // 버튼 패널
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		myZipcodeTF = textFieldWithValue(mainPanel, "우편번호", mVO.getMemZipcode());
+		myAddr1TF = textFieldWithValue(mainPanel, "주소", mVO.getMemAddr1());
+		myAddr2TF = textFieldWithValue(mainPanel, "상세주소", mVO.getMemAddr2());
 
-        listBtn = new JButton("내 정비 목록");
-        updateBtn = new JButton("수정");
-        deleteBtn = new JButton("회원 탈퇴");
+		// 버튼 패널
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        styleButton(listBtn, new Color(217, 217, 217));
-        styleButton(updateBtn, new Color(217, 217, 217));
-        styleButton(deleteBtn, new Color(255, 127, 127));
+		listBtn = new JButton("내 정비 목록");
+		updateBtn = new JButton("수정");
+		deleteBtn = new JButton("회원 탈퇴");
 
-        buttonPanel.add(listBtn);
-        buttonPanel.add(updateBtn);
-        buttonPanel.add(deleteBtn);
+		styleButton(listBtn, new Color(217, 217, 217));
+		styleButton(updateBtn, new Color(217, 217, 217));
+		styleButton(deleteBtn, new Color(255, 127, 127));
 
-        // 이벤트 연결
-        MyInfoEvt mie = new MyInfoEvt(this);
-        listBtn.addActionListener(mie);
-        updateBtn.addActionListener(mie);
-        deleteBtn.addActionListener(mie);
-        myPassTF.getDocument().addDocumentListener(mie);
-        myPassConfirmTF.getDocument().addDocumentListener(mie);
+		buttonPanel.add(listBtn);
+		buttonPanel.add(updateBtn);
+		buttonPanel.add(deleteBtn);
 
-        // 추가
-        add(mainPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-    }
+		// 이벤트 연결
+		MyInfoEvt mie = new MyInfoEvt(this);
+		listBtn.addActionListener(mie);
+		updateBtn.addActionListener(mie);
+		deleteBtn.addActionListener(mie);
+		myPassTF.getDocument().addDocumentListener(mie);
+		myPassConfirmTF.getDocument().addDocumentListener(mie);
 
-    private JPanel infoPanel(String labelText, String valueText) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBackground(new Color(245, 245, 245));
-        JLabel label = new JLabel(labelText + ": " + valueText);
-        label.setFont(new Font("Dialog", Font.BOLD, 16));
-        panel.add(label);
-        return panel;
-    }
+		// 추가
+		add(mainPanel, BorderLayout.CENTER);
+		add(buttonPanel, BorderLayout.SOUTH);
+	}
 
-    private JTextField textFieldWithValue(JPanel parent, String label, String value) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBackground(new Color(245, 245, 245));
-        JLabel jlabel = new JLabel(label);
-        jlabel.setPreferredSize(new Dimension(100, 25));
-        JTextField tf = new JTextField(value, 20);
-        panel.add(jlabel);
-        panel.add(tf);
-        parent.add(panel);
-        return tf;
-    }
+	private JPanel infoPanel(String labelText, String valueText) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBackground(new Color(245, 245, 245));
+		JLabel label = new JLabel(labelText + ": " + valueText);
+		label.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+		panel.add(label);
+		return panel;
+	}
 
-    private JPasswordField passwordFieldWithValue(JPanel parent, String label, String value) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBackground(new Color(245, 245, 245));
-        JLabel jlabel = new JLabel(label);
-        jlabel.setPreferredSize(new Dimension(100, 25));
-        JPasswordField pf = new JPasswordField(value, 20);
-        panel.add(jlabel);
-        panel.add(pf);
-        parent.add(panel);
-        return pf;
-    }
+	private JTextField textFieldWithValue(JPanel parent, String label, String value) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBackground(new Color(245, 245, 245));
+		JLabel jlabel = new JLabel(label);
+		jlabel.setPreferredSize(new Dimension(100, 25));
+		jlabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		JTextField tf = new JTextField(value, 20);
+		panel.add(jlabel);
+		panel.add(tf);
+		parent.add(panel);
+		return tf;
+	}
 
-    private void styleButton(JButton button, Color color) {
-        button.setBackground(color);
-        button.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-        button.setFocusPainted(false);
-    }
+	private JPasswordField passwordFieldWithValue(JPanel parent, String label, String value) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBackground(new Color(245, 245, 245));
+		JLabel jlabel = new JLabel(label);
+		jlabel.setPreferredSize(new Dimension(100, 25));
+		jlabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		JPasswordField pf = new JPasswordField(value, 20);
+		panel.add(jlabel);
+		panel.add(pf);
+		parent.add(panel);
+		return pf;
+	}
+
+	private void styleButton(JButton button, Color color) {
+		button.setBackground(color);
+		button.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		button.setFocusPainted(false);
+	}
 
 	public String getId() {
 		return id;

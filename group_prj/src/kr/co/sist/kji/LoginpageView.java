@@ -1,8 +1,8 @@
 package kr.co.sist.kji;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,13 +24,15 @@ public class LoginpageView extends JFrame {
 
 		// 최상단 라벨
 		JLabel titleLabel = new JLabel("쌍용 엔진오일 샵", JLabel.CENTER);
-		titleLabel.setFont(new Font("Dialog", Font.BOLD, 30));
+		titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 30));
 		add(titleLabel);
 
 		// 아이디 입력
 		JPanel idPanel = new JPanel();
 		JLabel idLabel = new JLabel("아이디 : ");
+		idLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		idField = new JTextField(30);
+		idField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
 		idPanel.add(idLabel);
 		idPanel.add(idField);
 		add(idPanel);
@@ -38,7 +40,9 @@ public class LoginpageView extends JFrame {
 		// 비밀번호 입력
 		JPanel passwordPanel = new JPanel();
 		JLabel passwordLabel = new JLabel("비밀번호 : ");
+		passwordLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		passwordField = new JPasswordField(30);
+		passwordField.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
 		passwordPanel.add(passwordLabel);
 		passwordPanel.add(passwordField);
 		add(passwordPanel);
@@ -46,7 +50,13 @@ public class LoginpageView extends JFrame {
 		// 로그인 버튼
 		JPanel buttonPanel = new JPanel();
 		jbtnLogin = new JButton("로그인");
+		jbtnLogin.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+		jbtnLogin.setBackground(new Color(217, 217, 217));
+
 		jbtnJoin = new JButton("회원 가입");
+		jbtnJoin.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+		jbtnJoin.setBackground(new Color(217, 217, 217));
+
 		buttonPanel.add(jbtnLogin);
 		buttonPanel.add(jbtnJoin);
 
@@ -54,7 +64,7 @@ public class LoginpageView extends JFrame {
 
 		// 로그인 버튼 이벤트 처리
 		LoginFormEvt lfe = new LoginFormEvt(this);
-		jbtnLogin.addActionListener(lfe); // 여기서 AdminLoginEvt와 연결
+		jbtnLogin.addActionListener(lfe);
 		jbtnJoin.addActionListener(lfe);
 
 		setLocationRelativeTo(null); // 화면 중앙에 배치
@@ -76,5 +86,4 @@ public class LoginpageView extends JFrame {
 	public JButton getJbtnJoin() {
 		return jbtnJoin;
 	}
-
 }
