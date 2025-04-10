@@ -1,6 +1,7 @@
 package kr.co.sist.pib;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -63,7 +64,6 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
         
         else if (source == view.getSaveButton()) {
         	ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
-        	int lastSelectedRow = viewPanel.getItem_management_table().getSelectedRow();
         	   
             int result = JOptionPane.showConfirmDialog(view, "수정하시겠습니까?", "수정", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             
@@ -74,9 +74,7 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
         	addImVO.setItem_num(Integer.parseInt(view.getProductNum().getText()));
         	addImVO.setItem_name(view.getNameField().getText().strip());
         	addImVO.setItem_stock(Integer.parseInt(view.getStockField().getText().replace(",", "")));
-//        	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText()));
         	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText().replace(",", "")));
-//        	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText()));
         	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
         	addImVO.setItem_repair_cost(getRepairCost(carType));
         	addImVO.setCar_type(carType);
@@ -88,7 +86,8 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
         	
         	System.out.println("업데이트 : " + addImVO);
         	viewPanel.setInitialTableData();
-        	viewPanel.getItem_management_table().setRowSelectionInterval(lastSelectedRow, lastSelectedRow);
+        	int row = findRowIndexByItemNum(viewPanel.getItem_management_table(), 0, view.getProductNum().getText());
+        	viewPanel.getItem_management_table().setRowSelectionInterval(row, row);
         	JOptionPane.showMessageDialog(view, "상품정보를 수정하였습니다.", "수정성공", JOptionPane.PLAIN_MESSAGE);
         	view.dispose();
         	}catch(NumberFormatException n){
@@ -129,6 +128,21 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
         	view.dispose();
         }
     }
+    
+    
+    private int findRowIndexByItemNum(JTable table, int columnIndex, Object itemNum) {
+        DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+        
+        for (int row = 0; row < dtm.getRowCount(); row++) {
+            Object cellValue = dtm.getValueAt(row, columnIndex);
+            if (cellValue != null && cellValue.equals(itemNum)) {
+                return row;  
+            }
+        }
+
+        return -1;  
+    }
+    
 
     private void handleDecreaseStock() {
         try {
@@ -138,13 +152,9 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
             	JOptionPane.showMessageDialog(view, "재고 변경 단위에는 음수가 들어갈 수 없습니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
             	return;
             }
-            int desireStock = currentStock - quantityUnit;
-            int finalStock = Math.max(desireStock, 0);
-//            if (currentStock - quantityUnit >= 0) {
-//                view.getStockField().setText(String.valueOf(currentStock - quantityUnit));
-//            } else {
-//                JOptionPane.showMessageDialog(view, "수량이 0보다 적을 수 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
-//            }
+            int finalStock = Math.max(0, currentStock - quantityUnit);
+           
+            
             view.getStockField().setText(String.valueOf(finalStock));
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -159,23 +169,19 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
             	JOptionPane.showMessageDialog(view, "재고 변경 단위에는 음수가 들어갈 수 없습니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
             	return;
             }
-            int desireStock = currentStock + quantityUnit;
-            int finalStock = Math.max(desireStock, 0);
+            
+            int finalStock = 0;
+            try {
+            	finalStock = Math.addExact(currentStock, quantityUnit);
+            }catch(ArithmeticException ae){
+            
+            	finalStock = Integer.MAX_VALUE;	
+            }
             view.getStockField().setText(String.valueOf(finalStock));
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-//    private void handleSaveChanges() {
-//        view.getTableModel().setValueAt(view.getNameField().getText(), view.getSelectedRow(), 1);
-//        view.getTableModel().setValueAt(view.getCarTypeComboBox().getSelectedItem(), view.getSelectedRow(), 2);
-//        view.getTableModel().setValueAt(view.getCostField().getText(), view.getSelectedRow(), 4);
-//        view.getTableModel().setValueAt(view.getPriceField().getText(), view.getSelectedRow(), 5);
-//        view.getTableModel().setValueAt(view.getStockField().getText(), view.getSelectedRow(), 3);
-//        
-//        view.dispose();
-//    }
 
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -222,7 +228,6 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
 		}
 	}
 	public void registerNumericDocumentFilter(JTextField jtf) {
-//		((AbstractDocument) jtf.getDocument()).setDocumentFilter(new NumericDocumentFilter());
 		AbstractDocument doc = (AbstractDocument) jtf.getDocument();
         doc.putProperty("text-component", jtf);
         doc.setDocumentFilter(new NumericDocumentFilter());
@@ -257,9 +262,6 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
 		@Override
 		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
 					
-//			System.out.println(text);
-//			System.out.println("replace 이벤트");
-			
 			if (checkCanWrite(text)) {
 				try {
 				super.replace(fb, offset, length, text, attrs);

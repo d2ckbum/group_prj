@@ -84,7 +84,7 @@ public class ItemRegView extends JDialog {
         	));
         addLabelAndComponent("상품명", nameField, formPanel, gbc, 0);
 
-        stockField = new JTextField("0", 5);
+        stockField = new JTextField("0", 10);
         stockField.setFont(font);
         stockField.setEditable(false);
         stockField.setFocusable(false);

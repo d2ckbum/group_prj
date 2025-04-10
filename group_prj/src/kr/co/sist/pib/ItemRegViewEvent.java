@@ -1,6 +1,7 @@
 package kr.co.sist.pib;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -25,14 +26,14 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
     private String initialCost;
     private String initialSellPrice;
     private int maxItemPrice = 2000000000;
-    private DocumentFilter commonDF;
+    private DocumentFilter defaultDF;
 
     public ItemRegViewEvent(ItemRegView view) {
         this.view = view;
         initialProductName = view.getNameField().getText();
         initialCost = view.getCostField().getText();
         initialSellPrice = view.getPriceField().getText();
-        commonDF = new DocumentFilter();
+        defaultDF = new DocumentFilter();
         
         // 메시지 다이얼로그에 사용될 글꼴 설정
         Font dialogFont = new Font("맑은 고딕", Font.BOLD, 12);
@@ -67,8 +68,6 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
              
             if(result == JOptionPane.YES_OPTION) {
             
-//            	System.out.println(view.getNameField().getText());
-            	
             if(!fieldInputCheck()) {
             	return;
             }
@@ -77,9 +76,7 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
          	String carType = view.getCarTypeComboBox().getSelectedItem().toString();
          	addImVO.setItem_name(view.getNameField().getText().strip());
          	addImVO.setItem_stock(Integer.parseInt(view.getStockField().getText().replace(",", "")));
-//         	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText()));
          	addImVO.setItem_cost(Integer.parseInt(view.getCostField().getText().replace(",", "")));
-//         	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText()));
          	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
          	addImVO.setItem_repair_cost(getRepairCost(carType));
          	addImVO.setCar_type(carType);
@@ -101,6 +98,7 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
         }
     }
     
+    
     private boolean fieldInputCheck() {
     	if(view.getNameField().getText().equals(initialProductName)) {
          	JOptionPane.showMessageDialog(view, "상품명을 입력해주세요.", "등록실패", JOptionPane.ERROR_MESSAGE);
@@ -118,11 +116,16 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
     }
 
     private void handleDecreaseStock() {
-        try {
+    	try {
             int currentStock = Integer.parseInt(view.getStockField().getText());
-            int quantityUnit = Integer.parseInt(view.getQuantityUnitField().getText());
-            int desireStock = currentStock - quantityUnit;
-            int finalStock = Math.max(desireStock, 0);
+            int quantityUnit = Integer.parseInt(view.getQuantityUnitField().getText().replace(",", ""));
+            if(quantityUnit < 0) {
+            	JOptionPane.showMessageDialog(view, "재고 변경 단위에는 음수가 들어갈 수 없습니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            	return;
+            }
+            int finalStock = Math.max(0, currentStock - quantityUnit);
+           
+            
             view.getStockField().setText(String.valueOf(finalStock));
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -130,10 +133,22 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
     }
 
     private void handleIncreaseStock() {
-        try {
+    	try {
             int currentStock = Integer.parseInt(view.getStockField().getText());
-            int quantityUnit = Integer.parseInt(view.getQuantityUnitField().getText());
-            view.getStockField().setText(String.valueOf(currentStock + quantityUnit));
+            int quantityUnit = Integer.parseInt(view.getQuantityUnitField().getText().replace(",", ""));
+            if(quantityUnit < 0) {
+            	JOptionPane.showMessageDialog(view, "재고 변경 단위에는 음수가 들어갈 수 없습니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            	return;
+            }
+            
+            int finalStock = 0;
+            try {
+            	finalStock = Math.addExact(currentStock, quantityUnit);
+            }catch(ArithmeticException ae){
+            
+            	finalStock = Integer.MAX_VALUE;	
+            }
+            view.getStockField().setText(String.valueOf(finalStock));
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "유효한 숫자를 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
         }
@@ -180,7 +195,6 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
 		if(e.getSource() == view.getPriceField()) {
 			if(view.getPriceField().getText().isBlank()) {
 				view.getPriceField().setForeground(Color.GRAY);
-//				view.getPriceField().setText(initialSellPrice);
 				setInitialText(view.getPriceField(), initialSellPrice);
 			}
 		}
@@ -191,7 +205,7 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
 		try {
 			 SimpleAttributeSet attrs = new SimpleAttributeSet();
 			 DocumentFilter numericDF = doc.getDocumentFilter();
-			 doc.setDocumentFilter(commonDF);
+			 doc.setDocumentFilter(defaultDF);
 			 doc.replace(0, doc.getLength(), initialtext, attrs);
 			 doc.setDocumentFilter(numericDF);
 			 
