@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.sist.cjw.view.Mem_Inquiry_View;
 import kr.co.sist.cjw.vo.FAQ_VO;
 import kr.co.sist.cjw.vo.Inquiry_VO;
 
@@ -81,6 +80,7 @@ public class Mem_Inquiry_Dao {
 
 		  try {
 		        con = dbCon.getConn();
+		        
 		        // SQL 쿼리 수정: 상태 컬럼 추가
 		        StringBuilder selectINQ = new StringBuilder();
 		        selectINQ
@@ -90,7 +90,8 @@ public class Mem_Inquiry_Dao {
 		            .append("               ELSE '답변 대기' ")
 		            .append("           END AS Inq_Status ")
 		            .append("	FROM INQUIRY i, Member m	")
-		        	.append("	where (m.mem_num=i.mem_num)and m.mem_id=?	");
+		        	.append("	where (m.mem_num=i.mem_num)and m.mem_id=? ")
+		        	.append("order by I.Inq_Reg_Date desc ");
 
 		        pstmt = con.prepareStatement(selectINQ.toString());
 		        
@@ -146,5 +147,68 @@ public class Mem_Inquiry_Dao {
 	        dbCon.closeDB(null, pstmt, con);
 	    }//end finally
 	}//insertFAQ
+	
+	
+	public Inquiry_VO select_Edit_INQ(Object inqId) throws SQLException {
+		Inquiry_VO inq = null;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    
+	    DbConnection dbCon = DbConnection.getInstance();
+	    try {
+	        con = dbCon.getConn();
+	        
+	        String selectFAQ = "SELECT inq_title, inq_contents, reply FROM INQUIRY WHERE inq_id = ?";
+	        pstmt = con.prepareStatement(selectFAQ);
+	        pstmt.setObject(1, inqId);
+	        
+	        rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            inq = new Inquiry_VO();
+	            inq.setInq_Title(rs.getString("inq_title"));
+	            inq.setInq_Contents(rs.getString("inq_contents"));
+	            inq.setInq_Reply(rs.getString("reply"));;
+	        }
+	    } finally {
+	    	dbCon.closeDB(rs, pstmt, con);
+	    }//end finally
+	    
+	    return inq;
+	}//selectINQ
+	
+	
+	public int updateInq(Inquiry_VO iVO, String inqId) throws SQLException {
+		int rowCnt=0;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+
+	    DbConnection dbCon = DbConnection.getInstance();
+
+	    try {
+	        con = dbCon.getConn();
+	        con.setAutoCommit(false); 
+
+	        
+	        StringBuilder updateInq = new StringBuilder();
+	        updateInq
+	            .append("	update INQUIRY 	")
+	            .append("	set  Inq_Title=?, Inq_Contents=? 	")
+	            .append("	where Inq_Id ? 	");
+
+	        
+	        pstmt = con.prepareStatement(updateInq.toString());
+	        pstmt.setString(1, iVO.getInq_Title());
+	        pstmt.setString(2, iVO.getInq_Contents());
+	        pstmt.setString(3, inqId);
+	        	        
+	        rowCnt=pstmt.executeUpdate();
+	        con.commit(); 
+	    } finally {
+	        dbCon.closeDB(null, pstmt, con);
+	    }//end finally
+	    return rowCnt;
+	}//updateInq
 	
 }//class

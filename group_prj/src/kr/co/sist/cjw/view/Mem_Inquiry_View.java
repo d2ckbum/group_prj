@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Insets;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,13 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import kr.co.sist.cjw.event.Mem_Inquiry_Event;
-import kr.co.sist.cjw.service.Mem_Inquiry_Service;
-import kr.co.sist.cjw.vo.FAQ_VO;
-import kr.co.sist.cjw.vo.Inquiry_VO;
 
 
 public class Mem_Inquiry_View extends JFrame {
@@ -65,26 +60,19 @@ public class Mem_Inquiry_View extends JFrame {
 		private JFrame mem_Inquiry_Edit_View;
 		
 
+		//DefaultTablemodel
+		private DefaultTableModel faqModel;
+		private DefaultTableModel inqModel;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-	
-	
-
-
-
-
-
-
 	public Mem_Inquiry_View(String id) throws HeadlessException {
 		this.id=id;
-	}
-
-
+		mem_Inquiry_Main_View(id);
+	}//Mem_Inquiry_View
 
 	public void mem_Inquiry_Main_View(String id) {
 		
@@ -107,10 +95,12 @@ public class Mem_Inquiry_View extends JFrame {
 	    //버튼 추가
 	    addJbtn = new JButton("문의작성");
 	    addJbtn.setBounds(930, 800, 100, 30); 
+	    addJbtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Main_View.add(addJbtn);
 	    
 	    cnlMainJbtn = new JButton("취소");
 	    cnlMainJbtn.setBounds(1050, 800, 100, 30); 
+	    cnlMainJbtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Main_View.add(cnlMainJbtn);
 	    
 	    //구분선 추가
@@ -129,6 +119,8 @@ public class Mem_Inquiry_View extends JFrame {
 	    faqScrollPane.setBounds(50, 90, 1100, 260); 
 	    faqScrollPane.setBorder(new LineBorder(Color.lightGray));
 	    mem_Inquiry_Main_View.add(faqScrollPane);
+	    faqModel = new DefaultTableModel(new String[]{"", "", ""}, 0);
+	    
 
 	    //문의 목록 테이블
 	    inqTable = new JTable(); 
@@ -140,53 +132,10 @@ public class Mem_Inquiry_View extends JFrame {
 	    inqScrollPane.setBorder(new LineBorder(Color.lightGray));
 	    mem_Inquiry_Main_View.add(inqScrollPane);
 	    
+	    inqModel = new DefaultTableModel(new String[]{"문의번호", "날짜", "제목","상태"}, 0);
 	    
-	    Mem_Inquiry_Service Mem_Inq_Service = new Mem_Inquiry_Service();
-	    List<FAQ_VO> faqList = Mem_Inq_Service.searchFAQ();
+	    
 
-	    DefaultTableModel faqModel = new DefaultTableModel(new String[]{"", "", ""}, 0);
-	    faqTable.setModel(faqModel);
-        for (FAQ_VO faq : faqList) {
-            faqModel.addRow(new Object[]{
-                faq.getFaq_title(), 
-                "⇒ " + faq.getFaq_contents(), 
-                faq.getFaq_reg_date() 
-            });
-        }
-        
-        
-        faqTable.getColumnModel().getColumn(0).setPreferredWidth(400); 
-        faqTable.getColumnModel().getColumn(1).setPreferredWidth(600); 
-        faqTable.getColumnModel().getColumn(2).setPreferredWidth(100); 
-        faqTable.setModel(faqModel);
-        
-	    List<Inquiry_VO> inqList = Mem_Inq_Service.searchINQ(id);
-
-	    DefaultTableModel inqModel = new DefaultTableModel(new String[]{"문의번호", "날짜", "제목","상태"}, 0);
-	    inqTable.setModel(inqModel);
-        for (Inquiry_VO inq : inqList) {
-        	inqModel.addRow(new Object[]{
-                inq.getInq_Id(), 
-                inq.getInq_Reg_Date(), 
-                inq.getInq_Title(), 
-                inq.getInq_Status() 
-            });
-        }
-        
-        //가운데 정렬 설정
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-
-        // 문의번호, 날짜, 상태 열에 가운데 정렬 적용
-        inqTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // 문의번호
-        inqTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer); // 날짜
-        inqTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer); // 상태
-        
-        inqTable.getColumnModel().getColumn(0).setPreferredWidth(100); 
-        inqTable.getColumnModel().getColumn(1).setPreferredWidth(100); 
-        inqTable.getColumnModel().getColumn(2).setPreferredWidth(900);
-        inqTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-        inqTable.setModel(inqModel);
         
         Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
         inqTable.addMouseListener(eventHandler);
@@ -246,14 +195,17 @@ public class Mem_Inquiry_View extends JFrame {
 	    // 버튼 추가
 	    logoutWriteBtn = new JButton("로그아웃");
 	    logoutWriteBtn.setBounds(1030,70,100,30);
+	    logoutWriteBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Write_View.add(logoutWriteBtn);
 	    
 	    saveBtn = new JButton("저장");
 	    saveBtn.setBounds(920, 800, 100, 40); 
+	    saveBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Write_View.add(saveBtn);
 
 	    cnlBtn = new JButton("취소");
 	    cnlBtn.setBounds(1030, 800, 100, 40); 
+	    cnlBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Write_View.add(cnlBtn);
 	    
 	    //이벤트 추가
@@ -337,14 +289,17 @@ public class Mem_Inquiry_View extends JFrame {
 	    // 버튼 추가
 	    logoutConfirmBtn = new JButton("로그아웃");
 	    logoutConfirmBtn.setBounds(1030,70,100,30);
+	    logoutConfirmBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Confirm_View.add(logoutConfirmBtn);
 	    
 	    confirmBtn = new JButton("확인");
 	    confirmBtn.setBounds(550, 800, 100, 40); 
+	    confirmBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Confirm_View.add(confirmBtn);
 	    
 	  //이벤트 추가
 	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    mem_Inquiry_Confirm_View.addWindowListener(eventHandler);
 	    confirmBtn.addActionListener(eventHandler);
 
 	    
@@ -398,14 +353,17 @@ public class Mem_Inquiry_View extends JFrame {
 	    // 버튼 추가
 	    logoutEditBtn = new JButton("로그아웃");
 	    logoutEditBtn.setBounds(1030,70,100,30);
+	    logoutEditBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Edit_View.add(logoutEditBtn);
 	    
 	    editBtn = new JButton("수정");
 	    editBtn.setBounds(920, 800, 100, 40); 
+	    editBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Edit_View.add(editBtn);
 
 	    cnlEditBtn = new JButton("취소");
 	    cnlEditBtn.setBounds(1030, 800, 100, 40); 
+	    cnlEditBtn.setBackground(new Color(217, 217, 217));
 	    mem_Inquiry_Edit_View.add(cnlEditBtn);
 	    
 	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
@@ -740,9 +698,37 @@ public class Mem_Inquiry_View extends JFrame {
 	public String getId() {
 		return id;
 	}
+	
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+
+
+
+	public DefaultTableModel getFaqModel() {
+		return faqModel;
+	}
+
+	public void setFaqModel(DefaultTableModel faqModel) {
+		this.faqModel = faqModel;
+	}
+	
+	
+	
+
+	public DefaultTableModel getInqModel() {
+		return inqModel;
+	}
+
+	public void setInqModel(DefaultTableModel inqModel) {
+		this.inqModel = inqModel;
+	}
 
 	public static void main(String[] args) {
-		new Mem_Inquiry_View("choi").mem_Inquiry_Main_View("choi");
+		new Mem_Inquiry_View("choi");
 		
 	}
 

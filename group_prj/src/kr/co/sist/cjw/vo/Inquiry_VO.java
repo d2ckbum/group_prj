@@ -11,6 +11,7 @@ public class Inquiry_VO {
 	private Date inq_Reply_Date;
 	private String inq_Status;
 	private int mem_Num;
+	private String mem_Name;
 	
 	
 	public Inquiry_VO() {
@@ -18,7 +19,7 @@ public class Inquiry_VO {
 
 
 	public Inquiry_VO(int inq_Id, String inq_Titile, String inq_Contents, Date inq_Reg_Date, String inq_Reply,
-			Date inq_Reply_Date, String inq_Status,int mem_Num, String id) {
+			Date inq_Reply_Date, String inq_Status,int mem_Num, String id, String mem_Name) {
 		this.inq_Id = inq_Id;
 		this.inq_Title = inq_Titile;
 		this.inq_Contents = inq_Contents;
@@ -27,6 +28,7 @@ public class Inquiry_VO {
 		this.inq_Reply_Date = inq_Reply_Date;
 		this.inq_Status=inq_Status;
 		this.mem_Num = mem_Num;
+		this.mem_Name = mem_Name;
 	}//Inquiry_VO
 
 
@@ -52,6 +54,11 @@ public class Inquiry_VO {
 
 	public String getInq_Contents() {
 		return inq_Contents;
+	}
+
+
+	public void setInq_Reply(String inq_Reply) {
+		this.inq_Reply = inq_Reply;
 	}
 
 
@@ -112,15 +119,24 @@ public class Inquiry_VO {
 
 
 
+	public String getMem_Name() {
+		return mem_Name;
+	}
+
+
+	public void setMem_Name(String mem_Name) {
+		this.mem_Name = mem_Name;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Inquiry_VO [inq_Id=" + inq_Id + ", inq_Title=" + inq_Title + ", inq_Contents=" + inq_Contents
 				+ ", inq_Reg_Date=" + inq_Reg_Date + ", inq_Reply=" + inq_Reply + ", inq_Reply_Date=" + inq_Reply_Date
-				+ ", inq_Status=" + inq_Status + ", mem_Num=" + mem_Num + "]";
+				+ ", inq_Status=" + inq_Status + ", mem_Num=" + mem_Num + ", mem_Name=" + mem_Name + "]";
 	}
 
 
-	
 	
 
 }//class

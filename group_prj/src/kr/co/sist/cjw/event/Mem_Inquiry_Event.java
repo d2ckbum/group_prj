@@ -7,11 +7,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import kr.co.sist.cjw.service.Mem_Inquiry_Service;
 import kr.co.sist.cjw.view.Mem_Inquiry_View;
@@ -25,7 +27,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 	
 	public Mem_Inquiry_Event(Mem_Inquiry_View miv) {
 		this.miv=miv;
-//		
 		
 	}
 	
@@ -45,7 +46,7 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		
 		//mem_Inquiry_Write_View
 		if(ae.getSource() == miv.getSaveBtn()) {
-			inqSaveConfirmDialog(miv.getMem_Inquiry_Confirm_View());
+			inqSaveConfirmDialog(miv.getMem_Inquiry_Write_View());
 		}//end if
 		
 		if(ae.getSource() == miv.getCnlBtn()) {
@@ -61,6 +62,10 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		}//end if
 		
 		//mem_Inquiry_Edit_View
+		if(ae.getSource() == miv.getEditBtn()) {
+			
+		}//end if
+		
 		if(ae.getSource() == miv.getCnlEditBtn()) {
 			miv.getMem_Inquiry_Edit_View().dispose();
 			miv.getMem_Inquiry_Main_View();
@@ -71,38 +76,60 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 	
 	//FAQ 목록 최신화 method
 	public void loadFAQData() {
-	    Mem_Inquiry_Service faqService = new Mem_Inquiry_Service();
-	    List<FAQ_VO> faqList = faqService.searchFAQ(); 
+		Mem_Inquiry_Service mem_Inq_Service = new Mem_Inquiry_Service();
+	    List<FAQ_VO> faqList = mem_Inq_Service.searchFAQ();
 
-	    DefaultTableModel model = (DefaultTableModel) miv.getFaqTable().getModel();
-	    model.setRowCount(0); 
-
-	    for (FAQ_VO faq : faqList) {
-            model.addRow(new Object[]{
+	    miv.getFaqModel().setRowCount(0); 
+	    
+	    miv.getFaqTable().setModel(miv.getFaqModel());
+        for (FAQ_VO faq : faqList) {
+        	miv.getFaqModel().addRow(new Object[]{
                 faq.getFaq_title(), 
-                "⇒ " + faq.getFaq_contents(),
-                faq.getFaq_reg_date()
+                "⇒ " + faq.getFaq_contents(), 
+                faq.getFaq_reg_date() 
             });
-	    }//end for
+        }
+        
+        
+        miv.getFaqTable().getColumnModel().getColumn(0).setPreferredWidth(400); 
+        miv.getFaqTable().getColumnModel().getColumn(1).setPreferredWidth(600); 
+        miv.getFaqTable().getColumnModel().getColumn(2).setPreferredWidth(100); 
+        miv.getFaqTable().setModel(miv.getFaqModel());
 	}//loadFAQData
 	
 	
 	//inq 목록 최신화 method
 		public void loadINQData() {
 			Mem_Inquiry_Service inqService = new Mem_Inquiry_Service();
-		    List<Inquiry_VO> inqList = inqService.searchINQ(miv.getId()); 
+		    List<Inquiry_VO> inqList = inqService.searchINQ(miv.getId());
 
-		    DefaultTableModel model = (DefaultTableModel) miv.getInqTable().getModel();
-		    model.setRowCount(0); 
-
-		    for (Inquiry_VO inq : inqList) {
-	        	model.addRow(new Object[]{
+		    miv.getInqModel().setRowCount(0); 
+		    
+		    miv.getInqTable().setModel(miv.getInqModel());
+	        for (Inquiry_VO inq : inqList) {
+	        	miv.getInqModel().addRow(new Object[]{
 	                inq.getInq_Id(), 
 	                inq.getInq_Reg_Date(), 
 	                inq.getInq_Title(), 
 	                inq.getInq_Status() 
 	            });
-		    }//end for
+	        }
+	        
+	        //가운데 정렬 설정
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+	        // 문의번호, 날짜, 상태 열에 가운데 정렬 적용
+	        miv.getInqTable().getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // 문의번호
+	        miv.getInqTable().getColumnModel().getColumn(1).setCellRenderer(centerRenderer); // 날짜
+	        miv.getInqTable().getColumnModel().getColumn(2).setCellRenderer(centerRenderer); // 날짜
+	        miv.getInqTable().getColumnModel().getColumn(3).setCellRenderer(centerRenderer); // 상태
+	        
+	        miv.getInqTable().getColumnModel().getColumn(0).setPreferredWidth(100); 
+	        miv.getInqTable().getColumnModel().getColumn(1).setPreferredWidth(100); 
+	        miv.getInqTable().getColumnModel().getColumn(2).setPreferredWidth(900);
+	        miv.getInqTable().getColumnModel().getColumn(3).setPreferredWidth(150);
+	        miv.getInqTable().setModel(miv.getInqModel());
 		}//loadFAQData
 
 	@Override
@@ -124,13 +151,27 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) { 
             int row = miv.getInqTable().getSelectedRow(); 
+            Object value = miv.getInqTable().getValueAt(row, 0);
             if (row != -1) {
                 String status = (String) miv.getInqTable().getValueAt(row, 3);
 
+                Mem_Inquiry_Service memInqService=new Mem_Inquiry_Service();
+                Inquiry_VO iVO=memInqService.search_Edit_INQ(value);
+                
                 if ("답변 완료".equals(status)) {
                     miv.mem_Inquiry_Confirm_View();
+                    miv.getSubConfirmJta().setText(iVO.getInq_Title());
+                    miv.getContentsConfirmJta().setText(iVO.getInq_Contents());
+                    miv.getReplyConfirmJta().setText(iVO.getInq_Reply());
+                    
+                    
                 } else if ("답변 대기".equals(status)) {
                     miv.mem_Inquiry_Edit_View(); //
+                    miv.getSubEditJta().setText(iVO.getInq_Title());
+                    miv.getContentsEditJta().setText(iVO.getInq_Contents());
+                    
+                    
+                    
                 }//else if
             }//end if
 		}//end if
@@ -221,6 +262,25 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		        System.out.println("창이 닫혔습니다");
 		    }//end if
 		}//inqCancelConfirmDialog
+		
+
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			JFrame frame = (JFrame) e.getSource();
+		    frame.dispose(); 
+		}//windowClosing
+
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			if (e.getSource() == miv.getMem_Inquiry_Main_View()){ 
+			loadFAQData();
+			loadINQData();
+			}//end if
+		}//windowOpened
+		
+		
 	
 	
 

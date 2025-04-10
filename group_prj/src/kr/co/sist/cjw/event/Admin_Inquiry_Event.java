@@ -11,13 +11,14 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import kr.co.sist.cjw.service.Admin_Inquiry_Service;
 import kr.co.sist.cjw.view.Admin_Inquiry_View;
 import kr.co.sist.cjw.vo.FAQ_VO;
-import kr.co.sist.hjs.AdminMainView;
+import kr.co.sist.cjw.vo.Inquiry_VO;
 
 public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener, KeyListener, MouseListener {
 	private Admin_Inquiry_View aiv;
@@ -44,28 +45,67 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 		
 	}//keyReleased
 
-	@Override
-	public void actionPerformed(ActionEvent ae) {
-		//admin_Inquiry_Main_View 영역
-		if(ae.getSource() == aiv.getAddJbtn()) {
-			aiv.admin_FAQ_Write_View();
-			
-		}//end if
-		if(ae.getSource() == aiv.getCnlJbtn()) {
-			aiv.getAdmin_Inquiry_Main_View().dispose();
-		}//end if
-		
-		//admin_FAQ_Write_View 영역
-		if(ae.getSource() == aiv.getSaveFAQBtn()) {
-			faqSaveConfirmDialog(aiv.getAdminFAQWriteView());
-		}//end if
-		if(ae.getSource() == aiv.getCnlFAQBtn()) {
-			faqCancelConfirmDialog(aiv.getAdminFAQWriteView());
-		}//end if
-		
-		
-	}//actionPerformed
 	
+	
+	public void loadFAQData() {
+		Admin_Inquiry_Service admin_Inq_Service = new Admin_Inquiry_Service();
+	    List<FAQ_VO> faqList = admin_Inq_Service.searchFAQ();
+	    
+	    aiv.getFaqModel().setRowCount(0);
+
+	    aiv.getFaqTable().setModel(aiv.getFaqModel());
+        for (FAQ_VO faq : faqList) {
+        	aiv.getFaqModel().addRow(new Object[]{
+                faq.getFaq_title(), 
+                "⇒ " + faq.getFaq_contents(), 
+                faq.getFaq_reg_date() 
+            });
+        }
+        
+        
+        aiv.getFaqTable().getColumnModel().getColumn(0).setPreferredWidth(400); 
+        aiv.getFaqTable().getColumnModel().getColumn(1).setPreferredWidth(600); 
+        aiv.getFaqTable().getColumnModel().getColumn(2).setPreferredWidth(100);
+        aiv.getFaqTable().setModel(aiv.getFaqModel());
+	}//loadFAQData
+	
+	public void loadINQData() {
+		Admin_Inquiry_Service admin_Inq_Service = new Admin_Inquiry_Service();
+		List<Inquiry_VO> inqList = admin_Inq_Service.searchINQ();
+
+		aiv.getInqModel().setRowCount(0);
+	    
+	    aiv.getInqTable().setModel(aiv.getInqModel());
+        for (Inquiry_VO inq : inqList) {
+        	aiv.getInqModel().addRow(new Object[]{
+                inq.getInq_Id(), 
+                inq.getMem_Name(), 
+                inq.getInq_Reg_Date(), 
+                inq.getInq_Title(), 
+                inq.getInq_Status() 
+            });
+        }//end for
+        
+        //가운데 정렬 설정
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        //가운데 정렬 적용
+        aiv.getInqTable().getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        aiv.getInqTable().getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        aiv.getInqTable().getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        aiv.getInqTable().getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        aiv.getInqTable().getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        
+        aiv.getInqTable().getColumnModel().getColumn(0).setPreferredWidth(100); 
+        aiv.getInqTable().getColumnModel().getColumn(1).setPreferredWidth(100); 
+        aiv.getInqTable().getColumnModel().getColumn(2).setPreferredWidth(100); 
+        aiv.getInqTable().getColumnModel().getColumn(3).setPreferredWidth(900);
+        aiv.getInqTable().getColumnModel().getColumn(4).setPreferredWidth(150);
+        aiv.getInqTable().setModel(aiv.getInqModel());
+	
+		
+	}//loadINQData
 	
 	
 	//저장 팝업 창
@@ -106,7 +146,7 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 	                JOptionPane.showMessageDialog(aiv.getAdminFAQWriteView(), "FAQ 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
 	            }
 	        System.out.println("저장 완료");
-	        parentFrame.dispose();
+	        aiv.getAdminFAQWriteView().dispose(); 
 	    } else {
 	    	faqCancelConfirmDialog(parentFrame);
 	    }//end if
@@ -127,37 +167,78 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 	    );
 
 	    if (response == 0) { 
-	        parentFrame.dispose(); 
+	        aiv.getAdminFAQWriteView().dispose(); 
 	        System.out.println("창이 닫혔습니다");
 	    }//end if
 	}//cancelConfirmDialog
 	
-	public void loadFAQData() {
-	    Admin_Inquiry_Service faqService = new Admin_Inquiry_Service();
-	    List<FAQ_VO> faqList = faqService.searchFAQ(); // 최신 FAQ 목록 가져오기
-
-	    DefaultTableModel model = (DefaultTableModel) aiv.getFaqTable().getModel();
-	    model.setRowCount(0); // 기존 데이터 초기화
-
-	    for (FAQ_VO faq : faqList) {
-            model.addRow(new Object[]{
-                faq.getFaq_title(), 
-                "⇒ " + faq.getFaq_contents(), // 답변 앞에 기호 추가
-                faq.getFaq_reg_date() // 등록일
-            });
-	    }
-	}
+	
+	
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		aiv.getAdmin_Inquiry_Main_View().dispose();
-		 new AdminMainView();
+		JFrame frame = (JFrame) e.getSource();
+	    frame.dispose(); 
 	}
+	
+	
+	
+	@Override
+	public void windowOpened(WindowEvent e) {
+		if (e.getSource() == aiv.getAdmin_Inquiry_Main_View()){ 
+		loadFAQData();
+		loadINQData();
+		}//end if
+	}//windowOpened
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if ( e.getClickCount() == 2 && e.getSource() == aiv.getFaqTable()) {
+	        int faq_Row = aiv.getFaqTable().getSelectedRow();
+	        Object faq_Value= aiv.getFaqTable().getValueAt(faq_Row, 0);
+	        
+	        Admin_Inquiry_Service faqService=new Admin_Inquiry_Service();
+	        FAQ_VO fVO=faqService.search_Edit_FAQ(faq_Value);
+	        
+	        if (faq_Row != -1) {
+	            // FAQ 수정/삭제 창 열기
+	            aiv.admin_FAQ_Edit_View();
+	            aiv.getSubFAQEditJta().setText(fVO.getFaq_title());
+	            aiv.getContentsFAQEditJta().setText(fVO.getFaq_contents());
+	        }
+	    } else if ( e.getClickCount() == 2 && e.getSource() == aiv.getInqTable()) {
+	        int inq_Row = aiv.getInqTable().getSelectedRow();
+	        Object inq_Value = aiv.getInqTable().getValueAt(inq_Row, 0);
+	        
+	        Admin_Inquiry_Service memInqService=new Admin_Inquiry_Service();
+            Inquiry_VO iVO=memInqService.search_Edit_INQ(inq_Value);
+	        
+	        if (inq_Row != -1) {
+	            String status = (String) aiv.getInqTable().getValueAt(inq_Row, 4);
+	            if ("답변 완료".equals(status)) {
+	                aiv.admin_Inquiry_Edit_View();
+	                aiv.getContentsConfirmJta().setText(iVO.getInq_Contents());
+                    aiv.getReplyConfirmJta().setText(iVO.getInq_Reply());
+                    aiv.getInqSub().setText("문의 제목: " + iVO.getInq_Title());
+                    aiv.getMemName().setText("고객명: " + iVO.getMem_Name());
+                    aiv.getInqDate().setText("날 짜: " + iVO.getInq_Reg_Date());
+                    aiv.getInqStatus().setText("상 태: " + iVO.getInq_Status());
+                     
+                    
+                    
+                    System.out.println(iVO.getInq_Title());
+	            } else if ("답변 대기".equals(status)) {
+	                aiv.admin_Inquiry_Write_View();
+	                aiv.getContentsInqJta().setText(iVO.getInq_Contents());
+	                aiv.getReplyInqJta().setText(iVO.getInq_Reply());
+	                aiv.getInqSub().setText("문의 제목: " + iVO.getInq_Title());
+                    aiv.getMemName().setText("고객명: " + iVO.getMem_Name());
+                    aiv.getInqDate().setText("날 짜: " + iVO.getInq_Reg_Date());
+                    aiv.getInqStatus().setText("상 태: " + iVO.getInq_Status());
+	            }
+	        }
+	    }
+
 	}
 
 	@Override
@@ -184,6 +265,46 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 		
 	}
 
-	
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		//admin_Inquiry_Main_View 영역
+		if(ae.getSource() == aiv.getAddJbtn()) {
+			aiv.admin_FAQ_Write_View();
+		}//end if
+		if(ae.getSource() == aiv.getCnlJbtn()) {
+			aiv.getAdmin_Inquiry_Main_View().dispose();
+		}//end if
+		
+		//admin_FAQ_Write_View 영역
+		if(ae.getSource() == aiv.getSaveFAQBtn()) {
+			faqSaveConfirmDialog(aiv.getAdminFAQWriteView());
+		}//end if
+		if(ae.getSource() == aiv.getCnlFAQBtn()) {
+			faqCancelConfirmDialog(aiv.getAdminFAQWriteView());
+		}//end if
+		
+		//admin_FAQ_Edit_View 영역
+		if(ae.getSource() == aiv.getEditFAQBtn()) {
+			
+		}//end if
+		if(ae.getSource() == aiv.getDelFAQBtn()) {
+			
+		}//end if
+		if(ae.getSource() == aiv.getCnlFAQEditBtn()) {
+			aiv.getAdmin_FAQ_Edit_View().dispose();
+		}//end if
+		
+		//admin_Inquiry_Write_View 영역
+		if(ae.getSource() == aiv.getCnlInqBtn()) {
+			aiv.getAdmin_Inquiry_Write_View().dispose();
+		}//end if
+		
+		
+		//admin_Inquiry_Edit_View
+		if(ae.getSource() == aiv.getCnlInqEditBtn()) {
+			aiv.getAdmin_Inquiry_Edit_View().dispose();
+		}//end if
+		
+	}//actionPerformed
 
 }//class

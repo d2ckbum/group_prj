@@ -38,12 +38,12 @@ public class Mem_Inquiry_Service {
 	}//searchINQ
 	
 	
-	public boolean addInq(Inquiry_VO inq, String id){
+	public boolean addInq(Inquiry_VO iVO, String id){
 		boolean flag = false;
 		Mem_Inquiry_Dao mIDAO = Mem_Inquiry_Dao.getInstance(); 
 			
 			try {
-				mIDAO.insertInq(inq, id);
+				mIDAO.insertInq(iVO, id);
 				flag = true;
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -52,5 +52,33 @@ public class Mem_Inquiry_Service {
 			return flag;
 		
 	}//addInq
+	
+	public Inquiry_VO search_Edit_INQ(Object inqId){
+		Inquiry_VO inq = null;
+		
+		Mem_Inquiry_Dao mIDAO = Mem_Inquiry_Dao.getInstance(); 
+		try {
+			inq=mIDAO.select_Edit_INQ(inqId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		
+		return inq;
+	}//search_Edit_INQ
+	
+	public boolean modifyInq(Inquiry_VO iVO, String inqId){
+		boolean flag= false;
+		
+		Mem_Inquiry_Dao mIDAO = Mem_Inquiry_Dao.getInstance(); 
+		try {
+			flag=(mIDAO.updateInq(iVO,inqId) ==1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		
+		return flag;
+	}//search_Edit_INQ
 
 }//class
