@@ -24,6 +24,9 @@ import kr.co.sist.kji.MyInfoView;
 public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, KeyListener, MouseListener {
 	
 	private Mem_Inquiry_View miv;
+	Object inqValue;
+	
+	
 	
 	public Mem_Inquiry_Event(Mem_Inquiry_View miv) {
 		this.miv=miv;
@@ -50,8 +53,7 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		}//end if
 		
 		if(ae.getSource() == miv.getCnlBtn()) {
-			miv.getMem_Inquiry_Write_View().dispose();
-			miv.getMem_Inquiry_Main_View();
+			inqCancelConfirmDialog(miv.getMem_Inquiry_Write_View());
 		}//end if
 		
 		
@@ -63,16 +65,13 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		
 		//mem_Inquiry_Edit_View
 		if(ae.getSource() == miv.getEditBtn()) {
-			
+			inqObject();
+			inqEditDialog(miv.getMem_Inquiry_Edit_View());	
 		}//end if
 		
 		if(ae.getSource() == miv.getCnlEditBtn()) {
-			miv.getMem_Inquiry_Edit_View().dispose();
-			miv.getMem_Inquiry_Main_View();
+			inqCancelEditDialog(miv.getMem_Inquiry_Edit_View());
 		}//end if
-		
-		
-//		sd
 		
 	}//actionPerformed
 	
@@ -155,11 +154,13 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		if (e.getClickCount() == 2) { 
             int row = miv.getInqTable().getSelectedRow(); 
             Object value = miv.getInqTable().getValueAt(row, 0);
+            
             if (row != -1) {
                 String status = (String) miv.getInqTable().getValueAt(row, 3);
 
                 Mem_Inquiry_Service memInqService=new Mem_Inquiry_Service();
                 Inquiry_VO iVO=memInqService.search_Edit_INQ(value);
+                
                 
                 if ("답변 완료".equals(status)) {
                     miv.mem_Inquiry_Confirm_View();
@@ -173,13 +174,18 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
                     miv.getSubEditJta().setText(iVO.getInq_Title());
                     miv.getContentsEditJta().setText(iVO.getInq_Contents());
                     
-                    
-                    
                 }//else if
             }//end if
 		}//end if
 		
 	}//mouseClicked
+	
+	public Object inqObject() {
+		int row = miv.getInqTable().getSelectedRow(); 
+		inqValue = miv.getInqTable().getValueAt(row, 0);
+		
+		return inqValue;
+	}//inqObject
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -266,6 +272,71 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		    }//end if
 		}//inqCancelConfirmDialog
 		
+		
+		
+		public void inqEditDialog(JFrame parentFrame) {
+		    Object[] options = {"확인", "취소"};
+		    int response = JOptionPane.showOptionDialog(
+		            parentFrame,
+		            "수정하시겠습니까?",
+		            "수정(팝업)",
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE,
+		            null,
+		            options,
+		            options[0]
+		    );
+
+		    if (response == 0) { 
+		    	 String title = miv.getSubEditJta().getText().trim();
+		         String contents = miv.getContentsEditJta().getText().trim();
+
+		            if (title.isEmpty() || contents.isEmpty()) {
+		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Edit_View(), "제목과 내용을 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+
+		            Inquiry_VO inq = new Inquiry_VO();
+		            inq.setInq_Title(title);
+		            inq.setInq_Contents(contents);
+
+		            Mem_Inquiry_Service inqService = new Mem_Inquiry_Service();
+		            System.out.println(inqValue);
+		            boolean success = inqService.modifyInq(inq, inqValue);
+
+		            if (success) {
+		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Edit_View(), "문의가 수정되었습니다.", "수정 성공", JOptionPane.INFORMATION_MESSAGE);
+		                miv.getMem_Inquiry_Edit_View().dispose();
+		                loadINQData();
+		            } else {
+		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Edit_View(), "문의 등록 중 오류가 발생했습니다.", "수정 오류", JOptionPane.ERROR_MESSAGE);
+		            }
+		        miv.getMem_Inquiry_Edit_View().dispose();
+		        System.out.println("수정 완료");
+		    } else {
+		    	inqCancelEditDialog(parentFrame);
+		    }//end if
+		}//inqSaveConfirmDialog
+
+		//닫기 팝업 창
+		public void inqCancelEditDialog(JFrame parentFrame) {
+		    Object[] options = {"확인", "취소"};
+		    int response = JOptionPane.showOptionDialog(
+		            parentFrame,
+		            "수정하지 않고 닫으시겠습니까?",
+		            "닫기(팝업)",
+		            JOptionPane.YES_NO_OPTION,
+		            JOptionPane.QUESTION_MESSAGE,
+		            null,
+		            options,
+		            options[0] 
+		    );
+
+		    if (response == 0) { 
+		        miv.getMem_Inquiry_Edit_View().dispose();
+		        System.out.println("창이 닫혔습니다");
+		    }//end if
+		}//inqCancelConfirmDialog
 
 
 		@Override

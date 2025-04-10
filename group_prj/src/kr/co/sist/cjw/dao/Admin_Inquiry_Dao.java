@@ -96,6 +96,68 @@ public class Admin_Inquiry_Dao {
 	    }//end finally
 	}//insertFAQ
 	
+	
+	public int updateFAQ(FAQ_VO fVO, Object faqSub) throws SQLException {
+		int rowCnt=0;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+
+	    DbConnection dbCon = DbConnection.getInstance();
+
+	    try {
+	        con = dbCon.getConn();
+	        con.setAutoCommit(false); 
+
+	        
+	        StringBuilder updateFAQ = new StringBuilder();
+	        updateFAQ
+	            .append("	UPDATE FAQ	")
+	            .append("	set Faq_title = ?, Faq_Contents = ?, Faq_Reg_Date = sysdate		")
+	            .append("	where Faq_title = ? ");
+
+	        pstmt = con.prepareStatement(updateFAQ.toString());
+	        pstmt.setString(1, fVO.getFaq_title());
+	        pstmt.setString(2, fVO.getFaq_contents());
+	        pstmt.setObject(3, faqSub);
+
+	        rowCnt = pstmt.executeUpdate();
+	        con.commit(); 
+	    } finally {
+	        dbCon.closeDB(null, pstmt, con);
+	    }//end finally
+	    return rowCnt;
+	}//updateFAQ
+	
+	public int deleteFAQ(Object faqSub) throws SQLException {
+		int rowCnt=0;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+
+	    DbConnection dbCon = DbConnection.getInstance();
+
+	    try {
+	        con = dbCon.getConn();
+	        con.setAutoCommit(false); 
+
+	        
+	        StringBuilder deleteFAQ = new StringBuilder();
+	        deleteFAQ
+	            .append("	delete from FAQ "	)
+	            .append("	where Faq_title = ? ");
+
+	        pstmt = con.prepareStatement(deleteFAQ.toString());
+	        pstmt.setObject(1, faqSub);
+
+	        rowCnt = pstmt.executeUpdate();
+	        con.commit(); 
+	    } finally {
+	        dbCon.closeDB(null, pstmt, con);
+	    }//end finally
+	    return rowCnt;
+	}//updateFAQ
+	
+	
+	
 	public FAQ_VO select_Edit_FAQ(Object faqSub) throws SQLException {
 		FAQ_VO faq = null;
 
@@ -209,7 +271,6 @@ public class Admin_Inquiry_Dao {
         	.append("	where (m.mem_num=i.mem_num)and i.Inq_id=? ")
         	.append("	order by I.Inq_Reg_Date desc ");
 	        
-	        System.out.println(inqId);
 	        pstmt = con.prepareStatement(selectINQ.toString());
 	        pstmt.setObject(1, inqId);
 	        
@@ -231,7 +292,38 @@ public class Admin_Inquiry_Dao {
 	    return inq;
 	}//selectINQ
 	
-	
+	public int updateInq(Inquiry_VO iVO, Object inqId) throws SQLException {
+		int rowCnt=0;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+
+	    DbConnection dbCon = DbConnection.getInstance();
+
+	    try {
+	        con = dbCon.getConn();
+	        con.setAutoCommit(false); 
+
+	        
+	        StringBuilder updateINQ = new StringBuilder();
+	        updateINQ
+	            .append("	update INQUIRY	 ")
+	            .append("	set  REPLY = ?, REPLY_REG_DATE = sysdate	")
+	        	.append("	where INQ_ID = ?	");
+
+	        pstmt = con.prepareStatement(updateINQ.toString());
+	        pstmt.setString(1, iVO.getInq_Reply());
+	        pstmt.setObject(2, inqId);
+
+	        rowCnt = pstmt.executeUpdate();
+	        con.commit(); 
+	    } finally {
+	        dbCon.closeDB(null, pstmt, con);
+	    }//end finally
+	    
+	    
+	    return rowCnt;
+	}//updateInq
+
 	
 	
 }//class

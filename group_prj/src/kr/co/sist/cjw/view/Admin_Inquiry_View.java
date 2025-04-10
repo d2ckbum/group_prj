@@ -50,9 +50,9 @@ public class Admin_Inquiry_View extends JFrame {
 	private JTextArea subFAQEditJta;
 	private JTextArea contentsFAQEditJta;
 	private JTextArea contentsInqJta;
-	private JTextArea replyInqJta;
-	private JTextArea contentsConfirmJta;
-	private JTextArea replyConfirmJta;
+	private JTextArea replyWriteJta;
+	private JTextArea contentsEditJta;
+	private JTextArea replyEditJta;
 	
 
 	//Frame
@@ -338,7 +338,7 @@ public class Admin_Inquiry_View extends JFrame {
 	    
 	    admin_FAQ_Edit_View.setVisible(true);
 		
-	}//admin_FAQ_Confirm_View
+	}//admin_FAQ_Edit_View
 	
 	public void admin_Inquiry_Write_View() {
 		admin_Inquiry_Write_View = new JFrame("답변 등록");
@@ -399,12 +399,12 @@ public class Admin_Inquiry_View extends JFrame {
 	    contentLabel.setBounds(70, 400, 50, 25);
 	    admin_Inquiry_Write_View.add(contentLabel);
 	    
-	    replyInqJta = new JTextArea();
-	    replyInqJta.setLineWrap(true);
-	    replyInqJta.setWrapStyleWord(true); 
-	    replyInqJta.setMargin(new Insets(5, 5, 5, 5)); 
+	    replyWriteJta = new JTextArea();
+	    replyWriteJta.setLineWrap(true);
+	    replyWriteJta.setWrapStyleWord(true); 
+	    replyWriteJta.setMargin(new Insets(5, 5, 5, 5)); 
 
-	    inqReplyWriteJsp = new JScrollPane(replyInqJta);
+	    inqReplyWriteJsp = new JScrollPane(replyWriteJta);
 	    inqReplyWriteJsp.setBounds(70, 430, 1060, 360); 
 	    inqReplyWriteJsp.setBorder(new LineBorder(Color.lightGray)); 
 	    admin_Inquiry_Write_View.add(inqReplyWriteJsp);
@@ -421,6 +421,7 @@ public class Admin_Inquiry_View extends JFrame {
 	    admin_Inquiry_Write_View.add(cnlInqBtn);
 	    
 	    Admin_Inquiry_Event eventHandler = new Admin_Inquiry_Event(this);
+	    saveInqBtn.addActionListener(eventHandler);
 	    cnlInqBtn.addActionListener(eventHandler);
 	    
 	    
@@ -472,13 +473,13 @@ public class Admin_Inquiry_View extends JFrame {
 	    titleLabel.setBounds(70, 100, 50, 25);
 	    admin_Inquiry_Edit_View.add(titleLabel);
 	    
-	    contentsConfirmJta = new JTextArea();
-	    contentsConfirmJta.setLineWrap(true);
-	    contentsConfirmJta.setWrapStyleWord(true);
-	    contentsConfirmJta.setEditable(false);
-	    contentsConfirmJta.setMargin(new Insets(5, 5, 5, 5));
+	    contentsEditJta = new JTextArea();
+	    contentsEditJta.setLineWrap(true);
+	    contentsEditJta.setWrapStyleWord(true);
+	    contentsEditJta.setEditable(false);
+	    contentsEditJta.setMargin(new Insets(5, 5, 5, 5));
 	    
-	    inqEditJsp = new JScrollPane(contentsConfirmJta);
+	    inqEditJsp = new JScrollPane(contentsEditJta);
 	    inqEditJsp.setBounds(70, 130, 1060, 260);
 	    inqEditJsp.setBorder(new LineBorder(Color.lightGray));
 	    admin_Inquiry_Edit_View.add(inqEditJsp);
@@ -488,12 +489,12 @@ public class Admin_Inquiry_View extends JFrame {
 	    contentLabel.setBounds(70, 400, 50, 25);
 	    admin_Inquiry_Edit_View.add(contentLabel);
 	    
-	    replyConfirmJta = new JTextArea();
-	    replyConfirmJta.setLineWrap(true);
-	    replyConfirmJta.setWrapStyleWord(true); 
-	    replyConfirmJta.setMargin(new Insets(5, 5, 5, 5)); 
+	    replyEditJta = new JTextArea();
+	    replyEditJta.setLineWrap(true);
+	    replyEditJta.setWrapStyleWord(true); 
+	    replyEditJta.setMargin(new Insets(5, 5, 5, 5)); 
 
-	    inqReplyEditJsp = new JScrollPane(replyConfirmJta);
+	    inqReplyEditJsp = new JScrollPane(replyEditJta);
 	    inqReplyEditJsp.setBounds(70, 430, 1060, 360); 
 	    inqReplyEditJsp.setBorder(new LineBorder(Color.lightGray)); 
 	    admin_Inquiry_Edit_View.add(inqReplyEditJsp);
@@ -512,6 +513,7 @@ public class Admin_Inquiry_View extends JFrame {
 	    
 	    //이벤트 추가
 	    Admin_Inquiry_Event eventHandler = new Admin_Inquiry_Event(this);
+	    editInqBtn.addActionListener(eventHandler);
 	    cnlInqEditBtn.addActionListener(eventHandler);
 	    
 	    
@@ -809,38 +811,38 @@ public class Admin_Inquiry_View extends JFrame {
 
 
 
-	public JTextArea getReplyInqJta() {
-		return replyInqJta;
+	public JTextArea getReplyWriteJta() {
+		return replyWriteJta;
 	}
 
 
 
-	public void setReplyInqJta(JTextArea replyInqJta) {
-		this.replyInqJta = replyInqJta;
+	public void setReplyWriteJta(JTextArea replyInqJta) {
+		this.replyWriteJta = replyInqJta;
 	}
 
 
 
-	public JTextArea getContentsConfirmJta() {
-		return contentsConfirmJta;
+	public JTextArea getContentsEditJta() {
+		return contentsEditJta;
 	}
 
 
 
-	public void setContentsConfirmJta(JTextArea subConfirmJta) {
-		this.contentsConfirmJta = subConfirmJta;
+	public void setContentsEditJta(JTextArea subConfirmJta) {
+		this.contentsEditJta = subConfirmJta;
 	}
 
 
 
-	public JTextArea getReplyConfirmJta() {
-		return replyConfirmJta;
+	public JTextArea getReplyEditJta() {
+		return replyEditJta;
 	}
 
 
 
-	public void setReplyConfirmJta(JTextArea replyConfirmJta) {
-		this.replyConfirmJta = replyConfirmJta;
+	public void setReplyEditJta(JTextArea replyConfirmJta) {
+		this.replyEditJta = replyConfirmJta;
 	}
 
 

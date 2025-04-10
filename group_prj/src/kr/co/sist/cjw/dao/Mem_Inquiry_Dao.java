@@ -179,7 +179,7 @@ public class Mem_Inquiry_Dao {
 	}//selectINQ
 	
 	
-	public int updateInq(Inquiry_VO iVO, String inqId) throws SQLException {
+	public int updateInq(Inquiry_VO iVO, Object inqId) throws SQLException {
 		int rowCnt=0;
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
@@ -194,16 +194,19 @@ public class Mem_Inquiry_Dao {
 	        StringBuilder updateInq = new StringBuilder();
 	        updateInq
 	            .append("	update INQUIRY 	")
-	            .append("	set  Inq_Title=?, Inq_Contents=? 	")
-	            .append("	where Inq_Id ? 	");
+	            .append("	set  Inq_Title = ?, Inq_Contents = ? 	")
+	            .append("	where Inq_Id = ? 	");
 
 	        
 	        pstmt = con.prepareStatement(updateInq.toString());
 	        pstmt.setString(1, iVO.getInq_Title());
 	        pstmt.setString(2, iVO.getInq_Contents());
-	        pstmt.setString(3, inqId);
-	        	        
+	        pstmt.setObject(3, inqId);
+	        
 	        rowCnt=pstmt.executeUpdate();
+	        System.out.println(updateInq.toString());
+	        System.out.println(iVO.toString());
+	        
 	        con.commit(); 
 	    } finally {
 	        dbCon.closeDB(null, pstmt, con);

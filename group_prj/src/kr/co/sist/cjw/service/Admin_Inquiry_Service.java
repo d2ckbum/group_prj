@@ -53,6 +53,37 @@ public class Admin_Inquiry_Service {
 		return flag;
 	}// addFAQ
 	
+	public boolean modifyFAQ(FAQ_VO fVO, Object faqSub) {
+		boolean flag = false;
+		Admin_Inquiry_Dao  aIDAO = Admin_Inquiry_Dao.getInstance();
+		
+		try {
+			aIDAO.updateFAQ(fVO,faqSub);
+			flag = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		return flag;
+	}// modifyFAQ
+	
+	
+	
+	public boolean removeFAQ(Object faqSub) {
+		boolean flag = false;
+		Admin_Inquiry_Dao  aIDAO = Admin_Inquiry_Dao.getInstance();
+		
+		try {
+			aIDAO.deleteFAQ(faqSub);
+			flag = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		return flag;
+	}// removeFAQ
+	
+	
 	public List<Inquiry_VO> searchINQ(){
 		List<Inquiry_VO> list = null;
 		
@@ -80,6 +111,36 @@ public class Admin_Inquiry_Service {
 		
 		return inq;
 	}//search_Edit_INQ
+	
+	
+	public boolean addReplyInq(Inquiry_VO iVO, Object inqId){
+		boolean flag= false;
+		
+		Admin_Inquiry_Dao aIDAO = Admin_Inquiry_Dao.getInstance(); 
+		try {
+			flag=(aIDAO.updateInq(iVO,inqId) ==1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		
+		return flag;
+	}//addReplyInq
+	
+	
+	public boolean modifyReplyInq(Inquiry_VO iVO, Object inqId){
+		boolean flag= false;
+		
+		Admin_Inquiry_Dao aIDAO = Admin_Inquiry_Dao.getInstance(); 
+		try {
+			flag=(aIDAO.updateInq(iVO,inqId) ==1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		
+		return flag;
+	}//addReplyInq
 	
 
 }//class

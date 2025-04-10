@@ -67,7 +67,7 @@ public class Mem_Inquiry_Service {
 		return inq;
 	}//search_Edit_INQ
 	
-	public boolean modifyInq(Inquiry_VO iVO, String inqId){
+	public boolean modifyInq(Inquiry_VO iVO, Object inqId){
 		boolean flag= false;
 		
 		Mem_Inquiry_Dao mIDAO = Mem_Inquiry_Dao.getInstance(); 
@@ -79,6 +79,6 @@ public class Mem_Inquiry_Service {
 		
 		
 		return flag;
-	}//search_Edit_INQ
+	}//modifyInq
 
 }//class

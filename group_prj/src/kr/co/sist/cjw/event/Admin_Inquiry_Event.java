@@ -22,6 +22,8 @@ import kr.co.sist.cjw.vo.Inquiry_VO;
 
 public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener, KeyListener, MouseListener {
 	private Admin_Inquiry_View aiv;
+	Object inqId;
+	Object faqSub;
 	
 	public Admin_Inquiry_Event(Admin_Inquiry_View aiv) {
 		this.aiv=aiv;
@@ -108,8 +110,18 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 	}//loadINQData
 	
 	
-	//저장 팝업 창
-	public void faqSaveConfirmDialog(JFrame parentFrame) {
+	
+	public Object faqSubObject() {
+		int row = aiv.getFaqTable().getSelectedRow(); 
+		faqSub = aiv.getFaqTable().getValueAt(row, 0);
+		
+		
+		return faqSub;
+	}//inqIdObject
+	
+	
+	// FAQ저장 팝업 창
+	public void faqSaveDialog(JFrame parentFrame) {
 	    Object[] options = {"확인", "취소"};
 	    int response = JOptionPane.showOptionDialog(
 	            parentFrame,
@@ -145,33 +157,287 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 	            } else {
 	                JOptionPane.showMessageDialog(aiv.getAdminFAQWriteView(), "FAQ 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
 	            }
-	        System.out.println("저장 완료");
 	        aiv.getAdminFAQWriteView().dispose(); 
 	    } else {
-	    	faqCancelConfirmDialog(parentFrame);
+	    	faqCancelDialog(parentFrame);
 	    }//end if
 	}//saveConfirmDialog
 
+	
 	//닫기 팝업 창
-	public void faqCancelConfirmDialog(JFrame parentFrame) {
+	public void faqCancelDialog(JFrame parentFrame) {
 	    Object[] options = {"확인", "취소"};
 	    int response = JOptionPane.showOptionDialog(
-	            parentFrame, // this -> parentFrame으로 변경
+	            parentFrame, 
 	            "저장하지 않고 닫으시겠습니까?",
 	            "닫기(팝업)",
 	            JOptionPane.YES_NO_OPTION,
 	            JOptionPane.QUESTION_MESSAGE,
 	            null,
 	            options,
-	            options[0] // 기본 선택 버튼
+	            options[0] 
 	    );
 
 	    if (response == 0) { 
 	        aiv.getAdminFAQWriteView().dispose(); 
-	        System.out.println("창이 닫혔습니다");
+	    }//end if
+	}//faqCancelDialog
+	
+	
+	
+	// FAQ 수정 팝업 창
+	public void faqEditDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame,
+	            "수정하시겠습니까?",
+	            "저장(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	    );
+
+	    if (response == 0) { 
+	    	 String title = aiv.getSubFAQEditJta().getText().trim();
+	            String contents = aiv.getContentsFAQEditJta().getText().trim();
+
+	            if (title.isEmpty() || contents.isEmpty()) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_FAQ_Edit_View(), "제목과 내용을 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            FAQ_VO faq = new FAQ_VO();
+	            faq.setFaq_title(title);
+	            faq.setFaq_contents(contents);
+
+	            Admin_Inquiry_Service faqService = new Admin_Inquiry_Service();
+	            boolean success = faqService.modifyFAQ(faq, faqSub);
+
+	            if (success) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_FAQ_Edit_View(), "FAQ가 수정되었습니다.", "수정 성공", JOptionPane.INFORMATION_MESSAGE);
+	                aiv.getAdmin_FAQ_Edit_View().dispose(); 
+	                loadFAQData();
+	            } else {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_FAQ_Edit_View(), "FAQ 수정 중 오류가 발생했습니다.", "수정 오류", JOptionPane.ERROR_MESSAGE);
+	            }
+	        aiv.getAdmin_FAQ_Edit_View().dispose(); 
+	    } else {
+	    	faqEditCancelDialog(parentFrame);
+	    }//end if
+	}//saveConfirmDialog
+	
+
+	//닫기 팝업 창
+	public void faqEditCancelDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame, 
+	            "수정하지 않고 닫으시겠습니까?",
+	            "닫기(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0] 
+	    );
+
+	    if (response == 0) { 
+	        aiv.getAdmin_FAQ_Edit_View().dispose(); 
 	    }//end if
 	}//cancelConfirmDialog
 	
+	
+	
+	
+	// FAQ 삭제 팝업 창
+	public void faqRemoveDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame,
+	            "삭제하시겠습니까?",
+	            "삭제(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	    );
+
+	    if (response == 0) { 
+
+	            Admin_Inquiry_Service faqService = new Admin_Inquiry_Service();
+	            boolean success = faqService.removeFAQ(faqSub);
+
+	            if (success) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_FAQ_Edit_View(), "FAQ가 삭제되었습니다.", "삭제 성공", JOptionPane.INFORMATION_MESSAGE);
+	                aiv.getAdmin_FAQ_Edit_View().dispose(); 
+	                loadFAQData();
+	            } else {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_FAQ_Edit_View(), "FAQ 삭제 중 오류가 발생했습니다.", "삭제 오류", JOptionPane.ERROR_MESSAGE);
+	            }
+	        aiv.getAdmin_FAQ_Edit_View().dispose(); 
+	    } else {
+	    	faqRemoveCancelDialog(parentFrame);
+	    }//end if
+	}//faqRemoveDialog
+	
+
+	//닫기 팝업 창
+	public void faqRemoveCancelDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame, 
+	            "삭제하지 않고 닫으시겠습니까?",
+	            "닫기(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0] 
+	    );
+
+	    if (response == 0) { 
+	        aiv.getAdmin_FAQ_Edit_View().dispose(); 
+	    }//end if
+	}//faqRemoveCancelDialog
+	
+	
+	
+	
+	public Object inqIdObject() {
+		int row = aiv.getInqTable().getSelectedRow(); 
+		inqId = aiv.getInqTable().getValueAt(row, 0);
+		
+		
+		return inqId;
+	}//inqIdObject
+	
+	
+	
+	//답변 저장 팝업 창
+	public void inqReplayAddDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame,
+	            "등록하시겠습니까?",
+	            "등록(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	    );
+
+	    if (response == 0) { 
+            String reply = aiv.getReplyWriteJta().getText().trim();
+
+	            if (reply.isEmpty()) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Write_View(), "답변을 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            Inquiry_VO inq = new Inquiry_VO();
+	            inq.setInq_Reply(reply);
+	            
+
+	            Admin_Inquiry_Service inqService = new Admin_Inquiry_Service();
+	            boolean success = inqService.addReplyInq(inq,inqId);
+
+	            if (success) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Write_View(), "답변이 등록되었습니다.", "등록 성공", JOptionPane.INFORMATION_MESSAGE);
+	                aiv.getAdmin_Inquiry_Write_View().dispose(); 
+	                loadINQData();
+	            } else {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Write_View(), "답변 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
+	            }
+	        aiv.getAdmin_Inquiry_Write_View().dispose(); 
+	    } else {
+	    	inqReplyCancelDialog(parentFrame);
+	    }//end if
+	}//inqReplayAddDialog
+
+	//닫기 팝업 창
+	public void inqReplyCancelDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame, 
+	            "등록하지 않고 닫으시겠습니까?",
+	            "닫기(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0] 
+	    );
+
+	    if (response == 0) { 
+	        aiv.getAdmin_Inquiry_Write_View().dispose(); 
+	    }//end if
+	}//inqReplyCancelDialog
+	
+	
+	//답변 수정 팝업 창
+	public void inqReplayEditDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame,
+	            "수정하시겠습니까?",
+	            "수정(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	    );
+
+	    if (response == 0) { 
+            String reply = aiv.getReplyEditJta().getText().trim();
+
+	            if (reply.isEmpty()) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Edit_View(), "답변을 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            Inquiry_VO inq = new Inquiry_VO();
+	            inq.setInq_Reply(reply);
+	            
+
+	            Admin_Inquiry_Service inqService = new Admin_Inquiry_Service();
+	            boolean success = inqService.modifyReplyInq(inq,inqId);
+
+	            if (success) {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Edit_View(), "답변이 수정되었습니다.", "수정 성공", JOptionPane.INFORMATION_MESSAGE);
+	                aiv.getAdmin_Inquiry_Edit_View().dispose(); 
+	                loadINQData();
+	            } else {
+	                JOptionPane.showMessageDialog(aiv.getAdmin_Inquiry_Edit_View(), "답변 수정 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
+	            }
+	        aiv.getAdmin_Inquiry_Edit_View().dispose(); 
+	    } else {
+	    	inqReplyEditCancelDialog(parentFrame);
+	    }//end if
+	}//inqReplayEditDialog
+
+	//닫기 팝업 창
+	public void inqReplyEditCancelDialog(JFrame parentFrame) {
+	    Object[] options = {"확인", "취소"};
+	    int response = JOptionPane.showOptionDialog(
+	            parentFrame, 
+	            "수정하지 않고 닫으시겠습니까?",
+	            "닫기(팝업)",
+	            JOptionPane.YES_NO_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0] 
+	    );
+
+	    if (response == 0) { 
+	        aiv.getAdmin_Inquiry_Edit_View().dispose(); 
+	    }//end if
+	}//inqReplyEditCancelDialog
 	
 	
 
@@ -217,8 +483,8 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 	            String status = (String) aiv.getInqTable().getValueAt(inq_Row, 4);
 	            if ("답변 완료".equals(status)) {
 	                aiv.admin_Inquiry_Edit_View();
-	                aiv.getContentsConfirmJta().setText(iVO.getInq_Contents());
-                    aiv.getReplyConfirmJta().setText(iVO.getInq_Reply());
+	                aiv.getContentsEditJta().setText(iVO.getInq_Contents());
+                    aiv.getReplyEditJta().setText(iVO.getInq_Reply());
                     aiv.getInqSub().setText("문의 제목: " + iVO.getInq_Title());
                     aiv.getMemName().setText("고객명: " + iVO.getMem_Name());
                     aiv.getInqDate().setText("날 짜: " + iVO.getInq_Reg_Date());
@@ -226,20 +492,18 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
                      
                     
                     
-                    System.out.println(iVO.getInq_Title());
 	            } else if ("답변 대기".equals(status)) {
 	                aiv.admin_Inquiry_Write_View();
 	                aiv.getContentsInqJta().setText(iVO.getInq_Contents());
-	                aiv.getReplyInqJta().setText(iVO.getInq_Reply());
 	                aiv.getInqSub().setText("문의 제목: " + iVO.getInq_Title());
                     aiv.getMemName().setText("고객명: " + iVO.getMem_Name());
                     aiv.getInqDate().setText("날 짜: " + iVO.getInq_Reg_Date());
                     aiv.getInqStatus().setText("상 태: " + iVO.getInq_Status());
-	            }
-	        }
-	    }
+	            }//else if
+	        }//end if
+	    }//else if
 
-	}
+	}//mouseClicked
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -277,32 +541,42 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
 		
 		//admin_FAQ_Write_View 영역
 		if(ae.getSource() == aiv.getSaveFAQBtn()) {
-			faqSaveConfirmDialog(aiv.getAdminFAQWriteView());
+			faqSaveDialog(aiv.getAdminFAQWriteView());
 		}//end if
 		if(ae.getSource() == aiv.getCnlFAQBtn()) {
-			faqCancelConfirmDialog(aiv.getAdminFAQWriteView());
+			faqCancelDialog(aiv.getAdminFAQWriteView());
 		}//end if
 		
 		//admin_FAQ_Edit_View 영역
 		if(ae.getSource() == aiv.getEditFAQBtn()) {
-			
+			faqSubObject();
+			faqEditDialog(aiv.getAdmin_FAQ_Edit_View());
 		}//end if
 		if(ae.getSource() == aiv.getDelFAQBtn()) {
-			
+			faqSubObject();
+			faqRemoveDialog(aiv.getAdmin_FAQ_Edit_View());
 		}//end if
 		if(ae.getSource() == aiv.getCnlFAQEditBtn()) {
-			aiv.getAdmin_FAQ_Edit_View().dispose();
+			faqEditCancelDialog(aiv.getAdmin_FAQ_Edit_View());
 		}//end if
 		
 		//admin_Inquiry_Write_View 영역
+		if(ae.getSource() == aiv.getSaveInqBtn()) {
+			inqIdObject();
+			inqReplayAddDialog(aiv.getAdmin_Inquiry_Write_View());
+		}//end if
 		if(ae.getSource() == aiv.getCnlInqBtn()) {
-			aiv.getAdmin_Inquiry_Write_View().dispose();
+			inqReplyCancelDialog(aiv.getAdmin_Inquiry_Write_View());
 		}//end if
 		
 		
 		//admin_Inquiry_Edit_View
+		if(ae.getSource() == aiv.getEditInqBtn()) {
+			inqIdObject();
+			inqReplayEditDialog(aiv.getAdmin_Inquiry_Edit_View());
+		}//end if
 		if(ae.getSource() == aiv.getCnlInqEditBtn()) {
-			aiv.getAdmin_Inquiry_Edit_View().dispose();
+			inqReplyEditCancelDialog(aiv.getAdmin_Inquiry_Edit_View());
 		}//end if
 		
 	}//actionPerformed
