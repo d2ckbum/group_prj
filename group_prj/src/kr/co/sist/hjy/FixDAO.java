@@ -8,8 +8,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.sist.khb.vo.OrderVO;
 
 public class FixDAO {
 	private static FixDAO fDAO;
@@ -32,7 +35,56 @@ public class FixDAO {
 	
 	//우선 join을 이용해서, 내가 필요한 상품명, 상품코드 등을 가져오자.
 	
-	
+	// ============= OrderService INSERT 메소드 시작 =============
+
+			public String insertFixRequest(OrderVO ovo, Connection conn) throws SQLException {
+			    PreparedStatement pstmtSeq = null;
+			    PreparedStatement pstmtInsert = null;
+			    ResultSet rsSeq = null;
+			    String generatedFixNum = null;
+			    String initialStatus = "1"; // 정비상태 초기값 1
+
+			    String selectSeqSql = "SELECT SEQ_FIX_NUM.NEXTVAL FROM DUAL";
+
+			    StringBuilder insertSql = new StringBuilder();
+			    insertSql.append("INSERT INTO FIX (FIX_NUM, FIX_STATUS, FIX_REG_DATE, FIX_MEMO, MEM_NUM, ITEM_NAME, TOTAL_PRICE, ITEM_NUM) ")
+			             .append("VALUES (?, ?, SYSDATE, ?, ?, ?, ?, ?)"); 
+
+			    try {
+			        pstmtSeq = conn.prepareStatement(selectSeqSql);
+			        rsSeq = pstmtSeq.executeQuery();
+			        if (rsSeq.next()) {
+			            generatedFixNum = rsSeq.getString(1);
+			        } else {
+			            throw new SQLException("SEQ_FIX_NUM 시퀀스 값을 가져오는데 실패했습니다.");
+			        }
+
+			        if (generatedFixNum == null || generatedFixNum.isEmpty()) {
+			             throw new SQLException("유효한 FIX_NUM이 생성되지 않았습니다.");
+			        }
+
+			        pstmtInsert = conn.prepareStatement(insertSql.toString());
+
+			        pstmtInsert.setString(1, generatedFixNum);      
+			        pstmtInsert.setString(2, initialStatus);          
+			        pstmtInsert.setNull(3, Types.CLOB);
+			        pstmtInsert.setInt(4, ovo.getMemNum());
+			        pstmtInsert.setString(5, ovo.getItemName());
+			        pstmtInsert.setInt(6, ovo.getTotalPrice());
+			        pstmtInsert.setInt(7, ovo.getItemNum());
+
+
+			        pstmtInsert.executeUpdate();
+
+			    } finally {
+			        if (rsSeq != null) { try { rsSeq.close(); } catch (SQLException e) { /* ignored */ } }
+			        if (pstmtSeq != null) { try { pstmtSeq.close(); } catch (SQLException e) { /* ignored */ } }
+			        if (pstmtInsert != null) { try { pstmtInsert.close(); } catch (SQLException e) { /* ignored */ } }
+			    }
+			    return generatedFixNum;
+			}
+
+		// ============= [ OrderService INSERT 끝 ] =================================
 	
 	/**
 	 * 모든 테이블 레코드 반환
