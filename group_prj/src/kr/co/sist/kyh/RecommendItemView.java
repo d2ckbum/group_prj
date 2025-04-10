@@ -5,9 +5,9 @@ import java.awt.*;
 import java.util.List;
 
 public class RecommendItemView extends JPanel {
-    private int carNum;
     private ItemView parent;
     private JPanel listPanel;
+    private int carNum;
 
     public RecommendItemView(ItemView parent, int carNum) {
         this.parent = parent;
@@ -25,30 +25,37 @@ public class RecommendItemView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         add(scrollPane, BorderLayout.CENTER);
+        
+        loadRecommendedItems();
+    }
+    
+    public void refresh() {
+        loadRecommendedItems();
     }
 
     private void loadRecommendedItems() {
-        listPanel.removeAll(); // 기존 목록 초기화
+        listPanel.removeAll();
         ItemRecommendDAO itemDAO = ItemRecommendDAO.getInstance();
         List<ItemVO> recommendedItems = null;
+        
+        int carNum = parent.getMember().getCarNum();
 
         try {
             recommendedItems = itemDAO.getRecommendedItems(carNum);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        int count = 0;
 
+        int count = 0;
         if (recommendedItems != null) {
+            RecommendItemEvt evt = new RecommendItemEvt(parent, parent.getMember());
+
             for (ItemVO item : recommendedItems) {
-            	if(item.getItemStock() <= 0) {
-            		continue;
-            	}
-            	
+                if (item.getItemStock() <= 0) continue;
+
                 JPanel itemPanel = new JPanel(new BorderLayout());
                 itemPanel.setBackground(Color.WHITE);
-                itemPanel.setPreferredSize(new Dimension(220, 180)); // 카드 크기
+                itemPanel.setPreferredSize(new Dimension(220, 180));
                 itemPanel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(200, 200, 200)),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
@@ -67,17 +74,20 @@ public class RecommendItemView extends JPanel {
                 textPanel.add(priceLabel);
 
                 itemPanel.add(textPanel, BorderLayout.CENTER);
-                itemPanel.addMouseListener(new ItemEvt(parent, parent.getMember()).getEngineOilClickListener(item));
+                itemPanel.addMouseListener(evt.getEngineOilClickListener(item));
 
                 listPanel.add(itemPanel);
                 count++;
             }
-            
-            // 추천상품 개수 기반으로 높이 설정
+
             int itemRow = 3;
             int itemHeight = 200;
             int rows = (int) Math.ceil(count / (double) itemRow);
             listPanel.setPreferredSize(new Dimension(800, rows * itemHeight));
         }
+        
+        revalidate();
+        repaint();
+     
     }
 }

@@ -43,4 +43,18 @@ public class ItemEvt implements ActionListener {
             }
         };
     }
+    
+ // 추천상품 클릭 시 상세보기로 전환
+    public MouseAdapter getRecommendClickListener(ItemVO item) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel detailPanel = new RecommendItemDetailView(item, member);
+                Container parent = itemView.getMainPanel();
+                parent.add(detailPanel, "RecommendDetail");
+                CardLayout layout = (CardLayout) parent.getLayout();
+                layout.show(parent, "RecommendDetail");
+            }
+        };
+    }
 }
