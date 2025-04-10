@@ -58,16 +58,11 @@ public class ItemDetailView extends JPanel {
                 orderView.getRequestButton().addActionListener(orderEvt); // "정비 요청" 버튼 리스너 연결
                 orderView.getCancelButton().addActionListener(orderEvt);  // "취소" 버튼 리스너 연결
 
-                // 3. OrderView 패널을 컨테이너에 추가
                 parent.add(orderView, "Order");
-
-                // 4. 화면 전환
                 CardLayout layout = (CardLayout) parent.getLayout();
                 layout.show(parent, "Order");
 
             } else {
-                 // 오류 처리
-                 System.err.println("ItemDetailView의 부모 컨테이너가 없거나 CardLayout이 아닙니다.");
                  JOptionPane.showMessageDialog(this, "화면 전환 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             }
         });

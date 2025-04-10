@@ -26,11 +26,6 @@ public class RecommendItemView extends JPanel {
         scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         add(scrollPane, BorderLayout.CENTER);
         
-        loadRecommendedItems();
-    }
-    
-    public void refresh() {
-        loadRecommendedItems();
     }
 
     private void loadRecommendedItems() {

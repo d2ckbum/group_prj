@@ -48,8 +48,10 @@ public class RecommendItemDetailView extends JPanel {
         // "선택" 버튼
         selectButton.addActionListener(e -> {
             Container parent = getParent();
+            
             if (parent != null && parent.getLayout() instanceof CardLayout) {
                 OrderView orderView = new OrderView(item, member);
+                
                 OrderEvt orderEvt = new OrderEvt(orderView);
                 orderView.getRequestButton().addActionListener(orderEvt);
                 orderView.getCancelButton().addActionListener(orderEvt);
@@ -57,8 +59,8 @@ public class RecommendItemDetailView extends JPanel {
                 parent.add(orderView, "Order");
                 CardLayout layout = (CardLayout) parent.getLayout();
                 layout.show(parent, "Order");
+                
             } else {
-                System.err.println("부모가 CardLayout이 아닙니다.");
                 JOptionPane.showMessageDialog(this, "화면 전환 중 오류 발생", "오류", JOptionPane.ERROR_MESSAGE);
             }
         });

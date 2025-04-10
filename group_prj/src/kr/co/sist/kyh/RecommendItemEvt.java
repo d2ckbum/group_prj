@@ -23,7 +23,7 @@ public class RecommendItemEvt {
             public void mouseClicked(MouseEvent e) {
                 RecommendItemDetailView detailView = new RecommendItemDetailView(item, member);
                 
-                Container parent = itemView.getMainPanel(); // ✅ JPanel 반환
+                Container parent = itemView.getMainPanel();
                 parent.add(detailView, "RecommendDetail");
 
                 CardLayout layout = (CardLayout) parent.getLayout();
