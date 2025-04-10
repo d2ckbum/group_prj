@@ -71,6 +71,9 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 			miv.getMem_Inquiry_Main_View();
 		}//end if
 		
+		
+//		sd
+		
 	}//actionPerformed
 	
 	
