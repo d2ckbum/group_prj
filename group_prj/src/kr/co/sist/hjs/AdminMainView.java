@@ -104,10 +104,11 @@ public class AdminMainView extends JFrame {
 		jbtnSales.addActionListener(amve);
 		jbtnInquiry.addActionListener(amve);
 		jbtnLogout.addActionListener(e -> {
-			JOptionPane.showConfirmDialog(null, "종료하실?\n (종료시 로그인창으로 갑니다잉)","종료",JOptionPane.YES_NO_CANCEL_OPTION);
-			dispose();
-			new AdminLoginView();
-		
+			int result=JOptionPane.showConfirmDialog(null, "종료하실?\n (종료시 로그인창으로 갑니다잉)","종료",JOptionPane.YES_NO_OPTION);
+			if(result==JOptionPane.YES_OPTION) {
+				dispose();
+				new AdminLoginView();
+			}//end if
 		});
 
 		// 윈도우가 활성화될 때마다 정보 업데이트
