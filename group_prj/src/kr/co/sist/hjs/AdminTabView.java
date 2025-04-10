@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import kr.co.sist.hjy.FixPanel;
+import kr.co.sist.khb.view.SalesView;
 import kr.co.sist.pib.ItemManagementMainView;
 
 public class AdminTabView extends JFrame implements ActionListener { // ActionListener 구현
@@ -26,7 +27,7 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 	private MemberPane memp;
 	private ItemManagementMainView itemp;
 	private FixPanel fixp;
-	private SalesPane salesp;
+	private SalesView salesp;
 //	private InquiryPane inquiryp;
 	private JButton jbtnLogout;
 	private JButton jbtnMember, jbtnItemManage, jbtnFixManage, jbtnSales, jbtnInquiryManage;
@@ -117,7 +118,7 @@ public class AdminTabView extends JFrame implements ActionListener { // ActionLi
 		memp = new MemberPane();
 		itemp = new ItemManagementMainView();
 		fixp = new FixPanel();
-		salesp = new SalesPane();
+		salesp = new SalesView();
 //		inquiryp = new InquiryPane();
 
 		mainPanel.add(memp, "memp");

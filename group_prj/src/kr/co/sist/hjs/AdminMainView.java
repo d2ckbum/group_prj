@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -30,6 +31,7 @@ public class AdminMainView extends JFrame {
 	private JLabel welcomeLabel;
 	private JButton jbtnLogout;
 	private AdminMainViewEvt amve; // 이벤트 처리 클래스
+	
 	private JLabel memberCountLabel; // 회원 수 표시 레이블
 	private JLabel itemCountLabel; // 등록된 수 표시 레이블
 	private JLabel fixCountLabel; // 정비 접수 완료 건수 표시 레이블
@@ -37,6 +39,7 @@ public class AdminMainView extends JFrame {
 	private JLabel fixOkCountLabel; // 정비 완료 건수 표시 레이블
 	private JLabel salesCountLabel;// 일 매출 현황 표시 레이블
 	private JLabel inquiryCountLabel; // 문의 답변 대기 건수 표시 레이블
+	
 	private Color defaultButtonColor = new Color(217, 217, 217); // 기본 버튼 색상
 	private Font buttonFont = new Font("맑은 고딕", Font.BOLD, 25);
 	private Font countFont = new Font("맑은 고딕", Font.BOLD, 14);
@@ -101,8 +104,9 @@ public class AdminMainView extends JFrame {
 		jbtnSales.addActionListener(amve);
 		jbtnInquiry.addActionListener(amve);
 		jbtnLogout.addActionListener(e -> {
-			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
+			JOptionPane.showConfirmDialog(null, "종료하실?\n (종료시 로그인창으로 갑니다잉)","종료",JOptionPane.YES_NO_CANCEL_OPTION);
 			dispose();
+			new AdminLoginView();
 		
 		});
 

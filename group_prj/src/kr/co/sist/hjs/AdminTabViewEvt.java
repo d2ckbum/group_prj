@@ -46,8 +46,11 @@ public class AdminTabViewEvt implements ActionListener {
 			view.setButtonSelected(view.getJbtnInquiryManage());
 			
 		} else if (clickedButton == view.getJbtnLogout()) {
-			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
+//			JOptionPane.showMessageDialog(null, "종료 되었습니다.");
+			JOptionPane.showConfirmDialog(null, "종료하실?\n (종료시 로그인창으로 갑니다잉)","종료",JOptionPane.YES_NO_CANCEL_OPTION);
 			view.dispose();
+			new AdminLoginView();
+			
 		}else if(clickedButton == view.getJbtnBack()) {
 			new AdminMainView();
 			view.dispose();

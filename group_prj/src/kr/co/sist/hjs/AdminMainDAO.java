@@ -80,7 +80,7 @@ public class AdminMainDAO {
 		int salesCount = 0;
 		try {
 			con = dbConn.getConn();
-			String sql = "select sum(sales_day_total) from sales";
+			String sql = "select sum(sales_total) from sales";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
