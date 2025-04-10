@@ -1,14 +1,13 @@
 package kr.co.sist.kyh;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 import kr.co.sist.kji.MemberVO;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public class RecommendItemEvt {
-    
+
     private ItemView itemView;
     private MemberVO member;
 
@@ -17,14 +16,18 @@ public class RecommendItemEvt {
         this.member = member;
     }
 
-    // 상품 클릭 시 상세보기 화면으로 전환
+    // 추천상품 클릭 시 상세뷰로 전환
     public MouseAdapter getEngineOilClickListener(ItemVO item) {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 RecommendItemDetailView detailView = new RecommendItemDetailView(item, member);
-                itemView.getMainPanel().add(detailView, "RecommendDetail");
-                itemView.getCardLayout().show(itemView.getMainPanel(), "RecommendDetail");
+                
+                Container parent = itemView.getMainPanel();
+                parent.add(detailView, "RecommendDetail");
+
+                CardLayout layout = (CardLayout) parent.getLayout();
+                layout.show(parent, "RecommendDetail");
             }
         };
     }

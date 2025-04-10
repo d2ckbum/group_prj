@@ -3,6 +3,8 @@ package kr.co.sist.kyh;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import kr.co.sist.khb.event.OrderEvt;
+import kr.co.sist.khb.view.OrderView;
 import kr.co.sist.kji.MemberVO;
 
 import java.awt.*;
@@ -44,12 +46,24 @@ public class ItemDetailView extends JPanel {
         buttonPanel.add(selectButton);
         buttonPanel.add(backButton);
 
+        // "선택" 버튼 ActionListener
         selectButton.addActionListener(e -> {
-            Container parent = getParent();
-            if (parent != null) {
-                parent.add(new OrderView(item, member), "Order");
+            Container parent = getParent(); 
+          
+            if (parent != null && parent.getLayout() instanceof CardLayout) {
+                OrderView orderView = new OrderView(item, member);
+
+                // 2. OrderEvt 생성 및 OrderView의 버튼들에 연결 
+                OrderEvt orderEvt = new OrderEvt(orderView); // OrderEvt 생성, OrderView 인스턴스 전달
+                orderView.getRequestButton().addActionListener(orderEvt); // "정비 요청" 버튼 리스너 연결
+                orderView.getCancelButton().addActionListener(orderEvt);  // "취소" 버튼 리스너 연결
+
+                parent.add(orderView, "Order");
                 CardLayout layout = (CardLayout) parent.getLayout();
                 layout.show(parent, "Order");
+
+            } else {
+                 JOptionPane.showMessageDialog(this, "화면 전환 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             }
         });
 

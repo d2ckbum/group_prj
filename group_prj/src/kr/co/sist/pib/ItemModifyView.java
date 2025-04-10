@@ -85,7 +85,7 @@ public class ItemModifyView extends JDialog {
         	));
         addLabelAndComponent("상품명", nameField, formPanel, gbc, 1);
 
-        stockField = new JTextField(stock, 5);
+        stockField = new JTextField(stock, 10);
         stockField.setFont(font);
         stockField.setEditable(false);
         stockField.setFocusable(false);
