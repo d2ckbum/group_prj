@@ -69,8 +69,14 @@ public class MyInfoEvt implements ActionListener, DocumentListener {
 			int confirm = JOptionPane.showConfirmDialog(miv, "수정하시겠습니까?");
 			if (confirm == JOptionPane.YES_OPTION) {
 				updateMember();
+				if (!EmailValidator.isValidFormat(mVO.getMemEmail().trim())) {
+		            JOptionPane.showMessageDialog(miv, "이메일 형식이 올바르지 않습니다.");
+		        } else if (!EmailValidator.isDomainExists(mVO.getMemEmail().trim())) {
+		        	JOptionPane.showMessageDialog(miv, "이메일 도메인이 존재하지 않습니다.");
+		        } else {
 				ms.modifyMember(mVO);
 				JOptionPane.showMessageDialog(miv, "수정되었습니다.");
+		        }
 			}
 		}
 

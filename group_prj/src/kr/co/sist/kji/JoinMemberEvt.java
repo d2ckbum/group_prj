@@ -118,11 +118,17 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 			}//end if
 			if(realJoinNum == 0) {
 				insertMember();
-				if(ms.addMember(mVO)) {
-					JOptionPane.showMessageDialog(jmv, "가입 되었습니다.");
-					new LoginpageView();
-					jmv.dispose();
-				}
+				if (!EmailValidator.isValidFormat(mVO.getMemEmail().trim())) {
+		            JOptionPane.showMessageDialog(jmv, "이메일 형식이 올바르지 않습니다.");
+		        } else if (!EmailValidator.isDomainExists(mVO.getMemEmail().trim())) {
+		        	JOptionPane.showMessageDialog(jmv, "이메일 도메인이 존재하지 않습니다.");
+		        } else {
+		            if(ms.addMember(mVO)) {
+		            	JOptionPane.showMessageDialog(jmv, "가입 되었습니다.");
+		            	new LoginpageView();
+		            	jmv.dispose();
+		            }
+		        }
 			}//end if
 			
 		}//end if
