@@ -117,7 +117,7 @@ public class ItemManagementMainView extends JPanel {
 //        JPanel buttonPanel = new JPanel();
 //        buttonPanel.setBackground(Color.WHITE);
 //        buttonPanel.setBorder(new LineBorder(Color.BLACK, 2));
-        centerPanel.setBorder(new LineBorder(Color.BLACK, 2));
+//        centerPanel.setBorder(new LineBorder(Color.BLACK, 2));
 //        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
 

@@ -5,11 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -39,6 +42,12 @@ public class AdminMainView extends JFrame {
 	private JLabel fixOkCountLabel; // 정비 완료 건수 표시 레이블
 	private JLabel salesCountLabel;// 일 매출 현황 표시 레이블
 	private JLabel inquiryCountLabel; // 문의 답변 대기 건수 표시 레이블
+	private JLabel fixImageLabel;
+	private JLabel salesImageLabel;
+	private JLabel memberImageLabel;
+	private JLabel inquiryImageLabel;
+	private JLabel itemManagementImageLabel;
+	
 	
 	private Color defaultButtonColor = new Color(217, 217, 217); // 기본 버튼 색상
 	private Font buttonFont = new Font("맑은 고딕", Font.BOLD, 25);
@@ -131,6 +140,7 @@ public class AdminMainView extends JFrame {
 		displayInquiryCount();
 
 		setVisible(true);
+		 
 	}
 
 	private void createMemberButton(JPanel parentPanel) {
@@ -147,7 +157,11 @@ public class AdminMainView extends JFrame {
 		memberCountLabel.setFont(countFont);
 		memberCountLabel.setBounds(0, 50, BUTTON_WIDTH, BUTTON_HEIGHT);
 		memberCountLabel.setOpaque(false);
-
+		
+	        
+        memberImageLabel = new JLabel(getImage("/resources/images/member_icon.png"));
+        memberImageLabel.setBounds(0, -80, BUTTON_WIDTH, BUTTON_HEIGHT);
+		layeredPane.add(memberImageLabel, JLayeredPane.PALETTE_LAYER);
 		layeredPane.add(jbtnMember, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(memberCountLabel, JLayeredPane.PALETTE_LAYER);
 
@@ -172,7 +186,12 @@ public class AdminMainView extends JFrame {
 		itemCountLabel.setFont(countFont);
 		itemCountLabel.setBounds(0, 50, BUTTON_WIDTH, BUTTON_HEIGHT);
 		itemCountLabel.setOpaque(false);
+		
+		itemManagementImageLabel = new JLabel(getImage("/resources/images/item_management_icon.png"));
+		itemManagementImageLabel.setBounds(0, -80, BUTTON_WIDTH, BUTTON_HEIGHT);
 
+        
+        layeredPane.add(itemManagementImageLabel, JLayeredPane.PALETTE_LAYER);
 		layeredPane.add(jbtnItemManage, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(itemCountLabel, JLayeredPane.PALETTE_LAYER);
 
@@ -203,7 +222,14 @@ public class AdminMainView extends JFrame {
 		fixOkCountLabel.setFont(countFont);
 		fixOkCountLabel.setBounds(0, 90, BUTTON_WIDTH, BUTTON_HEIGHT);
 		fixOkCountLabel.setOpaque(false);
+		
+		fixImageLabel = new JLabel(getImage("/resources/images/fix_icon.png"));
+		fixImageLabel.setBounds(0, -80, BUTTON_WIDTH, BUTTON_HEIGHT);
 
+        
+        layeredPane.add(fixImageLabel, JLayeredPane.PALETTE_LAYER);
+		
+		
 		layeredPane.add(jbtnFixManage, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(fixCountLabel, JLayeredPane.PALETTE_LAYER);
 		layeredPane.add(fixingCountLabel, JLayeredPane.PALETTE_LAYER);
@@ -226,6 +252,12 @@ public class AdminMainView extends JFrame {
 		salesCountLabel.setFont(countFont);
 		salesCountLabel.setBounds(0, 50, BUTTON_WIDTH, BUTTON_HEIGHT);
 		salesCountLabel.setOpaque(false);
+		
+		salesImageLabel = new JLabel(getImage("/resources/images/sales_icon.png"));
+		salesImageLabel.setBounds(0, -80, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+        
+        layeredPane.add(salesImageLabel, JLayeredPane.PALETTE_LAYER);
 
 		layeredPane.add(jbtnSales, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(salesCountLabel, JLayeredPane.PALETTE_LAYER);
@@ -247,6 +279,13 @@ public class AdminMainView extends JFrame {
 		inquiryCountLabel.setFont(countFont);
 		inquiryCountLabel.setBounds(0, 50, BUTTON_WIDTH, BUTTON_HEIGHT);
 		inquiryCountLabel.setOpaque(false);
+		
+		
+		inquiryImageLabel = new JLabel(getImage("/resources/images/inquiry.png"));
+		inquiryImageLabel.setBounds(0, -80, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+        
+        layeredPane.add(inquiryImageLabel, JLayeredPane.PALETTE_LAYER);
 
 		layeredPane.add(jbtnInquiry, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(inquiryCountLabel, JLayeredPane.PALETTE_LAYER);
@@ -341,6 +380,16 @@ public class AdminMainView extends JFrame {
 			}
 		}
 	}// displayInquiryCount
+	
+	private ImageIcon getImage(String imagePath) {
+	ImageIcon imageIcon = new ImageIcon(getClass().getResource(imagePath));  // 이미지 경로 설정
+        
+    // 이미지 크기 조정 ( 100x100)
+    Image image = imageIcon.getImage();
+    Image resizedImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);  // 이미지 크기 조정
+    ImageIcon resizedIcon = new ImageIcon(resizedImage);  // 크기 조정된 이미지 아이콘 생성
+    return resizedIcon;
+	}
 
 	public static void main(String[] args) {
 		new AdminMainView();
