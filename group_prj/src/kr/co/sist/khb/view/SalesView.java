@@ -5,7 +5,10 @@ import kr.co.sist.khb.vo.SalesSumVO;
 import kr.co.sist.khb.dao.SalesDAO;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
 import java.awt.*;
 import java.sql.Date; 
 import java.sql.SQLException;
@@ -25,40 +28,69 @@ public class SalesView extends JPanel {
     private NumberFormat numFormat;
 
     public SalesView() {
-        super(new BorderLayout());
+        setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+
         numFormat = NumberFormat.getInstance();
-        initUI();
+        initUI(); // UI 구성 요소 생성 및 배치
 
         SalesViewEvt sve = new SalesViewEvt(this);
         btnShowCalendar.addActionListener(sve);
 
-        setPreferredSize(new Dimension(1200, 700));
         fetchAndDisplayData(new java.sql.Date(System.currentTimeMillis()));
     }
-
+    
     private void initUI() {
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setPreferredSize(new Dimension(1000, 650));
+
+        // 2. 기존 northPanel 생성 및 contentPanel의 NORTH에 추가
         JPanel northPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         northPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         northPanel.add(new JLabel("조회 날짜 : "));
         lblSelectedDate = new JLabel(new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()));
         btnShowCalendar = new JButton("달력");
         northPanel.add(lblSelectedDate); northPanel.add(btnShowCalendar);
+        contentPanel.add(northPanel, BorderLayout.NORTH); // <<<=== contentPanel에 추가
 
+        // 3. 기존 tableScrollPane 생성 및 contentPanel의 CENTER에 추가
         String[] columnNames = {"상품번호", "상품명", "수량", "순수익", "총 매출"};
         dtmSales = new DefaultTableModel(columnNames, 0) {
-        	@Override 
-        	public boolean isCellEditable(int r, int c){ return false; } };
+        };
         salesTable = new JTable(dtmSales);
+        // ... 테이블 스타일 설정 (기존 코드) ...
+        JTableHeader tableHeader = salesTable.getTableHeader(); 
+        tableHeader.setFont(new Font("맑은 고딕", Font.BOLD, 15)); 
+        salesTable.setRowHeight(30); DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); /*...*/ centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i = 0; i < salesTable.getColumnCount(); i++) { 
+        	salesTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer); 
+        }
+        salesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+        salesTable.setGridColor(Color.BLACK); 
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setPreferredSize(new Dimension(tableHeader.getPreferredSize().width, 30)); 
+        tableHeader.setBackground(new Color(222, 222, 222));
+
         JScrollPane tableScrollPane = new JScrollPane(salesTable);
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        contentPanel.add(tableScrollPane, BorderLayout.CENTER); // <<<=== contentPanel에 추가
 
+        // 4. 기존 southPanel 생성 및 contentPanel의 SOUTH에 추가
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         southPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
-        lblDailyTotalSales = new JLabel("일일 매출 : 0 원"); // 총 매출
-        lblDailyNetProfit = new JLabel("총 순수익 : 0 원"); // 실 매출(순수익)
-        southPanel.add(lblDailyNetProfit); southPanel.add(Box.createHorizontalStrut(20)); southPanel.add(lblDailyTotalSales);
+        // southPanel.setPreferredSize(new Dimension(0, 40)); // 필요 시 높이 지정
+        // southPanel.setBackground(Color.YELLOW); // 디버깅용
+        lblDailyTotalSales = new JLabel("일일 매출 : 0 원");
+        lblDailyNetProfit = new JLabel("총 순수익 : 0 원");
+        Font summaryFont = new Font("맑은 고딕", Font.BOLD, 16); // 폰트 설정
+        lblDailyTotalSales.setFont(summaryFont);
+        lblDailyNetProfit.setFont(summaryFont);
+        southPanel.add(lblDailyNetProfit); 
+        southPanel.add(Box.createHorizontalStrut(20)); 
+        southPanel.add(lblDailyTotalSales);
+        contentPanel.add(southPanel, BorderLayout.SOUTH); // <<<=== contentPanel에 추가
 
-        add(northPanel, BorderLayout.NORTH); add(tableScrollPane, BorderLayout.CENTER); add(southPanel, BorderLayout.SOUTH);
+        // 5. 최종적으로 메인 SalesView 패널에는 contentPanel 하나만 추가
+        add(contentPanel); // <<<=== FlowLayout이므로 가운데 정렬됨
     }
 
 
@@ -122,14 +154,12 @@ public class SalesView extends JPanel {
     	return btnShowCalendar;
     }
 
-     // --- main 메소드 (테스트용) ---
-     public static void main(String[] args) {
-         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) { e.printStackTrace(); }
-         JFrame frame = new JFrame("매출 조회 테스트");
-         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         frame.add(new SalesView()); // SalesView 패널 추가
-         frame.pack();
-         frame.setLocationRelativeTo(null);
-         frame.setVisible(true);
-    }
+	/*
+	 * // --- main 메소드 (테스트용) --- public static void main(String[] args) { try {
+	 * UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch
+	 * (Exception e) { e.printStackTrace(); } JFrame frame = new
+	 * JFrame("매출 조회 테스트"); frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	 * frame.add(new SalesView()); // SalesView 패널 추가 frame.pack();
+	 * frame.setLocationRelativeTo(null); frame.setVisible(true); }
+	 */
 }
