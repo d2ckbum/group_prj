@@ -202,6 +202,7 @@ public class Mem_Inquiry_View extends JFrame {
 	    
 	    //이벤트 추가
 	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    subWriteJta.addKeyListener(eventHandler);
 	    saveBtn.addActionListener(eventHandler);
 	    cnlBtn.addActionListener(eventHandler);
 	    
@@ -349,6 +350,7 @@ public class Mem_Inquiry_View extends JFrame {
 	    mem_Inquiry_Edit_View.add(cnlEditBtn);
 	    
 	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    subEditJta.addKeyListener(eventHandler);
 	    editBtn.addActionListener(eventHandler);
 	    cnlEditBtn.addActionListener(eventHandler);
 	    

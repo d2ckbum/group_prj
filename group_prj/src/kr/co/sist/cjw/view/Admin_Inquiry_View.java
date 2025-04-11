@@ -324,6 +324,7 @@ public class Admin_Inquiry_View extends JFrame {
 	    
 	    //이벤트 추가
 	    Admin_Inquiry_Event eventHandler = new Admin_Inquiry_Event(this);
+	    subFAQEditJta.addKeyListener(eventHandler);
 	    editFAQBtn.addActionListener(eventHandler);
 	    delFAQBtn.addActionListener(eventHandler);
 	    cnlFAQEditBtn.addActionListener(eventHandler);

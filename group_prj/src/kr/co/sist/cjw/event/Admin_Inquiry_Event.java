@@ -40,6 +40,10 @@ public class Admin_Inquiry_Event extends WindowAdapter implements ActionListener
             e.consume();
             aiv.getContentsFAQJta().requestFocus();
 		}//end if
+		if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getSource() == aiv.getSubFAQEditJta()) {
+            e.consume();
+            aiv.getContentsFAQEditJta().requestFocus();
+		}//end if
 	}//keyPressed
 
 	@Override
