@@ -141,6 +141,14 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getSource() == miv.getSubWriteJta()) {
+            e.consume();
+            miv.getContentsWriteJta().requestFocus();
+		}//end if
+		if (e.getKeyCode() == KeyEvent.VK_ENTER && e.getSource() == miv.getSubEditJta()) {
+            e.consume();
+            miv.getContentsEditJta().requestFocus();
+		}//end if
 		
 	}
 
