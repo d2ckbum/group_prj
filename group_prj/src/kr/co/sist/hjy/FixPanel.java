@@ -20,6 +20,7 @@ public class FixPanel extends JPanel {
 	
 	public FixPanel() {
 //		System.out.println("FixPanel 생성자");
+		
 		makeFixView();
 	}//FixView
 	
@@ -35,7 +36,13 @@ public class FixPanel extends JPanel {
 		fixEvt=new FixEvt(this);
 		fixEvt.tableRow();
 //		System.out.println("FixPanel refreshFlag 0 listRowNum=="+fixEvt.getListRowNum());
-		dtm=new DefaultTableModel(columnNames,fixEvt.getTableList().size());
+		dtm=new DefaultTableModel(columnNames,fixEvt.getTableList().size()) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				//all cells false
+				return false;
+			}
+		};
 		fixEvt.tableRow();
 		
 		DefaultTableCellRenderer dtcr=new DefaultTableCellRenderer();
@@ -59,6 +66,7 @@ public class FixPanel extends JPanel {
 		jtbSummary.setFont(new Font("굴림",Font.PLAIN,12));
 		jtbSummary.setDragEnabled(true);
 		jtbSummary.setFocusable(false);
+		jtbSummary.setCellEditor(null);
 		jsp.setBounds(100, 0, 1000, 600);
 		
 		
@@ -80,9 +88,9 @@ public class FixPanel extends JPanel {
 	
 	
 ////////////////main/////////////////////////////////////////////////////////////////////
-	public static void main(String[] args) {
-		new FixPanel();
-	}
+//	public static void main(String[] args) {
+//		new FixPanel();
+//	}
 
 	///////////get method///////////////////////////////////////////////////
 

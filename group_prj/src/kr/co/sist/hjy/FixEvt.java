@@ -1,4 +1,5 @@
 package kr.co.sist.hjy;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 public class FixEvt extends WindowAdapter implements MouseListener {
@@ -24,6 +26,7 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	private List<FixPanelVO> tableList;
 	private List<MemoVO> memoList;
 	private int listRowNum;
+	private JFrame parentFrame;
 	
 	private String[] rowData;
 	private int refreshFlag;//0 :DB연결필요, 1:DB연결 불필요
@@ -31,6 +34,7 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	public FixEvt(FixPanel fp) {
 		this.fp=fp;
 		fixStatus();
+		
 	}//FixEvt
 	
 	
@@ -42,6 +46,10 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent me) {
+		
+		parentFrame = (JFrame)fp.getRootPane().getParent();
+//		System.out.println(parentFrame);
+		
 //		System.out.println(fp.getJtbSummary().getSelectedRow());
 //		System.out.println("mouseClicked" +  me.getComponent());
 //		System.out.println("mouserClicked x좌표" + fp.getJtbSummary().getAlignmentX());
@@ -117,6 +125,7 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	
 
 	private void fixStatus() {
+	
 		statusMap=new HashMap<String, String>();
 		statusMap.put("1", "접수완료");
 		statusMap.put("2", "정비중");
@@ -124,6 +133,7 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 		
 	}//fixStatus
 	
+
 	
 	
 	/**
@@ -314,6 +324,13 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 	public void setMemoList(List<MemoVO> memoList) {
 		this.memoList = memoList;
 	}
+
+
+
+	public JFrame getParentFrame() {
+		return parentFrame;
+	}
+	
 	
 
 }//class

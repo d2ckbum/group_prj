@@ -19,6 +19,7 @@ import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class FixDetailView extends JDialog{
+
 	private FixEvt fe;
 	
 	
@@ -40,7 +41,8 @@ public class FixDetailView extends JDialog{
 	private int keySum;
 	
 	public FixDetailView(FixEvt fe, String status) {
-//		super(fe.getFp(),"정비 상세",true);
+		super(fe.getParentFrame(),"정비 상세",true);
+		
 		this.fe=fe;
 		this.status=status;
 		

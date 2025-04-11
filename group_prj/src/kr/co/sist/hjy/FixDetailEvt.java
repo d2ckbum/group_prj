@@ -1,9 +1,11 @@
 package kr.co.sist.hjy;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +26,14 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		this.fv = fv;
 		this.dStatus = status + "";
 		fixStatus();
+		//창을 닫기 위해 필요한 상태 flag
+		strCloseStatus=fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixStatus();
 	}// FixDetailEvt
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		FixService fs = new FixService();
-		strCloseStatus=fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixStatus();	
+			
 
 		if (ae.getSource() == fv.getJbtnSave()) {
 			// yes:0, no:1
@@ -56,30 +60,14 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			}//end if
 		} // end if
 
-		if (ae.getSource() == fv.getJbtnClose()) {
+		
+		/*닫기 버튼을 눌렀을 경우*/
+		if (ae.getSource() == fv.getJbtnClose() ) {
 //			System.out.println("strCloseStatus"+strCloseStatus);
-			/*접수완료, 정비중 화면에서 / 정비상태와 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
-			if(strCloseStatus.compareTo("1")==0 || strCloseStatus.compareTo("2")==0) { 
-				if(compareSataus()==false || compareMemo()==false) {
-					int ret=JOptionPane.showConfirmDialog(fv, "저장하지 않고 닫으시겠습니까?","저장",JOptionPane.YES_NO_OPTION);
-					if(ret == 1) {
-						return;
-					}//end if
-				}//end if
-			}//end if
-			
-			/*정비완료 화면에서 / 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
-			if (strCloseStatus.compareTo("3")==0){
-				if(compareMemo()==false) {
-					int ret=JOptionPane.showConfirmDialog(fv, "정비 메모가 수정되었습니다.\n 수정된 것을 저장하지 않고 닫으시겠습니까?","수정",JOptionPane.YES_NO_OPTION);
-					if(ret == 1) {
-						return;
-					}//end if
-				}//end if
-				
-			}//end if
-			
-			windowClosing();
+			closeSetting();
+		
+			fv.dispose();
+		
 		} // end if
 
 	}// actionPerformed
@@ -93,6 +81,28 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 	}// fixStatus
 
 
+	private void closeSetting() {
+		/*접수완료, 정비중 화면에서 / 정비상태와 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
+		if(strCloseStatus.compareTo("1")==0 || strCloseStatus.compareTo("2")==0) { 
+			if(compareSataus()==false || compareMemo()==false) {
+				int ret=JOptionPane.showConfirmDialog(fv, "저장하지 않고 닫으시겠습니까?","저장",JOptionPane.YES_NO_OPTION);
+				if(ret == 1) {
+					return;
+				}//end if
+			}//end if
+		}//end if
+		
+		/*정비완료 화면에서 / 정비메모가 수정되었는데 저장버튼을 누르지 않았을 경우.*/
+		else if (strCloseStatus.compareTo("3")==0){
+			if(compareMemo()==false) {
+				int ret=JOptionPane.showConfirmDialog(fv, "정비 메모가 수정되었습니다.\n 수정된 것을 저장하지 않고 닫으시겠습니까?","수정",JOptionPane.YES_NO_OPTION);
+				if(ret == 1) {
+					return;
+				}//end if
+			}//end if
+			
+		}//end else if
+	}//closeSetting
 
 	
 	
@@ -126,8 +136,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		String fixMemo = fv.getJtaFixMemo().getText();// 정비메모
 		String chosenFixNum = fv.getFe().getTableList().get(fv.getFe().getListRowNum()).getFixNum();// 선택된 접수번호
 
-//		System.out.println("jtaFixMemo------"+fv.getJtaFixMemo().getText());
-		
+//		System.out.println("jtaFixMemo------"+fv.getJtaFixMemo().getText());	
 //		System.out.println("saveStatusAMemo에서  ...."+fixMemo);
 		
 		fs.modifyStatusAMemo(modiFixStatus, fixMemo, chosenFixNum);
@@ -169,8 +178,13 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		// 여기서는 부모 창을 refresh해 줄 필요가 없음.
 	}// saveMemo
 
-	public void windowClosing() {
-		fv.dispose();
+	@Override
+	public void windowClosing(WindowEvent we) {
+		
+		if(strCloseStatus != null) {
+			closeSetting();
+		}//end if
+			fv.dispose();
 	}// windowClosing
 	
 	
@@ -260,16 +274,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
 			fv.keyCountView();
 		}//end if ~ else if
-		
-		
-		//1000byte를 넘어가면, 중단.
-		if(fv.getKeySum()>1000) {
-			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
-			
-			return;
-		}//end if
-		
-		
+
 	}// keyTyped
 
 	@Override
@@ -306,10 +311,15 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		
 		//1000byte를 넘어가면, 중단.
 		if(fv.getKeySum()>1000) {
+			fv.getJtaFixMemo().setEditable(false); //더이상 textarea에 쓸 수 없음.
 			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
-			return;
 		}//end if
 	
+		//여기서 예외처리를 하긴 해야할 것 같은데.
+		//그러면 애초에 입력받을 때, Stringbuilder와 flag 2개를 가지고, 초과했는지 계속 비교하면서 해야해,
+		//만약에 초과되었다면, 초과되기 전까지의 문자열까지만 남겨주는거지.
+		
+		
 	}//keyPressed
 
 	@Override
