@@ -95,7 +95,7 @@ public class RecommendItemView extends JPanel {
                 JLabel nameLabel = new JLabel(item.getItemName(), SwingConstants.CENTER);
                 nameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 16));
 
-                JLabel priceLabel = new JLabel("₩" + item.getItemPrice(), SwingConstants.CENTER);
+                JLabel priceLabel = new JLabel("₩" + String.format("%,d", item.getItemPrice()), SwingConstants.CENTER);
                 priceLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
                 priceLabel.setForeground(new Color(70, 70, 70));
 

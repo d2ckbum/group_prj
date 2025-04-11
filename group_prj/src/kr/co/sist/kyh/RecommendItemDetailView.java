@@ -27,11 +27,26 @@ public class RecommendItemDetailView extends JPanel {
         titleBorder.setTitleFont(new Font("맑은 고딕", Font.BOLD, 25));
         titleBorder.setTitleJustification(TitledBorder.CENTER);
         productPanel.setBorder(titleBorder);
+        
+        String carType;
+        switch (item.getCarNum()) {
+            case 1:
+            	carType = "소형";
+                break;
+            case 2:
+            	carType = "중형";
+                break;
+            case 3:
+            	carType = "대형";
+                break;
+            default:
+            	carType = "알 수 없음";
+        }
 
         productPanel.add(infoLabel("상품번호: " + item.getItemNum()));
         productPanel.add(infoLabel("상품명: " + item.getItemName()));
-        productPanel.add(infoLabel("차종: " + item.getCarNum()));
-        productPanel.add(infoLabel("금액: ₩" + item.getItemPrice()));
+        productPanel.add(infoLabel("차종: " + carType));
+        productPanel.add(infoLabel("금액: ₩" + String.format("%,d", item.getItemPrice())));
 
         JPanel buttonPanel = new JPanel();
         JButton selectButton = new JButton("선택");
