@@ -36,9 +36,24 @@ public class OrderView extends JPanel {
         infoTitle.setTitleFont(new Font("맑은 고딕", Font.BOLD, 25));
         infoTitle.setTitleJustification(TitledBorder.CENTER);
         infoPanel.setBorder(infoTitle);
+        
+        String carType;
+        switch (itemVO.getCarNum()) {
+            case 1:
+               carType = "소형";
+                break;
+            case 2:
+               carType = "중형";
+                break;
+            case 3:
+               carType = "대형";
+                break;
+            default:
+               carType = "알 수 없음";
+        }
 
         infoPanel.add(infoLabel("상품명: " + itemVO.getItemName()));
-        infoPanel.add(infoLabel("차종: " + itemVO.getCarNum()));
+        infoPanel.add(infoLabel("차종: " + carType));
         infoPanel.add(infoLabel("상품금액: ₩" + String.format("%,d", itemVO.getItemPrice())));
         infoPanel.add(infoLabel("정비비용: ₩" + String.format("%,d", itemVO.getItemRepairCost())));
         int total = itemVO.getItemPrice() + itemVO.getItemRepairCost();
