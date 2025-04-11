@@ -80,14 +80,6 @@ public class Admin_Inquiry_View extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-
-
-//	public Admin_Inquiry_View() throws HeadlessException {
-//		admin_Inquiry_Main_View();
-//	}//Admin_Inquiry_View()
-
-
 
 	public void admin_Inquiry_Main_View() {
 		//프레임
