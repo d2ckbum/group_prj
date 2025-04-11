@@ -3,7 +3,6 @@ package kr.co.sist.hjy;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 

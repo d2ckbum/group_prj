@@ -1,9 +1,5 @@
 package kr.co.sist.hjy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -143,41 +139,41 @@ public class FixDAO {
 
 	
 	
-	public StringBuilder clobConvert(Clob clob) {
-		StringBuilder sb=null;
-		String memo="";
-		
-		Reader reader=null;
-		BufferedReader br=null;
-		
-		try {
-			reader=clob.getCharacterStream();
-			br=new BufferedReader(reader);
-			
-			while((memo=br.readLine())!=null){
-				sb.append(memo);
-			}//end while
-			
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-		}finally{
-			if(reader != null) {try {
-				reader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}}
-			if(br != null) {try {
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}}
-		}
-		
-		
-		return sb;
-	}//clobConvert
+//	public StringBuilder clobConvert(Clob clob) {
+//		StringBuilder sb=null;
+//		String memo="";
+//		
+//		Reader reader=null;
+//		BufferedReader br=null;
+//		
+//		try {
+//			reader=clob.getCharacterStream();
+//			br=new BufferedReader(reader);
+//			
+//			while((memo=br.readLine())!=null){
+//				sb.append(memo);
+//			}//end while
+//			
+//		} catch (SQLException | IOException e) {
+//			e.printStackTrace();
+//		}finally{
+//			if(reader != null) {try {
+//				reader.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}}
+//			if(br != null) {try {
+//				br.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}}
+//		}
+//		
+//		
+//		return sb;
+//	}//clobConvert
 	
 	/**
 	 * 처리 상태와 정비 메모 수정
@@ -212,7 +208,7 @@ public class FixDAO {
 			pstmt.setString(2, fixMemo);//setStringtoClob
 			pstmt.setString(3, chosenFixNum);//변경할 상태,메모의 정비 접수 번호
 
-			int returnVal=pstmt.executeUpdate(); //업데이트 실행
+			pstmt.executeUpdate(); //업데이트 실행
 //			System.out.println("returnVal   "+returnVal);
 			
 		}catch (SQLException se) {
@@ -258,7 +254,7 @@ public class FixDAO {
 		
 
 			
-			int returnVal=pstmt.executeUpdate(); //업데이트 실행
+			pstmt.executeUpdate(); //업데이트 실행
 //			System.out.println("returnVal   "+returnVal);
 			
 		}catch (SQLException se) {
