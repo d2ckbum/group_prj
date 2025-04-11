@@ -1,9 +1,9 @@
 package kr.co.sist.kji;
 
 public class MemberDataDTO {
-	MemberVO mVO = new MemberVO();;
-	String carType = "";
-	String mfgName = "";
+	private MemberVO mVO = new MemberVO();;
+	private String carType = "";
+	private String mfgName = "";
 	public MemberDataDTO() {
 		super();
 	}
