@@ -1,7 +1,6 @@
 package kr.co.sist.pib;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -17,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 public class ItemRegViewEvent implements ActionListener, FocusListener {
@@ -68,7 +68,7 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
              
             if(result == JOptionPane.YES_OPTION) {
             
-            if(!fieldInputCheck()) {
+            if(!isExistFieldInput()) {
             	return;
             }
             
@@ -80,10 +80,22 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
          	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
          	addImVO.setItem_repair_cost(getRepairCost(carType));
          	addImVO.setCar_type(carType);
-         	if(!new ItemManagementService().addImMember(addImVO)) {
-         		JOptionPane.showMessageDialog(view, "상품등록에 실패하였습니다.");
-         	}
-         	System.out.println("상품등록 : " + addImVO);
+         	
+         	try {
+				new ItemManagementService().addImMember(addImVO);
+				System.out.println("상품등록 : " + addImVO);
+         	} catch (DataTooLargeForColumnException de) {
+         		de.printStackTrace();
+         		if( de.getErrorColumnName().equals("ITEM_NAME")) {
+         			JOptionPane.showMessageDialog(view, "상품명이 입력 가능한 범위를 초과하였습니다", "등록실패", JOptionPane.ERROR_MESSAGE);
+         			return;
+         		}
+			} catch (SQLException se) {
+				se.printStackTrace();
+				JOptionPane.showMessageDialog(view, "상품등록에 실패하였습니다.", "등록실패", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+         	
          	ItemManagementMainView viewPanel = (ItemManagementMainView) view.getMainPanel();
          	viewPanel.setInitialTableData();
          	view.dispose();
@@ -99,7 +111,7 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
     }
     
     
-    private boolean fieldInputCheck() {
+    private boolean isExistFieldInput() {
     	if(view.getNameField().getText().equals(initialProductName)) {
          	JOptionPane.showMessageDialog(view, "상품명을 입력해주세요.", "등록실패", JOptionPane.ERROR_MESSAGE);
          	return false;

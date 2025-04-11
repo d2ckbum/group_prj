@@ -42,7 +42,7 @@ public class ItemManagementMainView extends JPanel {
 //        testFrame.setSize(1200,900);
 //        testFrame.add(this); // JFrame에 패널 추가
 //        testFrame.setVisible(true);
-//        System.out.println((JFrame)getRootPane().getParent() == testFrame);
+////        System.out.println((JFrame)getRootPane().getParent() == testFrame);
     }
 
     private void initializeUI() {
@@ -114,32 +114,40 @@ public class ItemManagementMainView extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
 
         // 버튼 패널 생성
-        JPanel buttonPanel = new JPanel();
+//        JPanel buttonPanel = new JPanel();
 //        buttonPanel.setBackground(Color.WHITE);
 //        buttonPanel.setBorder(new LineBorder(Color.BLACK, 2));
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        centerPanel.setBorder(new LineBorder(Color.BLACK, 2));
+//        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        
+
 
         // 상품 등록 버튼
         registerButton = new JButton("상품 등록");
-        registerButton.setPreferredSize(new Dimension(90, 35));
+        registerButton.setBounds(900, 620, 90, 35);
+//        registerButton.setPreferredSize(new Dimension(90, 35));
         registerButton.setBackground(new Color(217,217,217));
         registerButton.addActionListener(imEvt);
         registerButton.setFocusPainted(false);
 
         // 수정 버튼
         updateButton = new JButton("수정");
-        updateButton.setPreferredSize(new Dimension(70, 35));
+        updateButton.setBounds(1000, 620, 90, 35);
+//        updateButton.setPreferredSize(new Dimension(70, 35));
         updateButton.setBackground(new Color(217,217,217));
         updateButton.addActionListener(imEvt);
         updateButton.setFocusPainted(false);
-
+        
+        
+        centerPanel.add(registerButton);
+        centerPanel.add(updateButton);
         // 버튼 패널에 버튼 추가
-        buttonPanel.add(registerButton);
-        buttonPanel.add(updateButton);
+//        buttonPanel.add(registerButton);
+//        buttonPanel.add(updateButton);
 
         // 버튼 패널을 하단에 배치
 //        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        add(buttonPanel, BorderLayout.SOUTH);
+//        add(buttonPanel, BorderLayout.SOUTH);
     }
     
     private void setColumnSize() {
@@ -160,7 +168,7 @@ public class ItemManagementMainView extends JPanel {
     	
     	Iterator<ItemManagementVO> it = ls_imVO.iterator();
     	while(it.hasNext()) {
-    		var tempImVO = it.next();
+    		ItemManagementVO tempImVO = it.next();
     		String[] row = {String.valueOf(tempImVO.getItem_num()), tempImVO.getItem_name(), tempImVO.getCar_type(), 
     				String.valueOf(tempImVO.getItem_stock()), df.format(tempImVO.getItem_cost()), 
     				df.format(tempImVO.getItem_price()), tempImVO.getItem_reg_date().toString()};

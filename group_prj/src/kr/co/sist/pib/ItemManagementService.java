@@ -43,22 +43,27 @@ public class ItemManagementService {
 	}
 	
 	//데이터 추가 업무
-	public boolean addImMember(ItemManagementVO imVO) {
+	public boolean addImMember(ItemManagementVO imVO) throws DataTooLargeForColumnException, SQLException  {
 		ItemManagementDAO imDAO = ItemManagementDAO.getInstance();
 		try {
 			imDAO.insertImMember(imVO);
 			return true;
 		} catch (SQLException e) {
+			
+			if(e.getErrorCode() == 12899 ) {
 			e.printStackTrace();
-			System.out.println("Error Message: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("Error Code: " + e.getErrorCode());
+			throw new DataTooLargeForColumnException(getErrorColumnName(e));
+			}else {
+				throw e;
+			}
+//			System.out.println("Error Message: " + e.getMessage());
+//			System.out.println("SQLState: " + e.getSQLState());
+//			System.out.println("Error Code: " + e.getErrorCode());
 		}//end catch
-		return false;
 	}
 	
 	//데이터 수정 업무
-	public boolean modifyImMember(ItemManagementVO imVO) {
+	public boolean modifyImMember(ItemManagementVO imVO) throws DataTooLargeForColumnException, SQLException {
 		ItemManagementDAO imDAO = ItemManagementDAO.getInstance();
 		
 		try {
@@ -66,18 +71,13 @@ public class ItemManagementService {
 				return true;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			  String pattern = "\"([^\"]+)\"\\.\"([^\"]+)\"\\.\"([^\"]+)\".*실제:\\s*(\\d+)";
-		        java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
-		        java.util.regex.Matcher matcher = regex.matcher(e.getMessage());
-		        
-		        if (matcher.find()) {
-		            // 컬럼 이름 (matcher.group(3))을 추출
-		            System.out.println("Error Message Column: " + matcher.group(3));
-		            
-		        } else {
-		            System.out.println("No match found.");
-		        }
+			if(e.getErrorCode() == 12899 ) {
+				e.printStackTrace();
+				throw new DataTooLargeForColumnException(getErrorColumnName(e));
+			}else {
+				throw e;
+			}
+				
 		}
 		return false;
 	}
@@ -95,6 +95,24 @@ public class ItemManagementService {
 		}
 		return false;
 		
+		
+	}
+	
+	private String getErrorColumnName(SQLException e) {
+		String errorColumnName = null;
+		String pattern = "\"([^\"]+)\"\\.\"([^\"]+)\"\\.\"([^\"]+)\".*실제:\\s*(\\d+)";
+	        java.util.regex.Pattern regex = java.util.regex.Pattern.compile(pattern);
+	        java.util.regex.Matcher matcher = regex.matcher(e.getMessage());
+	        
+	        if (matcher.find()) {
+	            // 컬럼 이름 (matcher.group(3))을 추출
+//	        	System.out.println("Error Message Column: " + matcher.group(3));
+	        	errorColumnName = matcher.group(3);
+	            
+	        } else {
+	            System.out.println("No match found.");
+	        }
+	    return errorColumnName;
 		
 	}
 		

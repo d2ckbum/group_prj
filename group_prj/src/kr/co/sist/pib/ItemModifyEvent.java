@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 public class ItemModifyEvent implements ActionListener, FocusListener {
@@ -78,13 +79,22 @@ public class ItemModifyEvent implements ActionListener, FocusListener {
         	addImVO.setItem_price(Integer.parseInt(view.getPriceField().getText().replace(",", "")));
         	addImVO.setItem_repair_cost(getRepairCost(carType));
         	addImVO.setCar_type(carType);
-        	if(!new ItemManagementService().modifyImMember(addImVO)) {
-        		JOptionPane.showMessageDialog(view, "수정에 실패하였습니다.", "수정실패", JOptionPane.PLAIN_MESSAGE);
-        		return;
-        		
-        	}
         	
-        	System.out.println("업데이트 : " + addImVO);
+        	try {
+				new ItemManagementService().modifyImMember(addImVO);
+				System.out.println("업데이트 : " + addImVO);
+			} catch (DataTooLargeForColumnException de) {
+				de.printStackTrace();
+				if( de.getErrorColumnName().equals("ITEM_NAME")) {
+					JOptionPane.showMessageDialog(view, "상품명이 입력 가능한 범위를 초과하였습니다", "수정실패", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			} catch (SQLException se) {
+				se.printStackTrace();
+				JOptionPane.showMessageDialog(view, "상품수정에 실패하였습니다.", "수정실패", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+        	
         	viewPanel.setInitialTableData();
         	int row = findRowIndexByItemNum(viewPanel.getItem_management_table(), 0, view.getProductNum().getText());
         	viewPanel.getItem_management_table().setRowSelectionInterval(row, row);

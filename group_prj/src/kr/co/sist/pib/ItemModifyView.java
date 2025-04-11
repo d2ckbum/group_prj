@@ -196,10 +196,13 @@ public class ItemModifyView extends JDialog {
         buttonPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));  // 오른쪽 정렬로 설정
         saveButton = new JButton("수정");
+        saveButton.setBackground(new Color(217,217,217));
         saveButton.setPreferredSize(new Dimension(70, 35));
         deleteButton = new JButton("삭제");
+        deleteButton.setBackground(new Color(217,217,217));
         deleteButton.setPreferredSize(new Dimension(70, 35));
         closeButton = new JButton("닫기");
+        closeButton.setBackground(new Color(217,217,217));
         closeButton.setPreferredSize(new Dimension(70, 35));
         saveButton.addActionListener(evt);
         deleteButton.addActionListener(evt);

@@ -3,15 +3,11 @@ package kr.co.sist.pib;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 @SuppressWarnings("serial")
 public class ItemRegView extends JDialog {
 
-//    private DefaultTableModel tableModel;
-//    private int selectedRow;
-//    private JLabel productNum;
     private JTextField nameField;
     private JTextField stockField;
     private JTextField quantityField;
@@ -21,8 +17,6 @@ public class ItemRegView extends JDialog {
     private JButton decreaseButton;
     private JButton increaseButton;
     private JButton registerButton;
-//    private JButton saveButton;
-//    private JButton deleteButton;
     private JButton closeButton;
     private JComboBox<String> carTypeComboBox;
     private JTextField quantityUnitField;
@@ -34,8 +28,6 @@ public class ItemRegView extends JDialog {
         setTitle("상품 등록");
         
         this.mainPanel = mainPanel;
-//        this.tableModel = tableModel;
-//        this.selectedRow = selectedRow;
         Font font = new Font("맑은 고딕", Font.BOLD, 20);
         Font buttonFont = new Font("맑은 고딕", Font.BOLD, 10);
         Dimension buttonDimension = new Dimension(40, 30);
@@ -64,17 +56,6 @@ public class ItemRegView extends JDialog {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
-//        String productCode = (String) tableModel.getValueAt(selectedRow, 0);
-//        String productName = (String) tableModel.getValueAt(selectedRow, 1);
-//        String carType = (String) tableModel.getValueAt(selectedRow, 2);
-//        String stock = (String) tableModel.getValueAt(selectedRow, 3);
-//        String cost = (String) tableModel.getValueAt(selectedRow, 4);
-//        String price = (String) tableModel.getValueAt(selectedRow, 5);
-
-//        productNum = new JLabel();
-//        productNum.setText(productCode);
-//        productNum.setFont(new Font("맑은 고딕", Font.BOLD, 25));
-//        addLabelAndComponent("상품번호", productNum, formPanel, gbc, 0);
         nameField = new JTextField("상품명을 입력해주세요", 20);
         nameField.setFont(font);
         nameField.setForeground(Color.GRAY);
@@ -131,12 +112,6 @@ public class ItemRegView extends JDialog {
         gbc.gridwidth = 2;  // 두 칸을 차지하게 설정
         formPanel.add(stockControlPanel, gbc);
         
-//        JPanel stockPanel = new JPanel();
-//        stockPanel.add(stockField);
-//        stockPanel.add(decreaseButton);
-//        stockPanel.add(quantityUnitField);
-//        stockPanel.add(increaseButton);
-//        addLabelAndComponent("재고", stockPanel, formPanel, gbc, 2);
        
         
         carTypeComboBox = new JComboBox<>(new String[]{"소형", "중형", "대형"});
@@ -193,19 +168,13 @@ public class ItemRegView extends JDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));  // 오른쪽 정렬로 설정
-//        saveButton = new JButton("수정");
-//        saveButton.setPreferredSize(new Dimension(70, 35));
-//        deleteButton = new JButton("삭제");
-//        deleteButton.setPreferredSize(new Dimension(70, 35));
         closeButton = new JButton("닫기");
+        closeButton.setBackground(new Color(217, 217, 217));
         closeButton.setPreferredSize(new Dimension(70, 35));
-//        saveButton.addActionListener(evt);
-//        deleteButton.addActionListener(evt);
         closeButton.addActionListener(evt);
-//        buttonPanel.add(saveButton);
-//        buttonPanel.add(deleteButton);
         
         registerButton = new JButton("등록");
+        registerButton.setBackground(new Color(217, 217, 217));
         registerButton.setPreferredSize(new Dimension(70, 35));
         registerButton.addActionListener(evt);
         
@@ -259,22 +228,6 @@ public class ItemRegView extends JDialog {
 		return costField;
 	}
 
-//	public JButton getDeleteButton() {
-//		return deleteButton;
-//	}
-
-//	public DefaultTableModel getTableModel() {
-//		return tableModel;
-//	}
-//
-//	public int getSelectedRow() {
-//		return selectedRow;
-//	}
-
-//	public JLabel getProductNum() {
-//		return productNum;
-//	}
-
 	public JTextField getNameField() {
 		return nameField;
 	}
@@ -302,10 +255,6 @@ public class ItemRegView extends JDialog {
 	public JButton getIncreaseButton() {
 		return increaseButton;
 	}
-
-//	public JButton getSaveButton() {
-//		return saveButton;
-//	}
 
 	public JComboBox<String> getCarTypeComboBox() {
 		return carTypeComboBox;
