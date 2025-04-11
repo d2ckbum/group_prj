@@ -26,9 +26,6 @@ public class Mem_Inquiry_View extends JFrame {
 		private JButton cnlMainJbtn;
 		private JButton saveBtn;
 		private JButton cnlBtn;
-		private JButton logoutWriteBtn;
-		private JButton logoutConfirmBtn;
-		private JButton logoutEditBtn;
 		private JButton confirmBtn;
 		private JButton editBtn;
 		private JButton cnlEditBtn;
@@ -193,11 +190,6 @@ public class Mem_Inquiry_View extends JFrame {
 	    mem_Inquiry_Write_View.add(inqWriteJsp);
 	    
 	    // 버튼 추가
-	    logoutWriteBtn = new JButton("로그아웃");
-	    logoutWriteBtn.setBounds(1030,70,100,30);
-	    logoutWriteBtn.setBackground(new Color(217, 217, 217));
-	    mem_Inquiry_Write_View.add(logoutWriteBtn);
-	    
 	    saveBtn = new JButton("저장");
 	    saveBtn.setBounds(920, 800, 100, 40); 
 	    saveBtn.setBackground(new Color(217, 217, 217));
@@ -287,11 +279,6 @@ public class Mem_Inquiry_View extends JFrame {
 	    
 	    
 	    // 버튼 추가
-	    logoutConfirmBtn = new JButton("로그아웃");
-	    logoutConfirmBtn.setBounds(1030,70,100,30);
-	    logoutConfirmBtn.setBackground(new Color(217, 217, 217));
-	    mem_Inquiry_Confirm_View.add(logoutConfirmBtn);
-	    
 	    confirmBtn = new JButton("확인");
 	    confirmBtn.setBounds(550, 800, 100, 40); 
 	    confirmBtn.setBackground(new Color(217, 217, 217));
@@ -351,11 +338,6 @@ public class Mem_Inquiry_View extends JFrame {
 	    mem_Inquiry_Edit_View.add(inqEditJsp);
 	    
 	    // 버튼 추가
-	    logoutEditBtn = new JButton("로그아웃");
-	    logoutEditBtn.setBounds(1030,70,100,30);
-	    logoutEditBtn.setBackground(new Color(217, 217, 217));
-	    mem_Inquiry_Edit_View.add(logoutEditBtn);
-	    
 	    editBtn = new JButton("수정");
 	    editBtn.setBounds(920, 800, 100, 40); 
 	    editBtn.setBackground(new Color(217, 217, 217));
@@ -420,43 +402,6 @@ public class Mem_Inquiry_View extends JFrame {
 	public void setCnlBtn(JButton cnlBtn) {
 		this.cnlBtn = cnlBtn;
 	}
-
-
-
-	public JButton getLogoutWriteBtn() {
-		return logoutWriteBtn;
-	}
-
-
-
-	public void setLogoutWriteBtn(JButton logoutWriteBtn) {
-		this.logoutWriteBtn = logoutWriteBtn;
-	}
-
-
-
-	public JButton getLogoutConfirmBtn() {
-		return logoutConfirmBtn;
-	}
-
-
-
-	public void setLogoutConfirmBtn(JButton logoutConfirmBtn) {
-		this.logoutConfirmBtn = logoutConfirmBtn;
-	}
-
-
-
-	public JButton getLogoutEditBtn() {
-		return logoutEditBtn;
-	}
-
-
-
-	public void setLogoutEditBtn(JButton logoutEditBtn) {
-		this.logoutEditBtn = logoutEditBtn;
-	}
-
 
 
 	public JButton getConfirmBtn() {
@@ -726,11 +671,6 @@ public class Mem_Inquiry_View extends JFrame {
 
 	public void setInqModel(DefaultTableModel inqModel) {
 		this.inqModel = inqModel;
-	}
-
-	public static void main(String[] args) {
-		new Mem_Inquiry_View("choi");
-		
 	}
 
 
