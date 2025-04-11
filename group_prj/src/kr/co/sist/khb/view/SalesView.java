@@ -32,7 +32,7 @@ public class SalesView extends JPanel {
         SalesViewEvt sve = new SalesViewEvt(this);
         btnShowCalendar.addActionListener(sve);
 
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(1200, 700));
         fetchAndDisplayData(new java.sql.Date(System.currentTimeMillis()));
     }
 
