@@ -20,6 +20,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 	private String dStatus;// '1','2','3'
 //	private int saveBtnFlag;
 	private String strCloseStatus;
+	private int overMemoFlag;//overMemoFlag가 0이면, 넘치치 않음. 1이면 넘침
 	
 
 	public FixDetailEvt(FixDetailView fv, String status) {
@@ -264,22 +265,26 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		int keyCnt=(int)ke.getKeyChar();
 //		System.out.println(keyCnt);
 		
-		if(keyCnt>44031 && keyCnt<55203) {
-			fv.setKeySum(3);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
+		if(overMemoFlag == 0) {
+			if(keyCnt>44031 && keyCnt<55203) {
+				fv.setKeySum(3);
+				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+				fv.keyCountView();
+	
+			}else if(keyCnt>12592 && keyCnt<12644) {
+				fv.setKeySum(3);
+				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+				fv.keyCountView();
+			}//end if ~ else if
 
-		}else if(keyCnt>12592 && keyCnt<12644) {
-			fv.setKeySum(3);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
-		}//end if ~ else if
+		}//end if
 
+		
 	}// keyTyped
 
 	@Override
 	public void keyPressed(KeyEvent ke) {
-		
+		fv.getFe().getMemoList().get(fv.getFe().getListRowNum()).getFixMemoSize();
 		
 		// 아 ... 여기서 Stream 쓰면 될 것 같은데....
 		// inputstream으로 count하는거지
@@ -287,32 +292,55 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		//44032 ~  50807까지는 한글이므로 3byte
 		int keyCnt=(int)ke.getKeyChar();
 //		System.out.println(keyCnt);
-		
-		if(ke.isControlDown()) {
+		if(ke.isControlDown() || keyCnt==ke.VK_DELETE) {
 			JOptionPane.showMessageDialog(fv, "사용할 수 없는 키입니다.");
 			String text=fv.getFe().getMemoList().get(fv.getFe().getListRowNum()).getStrFixMemo().toString();
 			fv.getJtaFixMemo().setText(text);
-			return;
 		}//end if
-		
-		if(keyCnt==8) {
-			fv.setKeySum(-1);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
-			return;
-		}//end if
-		
-		if((keyCnt>47 && keyCnt<128)||(keyCnt ==32)||(keyCnt==10)) {
-			fv.setKeySum(1);
-			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
-			fv.keyCountView();
+	
+		if(keyCnt==8) {//백스페이스 혹은 delete 키
+			
+			//만약 빈 정비메모이면,
+			if(checkEmpty()) {
+				return;
+			}//end if
+			
+			
+			fv.getJtaFixMemo().setEditable(true);
+			fv.getJtaFixMemo().setCaretPosition(fv.getJtaFixMemo().getText().length());
+			fv.getJtaFixMemo().getCaret().setVisible(true);
 
+			StringBuilder sb=new StringBuilder();
+			sb.append(fv.getJtaFixMemo().getText());
+			int keysum=fv.getFe().byteCalculate(sb);
+			fv.setKeySum(-keysum);		
+			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+			
+			fv.keyCountView();
+			
+			if(fv.getKeySum()<1000) {
+				overMemoFlag=0;
+			}//end if
+			
+			
+			
 		}//end if
-		
+			
+			
+		if(overMemoFlag == 0) {//overMemoFlag가 0이면, 넘치치 않음.
+			if((keyCnt>47 && keyCnt<128)||(keyCnt ==32)||(keyCnt==10)) {
+				fv.setKeySum(1);
+				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+				fv.keyCountView();
+	
+			}//end if
+		}//end if
 		//1000byte를 넘어가면, 중단.
 		if(fv.getKeySum()>1000) {
+			overMemoFlag=1;
 			fv.getJtaFixMemo().setEditable(false); //더이상 textarea에 쓸 수 없음.
 			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
+			
 		}//end if
 	
 		//여기서 예외처리를 하긴 해야할 것 같은데.
@@ -323,12 +351,33 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 	}//keyPressed
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+	public void keyReleased(KeyEvent ke) {
+		
+		checkEmpty();
+		
+//		
+//		System.out.println("get text -------|"+fv.getJtaFixMemo().getText()+"|-----------------");
+//		fv.getJtaFixMemo().setCaretPosition(fv.getJtaFixMemo().getText().length());
+//		System.out.println("getCaretPosition ------ "+fv.getJtaFixMemo().getCaretPosition());
 
-	}
+	}//keyReleased
 
-
+	private boolean checkEmpty() {
+		boolean checkFlag=false;
+		
+		if(fv.getJtaFixMemo().getText().matches("\\s*\\n*\\t*")) {
+			fv.setKeySum(0);
+//			System.out.println("set 0 하였음.");
+			fv.getJlblKeyCount().setText(fv.getKeySum()+"");
+			fv.keyCountView();
+			fv.getJtaFixMemo().setEditable(true);
+			overMemoFlag=0;
+			checkFlag=true;
+		}//end if
+		
+		
+		return checkFlag;
+	}//checkEmpty
 	
 	
 	

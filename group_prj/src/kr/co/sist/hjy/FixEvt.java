@@ -217,7 +217,12 @@ public class FixEvt extends WindowAdapter implements MouseListener {
 		
 	}// readFixMemo
 	
-	private int byteCalculate(StringBuilder sb) {
+	/**
+	 * 키 사이즈를 byte로 계산
+	 * @param sb
+	 * @return
+	 */
+	public int byteCalculate(StringBuilder sb) {
 		int keySize=0;
 		
 		String str=sb.toString();

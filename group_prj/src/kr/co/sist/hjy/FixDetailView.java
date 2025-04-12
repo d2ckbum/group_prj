@@ -1,6 +1,5 @@
 package kr.co.sist.hjy;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
@@ -359,7 +358,7 @@ public class FixDetailView extends JDialog{
 //			jtaFixMemo.setText("내용을 입력해 주세요.");
 			
 		}//end if~else
-		
+		jtaFixMemo.setLineWrap(true);
 		
 //		keyCountView();
 //		keyView();
@@ -518,15 +517,13 @@ public class FixDetailView extends JDialog{
 	}
 
 	public void setKeySum(int keySum) {
-		this.keySum += keySum;
-		
-		if(this.keySum<0) {
-			this.keySum=0;
-		}//end if
+		if(keySum<1) {
+			this.keySum=(-1)*keySum;
+		}else{
+			this.keySum += keySum;
+		}//if~else
 	}//setKeySum
 
-
-	
 	
 	
 	
