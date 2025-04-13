@@ -74,7 +74,6 @@ public class SalesView extends JPanel {
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         contentPanel.add(tableScrollPane, BorderLayout.CENTER); // <<<=== contentPanel에 추가
 
-        // 4. 기존 southPanel 생성 및 contentPanel의 SOUTH에 추가
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         southPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
         // southPanel.setPreferredSize(new Dimension(0, 40)); // 필요 시 높이 지정
