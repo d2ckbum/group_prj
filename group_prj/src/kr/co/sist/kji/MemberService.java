@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 public class MemberService {
-	 Map<String, String> fieldMap = new HashMap<>();
+	 private Map<String, String> fieldMap = new HashMap<>();
 
 
-	String errMsg="";
+	private String errMsg="";
 	
 	public MemberService() {
 		fieldMap.put("ID", "아이디");

@@ -17,9 +17,9 @@ public class JoinMemberView extends JFrame {
 
 	private JTextField idField, nameField, emailField, phoneField, zipField, addrField, detailAddrField;
 	private JPasswordField pwField, pwConfirmField;
-	private JButton checkBtn,signupBtn,cancelBtn;
+	private JButton checkBtn,signupBtn,cancelBtn, searchZip;
 	private JComboBox<String> makerBox, modelBox;
-	JLabel pwMatch, idUnavailable,idAvailable;
+	private JLabel pwMatch, idUnavailable,idAvailable;
 	public JoinMemberView() {
 
 		setTitle("회원가입");
@@ -48,6 +48,7 @@ public class JoinMemberView extends JFrame {
 
 		checkBtn = new JButton("중복확인");
 		checkBtn.setBounds(420, 80, 100, 25);
+		checkBtn.setBackground(new Color(217, 217, 217));
 		panel.add(checkBtn);
 
 		idAvailable = new JLabel("사용 가능한 ID");
@@ -157,8 +158,13 @@ public class JoinMemberView extends JFrame {
 		panel.add(zipLabel);
 
 		zipField = new JTextField();
-		zipField.setBounds(210, 360, 360, 25);
+		zipField.setBounds(210, 360, 270, 25);
 		panel.add(zipField);
+		
+//		searchZip =new JButton("찾기");
+//		searchZip.setBounds(490, 360, 80, 25);
+//		searchZip.setBackground(new Color(217, 217, 217));
+//		panel.add(searchZip);
 
 		// 주소
 		JLabel addrLabel = new JLabel("주소");
@@ -181,10 +187,12 @@ public class JoinMemberView extends JFrame {
 		// 버튼
 		signupBtn = new JButton("가입");
 		signupBtn.setBounds(280, 500, 80, 30);
+		signupBtn.setBackground(new Color(217, 217, 217));
 		panel.add(signupBtn);
 
 		cancelBtn = new JButton("돌아가기");
 		cancelBtn.setBounds(380, 500, 100, 30);
+		cancelBtn.setBackground(new Color(217, 217, 217));
 		panel.add(cancelBtn);
 
 		JoinMemberEvt jme = new JoinMemberEvt(this);
