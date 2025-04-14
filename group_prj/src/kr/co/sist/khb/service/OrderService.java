@@ -2,11 +2,12 @@ package kr.co.sist.khb.service;
 
 import kr.co.sist.khb.dao.SalesDAO;    
 import kr.co.sist.hjy.FixDAO;           
-import kr.co.sist.khb.DbConnection;    
 import kr.co.sist.khb.vo.OrderVO;    
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import DBConnection.DbConnection;
 
 public class OrderService {
 

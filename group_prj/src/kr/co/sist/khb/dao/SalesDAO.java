@@ -10,14 +10,14 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.sist.khb.DbConnection;
+import DBConnection.DbConnection;
 import kr.co.sist.khb.vo.OrderVO;
 import kr.co.sist.khb.vo.SalesSumVO;
 
 public class SalesDAO {
 
     private static SalesDAO instance;
-    private DbConnection dbConn;
+    private DbConnection dbConn; 
 
     private SalesDAO() {
         dbConn = DbConnection.getInstance();
