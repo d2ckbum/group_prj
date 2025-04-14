@@ -284,7 +284,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			}//end if
 
 		}//end if
-		System.out.println(fv.getKeySum());
+//		System.out.println(fv.getKeySum());
 		
 	}// keyTyped
 
@@ -354,7 +354,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 
 	private void keySumChk() {
 		//1000byte를 넘어가면, 중단.
-		System.out.println(fv.getKeySum());
+//		System.out.println(fv.getKeySum());
 		if(fv.getKeySum()>1000) {
 			overMemoFlag=1;
 			fv.getJtaFixMemo().setEditable(false); //더이상 textarea에 쓸 수 없음.
