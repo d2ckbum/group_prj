@@ -77,7 +77,6 @@ public class LoginFormEvt  implements ActionListener {
 			
 			flag = true;
 		}//end if
-		System.out.println(mVO.getMemFlag());
 		
 		return flag;
 	}// passChk
