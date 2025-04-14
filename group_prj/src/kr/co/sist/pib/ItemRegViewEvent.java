@@ -45,11 +45,11 @@ public class ItemRegViewEvent implements ActionListener, FocusListener {
     public int getRepairCost(String type) {
     	switch(type) {
     	case "소형" : 
-    		return 3000;
+    		return 10000;
     	case "중형" :
-    		return 6000;
+    		return 20000;
     	case "대형" :
-    		return 9000;
+    		return 30000;
     	}
     	return 0;
     }
