@@ -120,6 +120,9 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 				return;
 			}//end if
 			emptyChk();
+			if(!pass.equals(passConf)) {
+				JOptionPane.showMessageDialog(jmv, "비밀번호가 다릅니다");
+			}
 			
 			if( emptyField&&pass.equals(passConf)&&idChkFlag) {
 				realJoinNum= JOptionPane.showConfirmDialog(jmv, "가입 하시겠습니까?");
