@@ -328,7 +328,7 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 			
 			
 		if(overMemoFlag == 0) {//overMemoFlag가 0이면, 넘치치 않음.
-			if((keyCnt>47 && keyCnt<128)||(keyCnt ==32)||(keyCnt==10)) {
+			if((keyCnt>32 && keyCnt<127)||(keyCnt ==32)||(keyCnt==10)) {
 				fv.setKeySum(1);
 				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
 				fv.keyCountView();
