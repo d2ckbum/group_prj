@@ -180,20 +180,26 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
+		if (e.getDocument() == idField.getDocument()) {
+			checkMatchId();
+		}
 		checkMatch();	
-		checkMatchId();
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		checkMatch();
-		checkMatchId();
+		if (e.getDocument() == idField.getDocument()) {
+			checkMatchId();
+		}
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		checkMatch();
-		checkMatchId();
+		if (e.getDocument() == idField.getDocument()) {
+			checkMatchId();
+		}
 	}
 
 }//class
