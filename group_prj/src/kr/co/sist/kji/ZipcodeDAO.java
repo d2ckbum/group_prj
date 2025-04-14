@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.sist.hjs.DbConnection;
+import DBConnection.DbConnection;
 
 public class ZipcodeDAO {
 	private static ZipcodeDAO zDAO;

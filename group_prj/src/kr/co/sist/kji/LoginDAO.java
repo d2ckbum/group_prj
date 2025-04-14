@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kr.co.sist.hjs.DbConnection;
+import DBConnection.DbConnection;
 
 public class LoginDAO {
 	
