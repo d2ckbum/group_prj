@@ -87,7 +87,6 @@ public class CarDAO {
 			.append("	from car						")
 			.append("	where car_type =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
 			// 4.
 			pstmt.setString(1, car_type);
 			// 5.
@@ -108,14 +107,5 @@ public class CarDAO {
 
 	}// selectOneMember
 	
-public static void main(String[] args) {
-	CarDAO cDAO = CarDAO.getInstance();
-	try {
-		System.out.println(cDAO.selectOneCarNum("대형"));
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-}//main
 
 }// class

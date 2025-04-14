@@ -84,7 +84,6 @@ private static MemberDAO mDAO;
 			.append("	from fix f,member m						")
 			.append("	where (m.mem_num = f.mem_num) and m.mem_id=?				 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
 			// 4.
 			pstmt.setString(1, memId);
 			// 5.
@@ -217,7 +216,6 @@ private static MemberDAO mDAO;
 			pstmt.setString(1, lVO.getId());
 			pstmt.setString(2, lVO.getPass());
 		//5. 쿼리문 수행 후 결과 얻기
-			System.out.println(selectName);
 			
 			rs=pstmt.executeQuery();
 			
@@ -307,7 +305,6 @@ private static MemberDAO mDAO;
 			.append("	from member						")
 			.append("	where mem_id =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
 			// 4.
 			pstmt.setString(1, memId);
 			// 5.
@@ -362,7 +359,6 @@ private static MemberDAO mDAO;
 			.append("	from member mem, car car, MANUFACTURER mfg					")
 			.append("	where(car.car_num=mem.car_num and mfg.mfg_num = mem.mfg_num)and mem_id =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
 			// 4.
 			pstmt.setString(1, memId);
 			// 5.
@@ -394,14 +390,6 @@ private static MemberDAO mDAO;
 
 	}// selectOneMember
 	
-	public static void main(String[] args) {
-		MemberDAO mDAO = MemberDAO.getInstance();
-		try {
-			System.out.println(mDAO.selectOneMemberData("kkk").toString());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}//main
 	
 	
 	

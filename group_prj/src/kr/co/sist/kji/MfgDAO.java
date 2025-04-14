@@ -88,7 +88,6 @@ private static MfgDAO mfgDAO;
 			.append("	from manufacturer						")
 			.append("	where mfg_name =?						 		");
 			pstmt = con.prepareStatement(selectOneMember.toString());
-			System.out.println(pstmt);
 			// 4.
 			pstmt.setString(1, mfg_name);
 			// 5.
