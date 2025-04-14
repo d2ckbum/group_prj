@@ -164,6 +164,9 @@ public class ItemManagementMainView extends JPanel {
     public void setInitialTableData() {
     	var ls_imVO = new ItemManagementService().searchAllMember();
     	dtm.setRowCount(0);
+    	if(ls_imVO == null) {
+    		return;
+    	}
     	DecimalFormat df = new DecimalFormat("#,###");
     	
     	Iterator<ItemManagementVO> it = ls_imVO.iterator();

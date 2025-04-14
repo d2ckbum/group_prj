@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import DBConnection.DbConnection;
+
 public class ItemManagementDAO {
 	private static ItemManagementDAO imDAO;
 	
@@ -28,6 +30,7 @@ public class ItemManagementDAO {
 	public void insertImMember(ItemManagementVO imVO) throws SQLException {
 		Connection con = null;
 	    PreparedStatement pstmt = null;
+//	    DbConnetion dbCon = DbConnection.getInstance();
 	    DbConnection dbCon = DbConnection.getInstance();
 	    
 	    try {
