@@ -3,6 +3,8 @@ package kr.co.sist.kyh;
 import java.sql.*;
 import java.util.*;
 
+import DBConnection.DbConnection;
+
 public class ItemRecommendDAO {
 
     private static ItemRecommendDAO instance;
