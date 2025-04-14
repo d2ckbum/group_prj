@@ -98,7 +98,8 @@ public class MyInfoView extends JPanel {
 		myZipcodeTF = new JTextField(mVO.getMemZipcode(), 15);
 
 		searchZip = new JButton("찾기");
-		searchZip.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		searchZip.setBackground(new Color(217, 217, 217));
+		searchZip.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		searchZip.setMargin(new Insets(2, 10, 2, 10)); // 버튼 안쪽 여백
 
 		zipPanel.add(zipLabel);
