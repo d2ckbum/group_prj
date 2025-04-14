@@ -12,13 +12,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class JoinMemberEvt implements ActionListener, DocumentListener{
-	JoinMemberView jmv;
+	private JoinMemberView jmv;
 	private JTextField idField, nameField, emailField, phoneField, zipField, addrField, detailAddrField;
 	private JPasswordField pwField, pwConfirmField;
 	private JComboBox<String> makerBox, modelBox;
 	private MemberVO mVO= new MemberVO();
-	boolean idChkFlag = false;
-	boolean emptyField = false;	
+	private boolean idChkFlag = false;
+	private boolean emptyField = false;	
 	
 	
 	public JoinMemberEvt(JoinMemberView jmv) {
@@ -36,6 +36,14 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 		modelBox = jmv.getModelBox();
 	}//JoinMemberEvt
 	
+	
+	
+	 private void checkMatchId() {
+		jmv.getIdUnavailable().setVisible(false);
+		jmv.getIdAvailable().setVisible(false);
+		idChkFlag=false;
+        
+    }//checkMatch
 	 private void checkMatch() {
 		String pass = new String(pwField.getPassword());
 		String passConf = new String(pwConfirmField.getPassword());
@@ -140,14 +148,17 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 			}catch(NullPointerException npe) {
 				if(jtfEmptyChk(idField)) {JOptionPane.showMessageDialog(jmv, "아이디가 비었습니다");return;}
 				idChkFlag = true;
+				idCon=id;
 				jmv.getIdUnavailable().setVisible(false);
 				jmv.getIdAvailable().setVisible(true);
-				
+				return;
 			}//end catch
 			
 			if(!idCon.isEmpty()) {
+				idChkFlag = false;
 				jmv.getIdAvailable().setVisible(false);
 				jmv.getIdUnavailable().setVisible(true);
+				return;
 			}//end if
 			
 		}//end if
@@ -155,23 +166,34 @@ public class JoinMemberEvt implements ActionListener, DocumentListener{
 		if(e.getSource()==jmv.getCancelBtn()) {
 			new LoginpageView();
 			jmv.dispose();
-		}
+		}//end if
+		
+		if(e.getSource()==jmv.getSearchZip()) {
+			SearchZipCodeView szcv= new SearchZipCodeView(jmv);
+			jmv.getZipField().setText(szcv.getZipcode());
+			jmv.getAddrField().setText(szcv.getAddr());
+		}//end if
+			
+			
 		
 	}//actionPerformed
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		checkMatch();		
+		checkMatch();	
+		checkMatchId();
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		checkMatch();		
+		checkMatch();
+		checkMatchId();
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		checkMatch();		
+		checkMatch();
+		checkMatchId();
 	}
 
 }//class

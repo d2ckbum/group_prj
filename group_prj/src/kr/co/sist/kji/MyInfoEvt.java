@@ -78,6 +78,13 @@ public class MyInfoEvt implements ActionListener, DocumentListener {
 				JOptionPane.showMessageDialog(miv, "수정되었습니다.");
 		        }
 			}
+			
+		}
+		if(obj== miv.getSearchZip()) {
+			Window parentWindow = SwingUtilities.getWindowAncestor(miv);
+			SearchZipCodeView szcv= new SearchZipCodeView(parentWindow);
+			miv.getMyZipcodeTF().setText(szcv.getZipcode());
+			miv.getMyAddr1TF().setText(szcv.getAddr());
 		}
 
 		if (obj == miv.getDeleteBtn()) {
@@ -85,6 +92,10 @@ public class MyInfoEvt implements ActionListener, DocumentListener {
 			if (confirm == JOptionPane.YES_OPTION) {
 				ms.removeMember(id);
 				JOptionPane.showMessageDialog(miv, "탈퇴되었습니다.");
+				 Window window = SwingUtilities.getWindowAncestor(miv);
+				    if (window != null) {
+				        window.dispose();
+				    }
 				new LoginpageView();
 			}
 		}

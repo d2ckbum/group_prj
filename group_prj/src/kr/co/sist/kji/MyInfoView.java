@@ -27,7 +27,7 @@ public class MyInfoView extends JPanel {
 
 	private JButton listBtn;
 	private JButton updateBtn;
-	private JButton deleteBtn;
+	private JButton deleteBtn, searchZip;
 
 	public MyInfoView(String id) {
 		this.id = id;
@@ -55,7 +55,7 @@ public class MyInfoView extends JPanel {
 		myPassConfirmTF = passwordFieldWithValue(mainPanel, "비밀번호 확인", mVO.getMemPass());
 
 		pwMatch = new JLabel();
-		pwMatch.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		pwMatch.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 		pwMatch.setForeground(Color.RED);
 		JPanel pwCheckPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		pwCheckPanel.setBackground(new Color(245, 245, 245));
@@ -88,10 +88,28 @@ public class MyInfoView extends JPanel {
 
 		mainPanel.add(carPanel);
 
-		myZipcodeTF = textFieldWithValue(mainPanel, "우편번호", mVO.getMemZipcode());
+		JPanel zipPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		zipPanel.setBackground(new Color(245, 245, 245));
+
+		JLabel zipLabel = new JLabel("우편번호");
+		zipLabel.setPreferredSize(new Dimension(100, 25));
+		zipLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+
+		myZipcodeTF = new JTextField(mVO.getMemZipcode(), 15);
+
+		searchZip = new JButton("찾기");
+		searchZip.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		searchZip.setMargin(new Insets(2, 10, 2, 10)); // 버튼 안쪽 여백
+
+		zipPanel.add(zipLabel);
+		zipPanel.add(myZipcodeTF);
+		zipPanel.add(searchZip);
+
+		mainPanel.add(zipPanel); 
 		myAddr1TF = textFieldWithValue(mainPanel, "주소", mVO.getMemAddr1());
 		myAddr2TF = textFieldWithValue(mainPanel, "상세주소", mVO.getMemAddr2());
-
+	
+		
 		// 버튼 패널
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -113,6 +131,7 @@ public class MyInfoView extends JPanel {
 		listBtn.addActionListener(mie);
 		updateBtn.addActionListener(mie);
 		deleteBtn.addActionListener(mie);
+		searchZip.addActionListener(mie);
 		myPassTF.getDocument().addDocumentListener(mie);
 		myPassConfirmTF.getDocument().addDocumentListener(mie);
 
@@ -135,7 +154,7 @@ public class MyInfoView extends JPanel {
 		panel.setBackground(new Color(245, 245, 245));
 		JLabel jlabel = new JLabel(label);
 		jlabel.setPreferredSize(new Dimension(100, 25));
-		jlabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		jlabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		JTextField tf = new JTextField(value, 20);
 		panel.add(jlabel);
 		panel.add(tf);
@@ -148,7 +167,7 @@ public class MyInfoView extends JPanel {
 		panel.setBackground(new Color(245, 245, 245));
 		JLabel jlabel = new JLabel(label);
 		jlabel.setPreferredSize(new Dimension(100, 25));
-		jlabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		jlabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
 		JPasswordField pf = new JPasswordField(value, 20);
 		panel.add(jlabel);
 		panel.add(pf);
@@ -225,4 +244,9 @@ public class MyInfoView extends JPanel {
 	public JLabel getPwMatch() {
 		return pwMatch;
 	}
+
+	public JButton getSearchZip() {
+		return searchZip;
+	}
+	
 }

@@ -161,10 +161,10 @@ public class JoinMemberView extends JFrame {
 		zipField.setBounds(210, 360, 270, 25);
 		panel.add(zipField);
 		
-//		searchZip =new JButton("찾기");
-//		searchZip.setBounds(490, 360, 80, 25);
-//		searchZip.setBackground(new Color(217, 217, 217));
-//		panel.add(searchZip);
+		searchZip =new JButton("찾기");
+		searchZip.setBounds(490, 360, 80, 25);
+		searchZip.setBackground(new Color(217, 217, 217));
+		panel.add(searchZip);
 
 		// 주소
 		JLabel addrLabel = new JLabel("주소");
@@ -199,6 +199,8 @@ public class JoinMemberView extends JFrame {
 		signupBtn.addActionListener(jme);
 		checkBtn.addActionListener(jme);
 		cancelBtn.addActionListener(jme);
+		searchZip.addActionListener(jme);
+		idField.getDocument().addDocumentListener(jme);
 		pwField.getDocument().addDocumentListener(jme);
 		pwConfirmField.getDocument().addDocumentListener(jme);
 		
@@ -259,6 +261,8 @@ public class JoinMemberView extends JFrame {
 	public JLabel getIdAvailable() {
 		return idAvailable;
 	}
-	
+	public JButton getSearchZip() {
+		return searchZip;
+	}
 	
 }//class
