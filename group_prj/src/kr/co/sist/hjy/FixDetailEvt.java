@@ -276,9 +276,15 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
 				fv.keyCountView();
 			}//end if ~ else if
+			
+			keySumChk();
+			
+			if(fv.getKeySum()<1000) {
+				overMemoFlag=0;
+			}//end if
 
 		}//end if
-
+		System.out.println(fv.getKeySum());
 		
 	}// keyTyped
 
@@ -333,15 +339,11 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 				fv.getJlblKeyCount().setText(fv.getKeySum()+"");
 				fv.keyCountView();
 	
+				
+				keySumChk();
 			}//end if
 		}//end if
-		//1000byte를 넘어가면, 중단.
-		if(fv.getKeySum()>1000) {
-			overMemoFlag=1;
-			fv.getJtaFixMemo().setEditable(false); //더이상 textarea에 쓸 수 없음.
-			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
-			
-		}//end if
+	
 	
 		//여기서 예외처리를 하긴 해야할 것 같은데.
 		//그러면 애초에 입력받을 때, Stringbuilder와 flag 2개를 가지고, 초과했는지 계속 비교하면서 해야해,
@@ -350,6 +352,18 @@ public class FixDetailEvt extends WindowAdapter implements ActionListener, KeyLi
 		
 	}//keyPressed
 
+	private void keySumChk() {
+		//1000byte를 넘어가면, 중단.
+		System.out.println(fv.getKeySum());
+		if(fv.getKeySum()>1000) {
+			overMemoFlag=1;
+			fv.getJtaFixMemo().setEditable(false); //더이상 textarea에 쓸 수 없음.
+			JOptionPane.showMessageDialog(fv, "1000byte를 초과하였습니다.");
+			
+		}//end if
+	}//keySumChk
+	
+	
 	@Override
 	public void keyReleased(KeyEvent ke) {
 		
