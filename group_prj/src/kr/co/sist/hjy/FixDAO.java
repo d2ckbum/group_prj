@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.sist.khb.vo.OrderVO;
+import DBConnection.DbConnection;
 
 public class FixDAO {
 	private static FixDAO fDAO;
