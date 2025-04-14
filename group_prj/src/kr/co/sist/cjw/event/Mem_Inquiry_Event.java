@@ -56,8 +56,14 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 			inqCancelConfirmDialog(miv.getMem_Inquiry_Write_View());
 		}//end if
 		
+		//mem_FAQ_Confirm_View 영역
+		if(ae.getSource() == miv.getConfirmFAQBtn()) {
+			miv.getMem_FAQ_Confirm_View().dispose();
+			miv.getMem_Inquiry_Main_View();
+		}//end if
 		
-		//mem_Inquiry_Confirm_View
+		
+		//mem_Inquiry_Confirm_View 영역
 		if(ae.getSource() == miv.getConfirmBtn()) {
 			miv.getMem_Inquiry_Confirm_View().dispose();
 			miv.getMem_Inquiry_Main_View();
@@ -159,7 +165,23 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2) { 
+		if ( e.getClickCount() == 2 && e.getSource() == miv.getFaqTable()) {
+			int faq_Row = miv.getFaqTable().getSelectedRow();
+	        Object faq_Value= miv.getFaqTable().getValueAt(faq_Row, 0);
+	        
+	        Mem_Inquiry_Service faqService=new Mem_Inquiry_Service();
+	        FAQ_VO fVO=faqService.searchFAQ(faq_Value);
+	        
+	        if (faq_Row != -1) {
+	            // FAQ 수정/삭제 창 열기
+	            miv.mem_FAQ_Confirm_View();
+	            miv.getSubFAQJta().setText(fVO.getFaq_title());
+	            miv.getContentsFAQJta().setText(fVO.getFaq_contents());
+	        }//end if
+			
+		}//end if
+		
+		if (e.getClickCount() == 2 && e.getSource() == miv.getInqTable()) { 
             int row = miv.getInqTable().getSelectedRow(); 
             Object value = miv.getInqTable().getValueAt(row, 0);
             
@@ -254,7 +276,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Write_View(), "문의 등록 중 오류가 발생했습니다.", "등록 오류", JOptionPane.ERROR_MESSAGE);
 		            }
 		        miv.getMem_Inquiry_Write_View().dispose();
-		        System.out.println("저장 완료");
 		    } else {
 		    	inqCancelConfirmDialog(parentFrame);
 		    }//end if
@@ -276,7 +297,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 
 		    if (response == 0) { 
 		        miv.getMem_Inquiry_Write_View().dispose();
-		        System.out.println("창이 닫혔습니다");
 		    }//end if
 		}//inqCancelConfirmDialog
 		
@@ -309,7 +329,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		            inq.setInq_Contents(contents);
 
 		            Mem_Inquiry_Service inqService = new Mem_Inquiry_Service();
-		            System.out.println(inqValue);
 		            boolean success = inqService.modifyInq(inq, inqValue);
 
 		            if (success) {
@@ -320,7 +339,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 		                JOptionPane.showMessageDialog(miv.getMem_Inquiry_Edit_View(), "문의 등록 중 오류가 발생했습니다.", "수정 오류", JOptionPane.ERROR_MESSAGE);
 		            }
 		        miv.getMem_Inquiry_Edit_View().dispose();
-		        System.out.println("수정 완료");
 		    } else {
 		    	inqCancelEditDialog(parentFrame);
 		    }//end if
@@ -342,7 +360,6 @@ public class Mem_Inquiry_Event extends WindowAdapter implements ActionListener, 
 
 		    if (response == 0) { 
 		        miv.getMem_Inquiry_Edit_View().dispose();
-		        System.out.println("창이 닫혔습니다");
 		    }//end if
 		}//inqCancelConfirmDialog
 

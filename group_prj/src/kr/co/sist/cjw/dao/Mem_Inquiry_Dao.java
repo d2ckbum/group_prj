@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import DBConnection.DbConnection;
 import kr.co.sist.cjw.vo.FAQ_VO;
 import kr.co.sist.cjw.vo.Inquiry_VO;
 
@@ -65,6 +66,49 @@ public class Mem_Inquiry_Dao {
 		}
 
 		return list;
+	}//selectFAQ
+	
+	
+	public FAQ_VO selectFAQ(Object faqSub) throws SQLException {
+		FAQ_VO faq = null;
+
+		// 1.
+		// 2.
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		DbConnection dbCon = DbConnection.getInstance();
+
+		try {
+			con = dbCon.getConn();
+			// 3.
+			StringBuilder selectFAQ = new StringBuilder();
+			selectFAQ
+			.append("	select	*	")
+			.append("	from faq	")
+			.append("	where Faq_Title	= ? ");
+			pstmt = con.prepareStatement(selectFAQ.toString());
+			pstmt.setObject(1, faqSub);
+			// 4.
+			// 5.
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {// 레코드가 존재하는지?
+				// 레코드의 컬럼 값을 VO에 저장하고
+				faq = new FAQ_VO();
+
+				faq.setFaq_title(rs.getString("Faq_Title"));
+				faq.setFaq_contents(rs.getString("Faq_Contents"));
+				faq.setFaq_reg_date(rs.getDate("Faq_Reg_Date"));
+
+			} // end while
+		} finally {
+			// 6.
+			dbCon.closeDB(rs, pstmt, con);
+		}
+
+		return faq;
 	}//selectFAQ
 	
 	public List<Inquiry_VO> selectINQ(String id) throws SQLException {
@@ -204,8 +248,6 @@ public class Mem_Inquiry_Dao {
 	        pstmt.setObject(3, inqId);
 	        
 	        rowCnt=pstmt.executeUpdate();
-	        System.out.println(updateInq.toString());
-	        System.out.println(iVO.toString());
 	        
 	        con.commit(); 
 	    } finally {

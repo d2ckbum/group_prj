@@ -23,6 +23,20 @@ public class Mem_Inquiry_Service {
 		return list;
 	}//searchFAQ
 	
+	public FAQ_VO searchFAQ(Object faqSub){
+		FAQ_VO faq = null;
+		
+		Mem_Inquiry_Dao mIDAO = Mem_Inquiry_Dao.getInstance();
+		try {
+			faq=mIDAO.selectFAQ(faqSub);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		
+		return faq;
+	}//search_Edit_FAQ
+	
 	public List<Inquiry_VO> searchINQ(String id){
 		List<Inquiry_VO> list = null;
 		
@@ -36,6 +50,8 @@ public class Mem_Inquiry_Service {
 		
 		return list;
 	}//searchINQ
+	
+	
 	
 	
 	public boolean addInq(Inquiry_VO iVO, String id){

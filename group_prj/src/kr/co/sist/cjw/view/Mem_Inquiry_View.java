@@ -29,6 +29,7 @@ public class Mem_Inquiry_View extends JFrame {
 		private JButton confirmBtn;
 		private JButton editBtn;
 		private JButton cnlEditBtn;
+		private JButton confirmFAQBtn;
 		
 		
 		//table
@@ -36,12 +37,15 @@ public class Mem_Inquiry_View extends JFrame {
 		private JTable inqTable;
 		
 		//scroll
+		private JScrollPane faqJsp;
 		private JScrollPane inqWriteJsp;
 		private JScrollPane inqConfirmJsp;
 		private JScrollPane inqReplyJsp;
 		private JScrollPane inqEditJsp;
 		
 		//TextArea
+		private JTextArea subFAQJta;
+		private JTextArea contentsFAQJta;
 		private JTextArea subWriteJta;
 		private JTextArea contentsWriteJta;
 		private JTextArea subConfirmJta;
@@ -52,6 +56,7 @@ public class Mem_Inquiry_View extends JFrame {
 		
 		//JFrame
 		private JFrame mem_Inquiry_Main_View;
+		private JFrame mem_FAQ_Confirm_View;
 		private JFrame mem_Inquiry_Write_View;
 		private JFrame mem_Inquiry_Confirm_View;
 		private JFrame mem_Inquiry_Edit_View;
@@ -135,6 +140,7 @@ public class Mem_Inquiry_View extends JFrame {
 
         
         Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+        faqTable.addMouseListener(eventHandler);
         inqTable.addMouseListener(eventHandler);
         addJbtn.addActionListener(eventHandler);
         cnlMainJbtn.addActionListener(eventHandler);
@@ -143,6 +149,70 @@ public class Mem_Inquiry_View extends JFrame {
 
 	    mem_Inquiry_Main_View.setVisible(true); 
 	}//mem_Inquiry_Main_View
+	
+	
+	
+	public void mem_FAQ_Confirm_View() {
+		mem_FAQ_Confirm_View = new JFrame("FAQ 확인");
+		mem_FAQ_Confirm_View.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		mem_FAQ_Confirm_View.setLayout(null);
+		mem_FAQ_Confirm_View.setResizable(false);
+		mem_FAQ_Confirm_View.setBounds(800, 600, 1200, 900); 
+		mem_FAQ_Confirm_View.setLocationRelativeTo(null); 
+		
+		
+		//라벨
+		JLabel logoJlbl = new JLabel("쌍용 엔진오일 샵");
+	    logoJlbl.setBounds(550, 20, 100, 25); 
+	    mem_FAQ_Confirm_View.add(logoJlbl);
+	    
+	    
+	    //문의 제목 확인 영역
+	    JLabel titleLabel = new JLabel("FAQ 제목");
+	    titleLabel.setBounds(70, 100, 50, 25);
+	    mem_FAQ_Confirm_View.add(titleLabel);
+	    
+	    subFAQJta = new JTextArea();
+	    subFAQJta.setBounds(70, 130, 1060, 30);
+	    subFAQJta.setLineWrap(true);
+	    subFAQJta.setEditable(false);
+	    subFAQJta.setWrapStyleWord(true);
+	    
+	    subFAQJta.setBorder(new LineBorder(Color.lightGray));
+	    subFAQJta.setMargin(new Insets(5, 5, 5, 5)); 
+	    mem_FAQ_Confirm_View.add(subFAQJta);
+
+	    //문의 내용 확인 영역
+	    JLabel contentLabel = new JLabel("FAQ 내용");
+	    contentLabel.setBounds(70, 170, 50, 25);
+	    mem_FAQ_Confirm_View.add(contentLabel);
+	    
+	    contentsFAQJta = new JTextArea();
+	    contentsFAQJta.setLineWrap(true);
+	    contentsFAQJta.setWrapStyleWord(true); 
+	    contentsFAQJta.setEditable(false);
+	    contentsFAQJta.setMargin(new Insets(5, 5, 5, 5)); 
+	    mem_FAQ_Confirm_View.add(contentsFAQJta);
+
+	    faqJsp = new JScrollPane(contentsFAQJta);
+	    faqJsp.setBounds(70, 195, 1060, 580); 
+	    faqJsp.setBorder(new LineBorder(Color.lightGray));
+	    mem_FAQ_Confirm_View.add(faqJsp);
+	    
+	    // 버튼 추가
+	    confirmFAQBtn = new JButton("확인");
+	    confirmFAQBtn.setBounds(550, 800, 100, 40); 
+	    confirmFAQBtn.setBackground(new Color(217, 217, 217));
+	    mem_FAQ_Confirm_View.add(confirmFAQBtn);
+	    
+	  //이벤트 추가
+	    Mem_Inquiry_Event eventHandler = new Mem_Inquiry_Event(this);
+	    mem_FAQ_Confirm_View.addWindowListener(eventHandler);
+	    confirmFAQBtn.addActionListener(eventHandler);
+	    
+	    mem_FAQ_Confirm_View.setVisible(true);
+		
+	}//mem_FAQ_Confirm_View
 	
 	
 	
@@ -227,9 +297,6 @@ public class Mem_Inquiry_View extends JFrame {
 	    
 	    
 	    //문의 제목 확인 영역
-	    JLabel inqDateLabel = new JLabel("25.01.01");
-	    inqDateLabel.setBounds(70, 1100, 50, 25);
-	    mem_Inquiry_Confirm_View.add(inqDateLabel);
 	    JLabel titleLabel = new JLabel("문의제목");
 	    titleLabel.setBounds(70, 100, 50, 25);
 	    mem_Inquiry_Confirm_View.add(titleLabel);
@@ -674,6 +741,49 @@ public class Mem_Inquiry_View extends JFrame {
 	public void setInqModel(DefaultTableModel inqModel) {
 		this.inqModel = inqModel;
 	}
+
+	public JButton getConfirmFAQBtn() {
+		return confirmFAQBtn;
+	}
+
+	public void setConfirmFAQBtn(JButton confirmFAQBtn) {
+		this.confirmFAQBtn = confirmFAQBtn;
+	}
+
+	public JScrollPane getFaqJsp() {
+		return faqJsp;
+	}
+
+	public void setFaqJsp(JScrollPane faqJsp) {
+		this.faqJsp = faqJsp;
+	}
+
+	public JTextArea getSubFAQJta() {
+		return subFAQJta;
+	}
+
+	public void setSubFAQJta(JTextArea subFAQJta) {
+		this.subFAQJta = subFAQJta;
+	}
+
+	public JTextArea getContentsFAQJta() {
+		return contentsFAQJta;
+	}
+
+	public void setContentsFAQJta(JTextArea contentsFAQJta) {
+		this.contentsFAQJta = contentsFAQJta;
+	}
+
+	public JFrame getMem_FAQ_Confirm_View() {
+		return mem_FAQ_Confirm_View;
+	}
+
+	public void setMem_FAQ_Confirm_View(JFrame mem_FAQ_Confirm_View) {
+		this.mem_FAQ_Confirm_View = mem_FAQ_Confirm_View;
+	}
+	
+	
+	
 
 
 }//class
