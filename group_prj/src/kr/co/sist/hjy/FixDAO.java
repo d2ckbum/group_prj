@@ -108,7 +108,7 @@ public class FixDAO {
 		
 		StringBuilder selectAllFix=new StringBuilder();
 		selectAllFix
-		.append("	select	f.FIX_NUM, f.FIX_REG_DATE,  i.ITEM_NAME,   			")
+		.append("	select	f.FIX_NUM, f.FIX_REG_DATE,  f.ITEM_NAME,   			")
 		.append("	mf.mfg_name,   c.CAR_TYPE,   m.mem_num,   m.MEM_NAME,		")
 		.append("i.item_price+i.item_repair_cost as total,   f.fix_status, f.fix_memo, m.mem_tell 		")
 		.append("	from	fix f, item i, car c, member m,manufacturer mf		")
