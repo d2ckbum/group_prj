@@ -109,10 +109,10 @@ public class FixDAO {
 		StringBuilder selectAllFix=new StringBuilder();
 		selectAllFix
 		.append("	select	f.FIX_NUM, f.FIX_REG_DATE,  f.ITEM_NAME,   			")
-		.append("	mf.mfg_name,   c.CAR_TYPE,   m.mem_num,   m.MEM_NAME,		")
+		.append("	mf.mfg_name,   c.CAR_TYPE,   f.mem_num,   m.MEM_NAME,		")
 		.append(" f.total_price,   f.fix_status, f.fix_memo, m.mem_tell 		")
-		.append("	from	fix f, item i, car c, member m,manufacturer mf		")
-		.append("	where (f.mem_num=m.mem_num and m.car_num=c.car_num and m.mfg_num=mf.mfg_num)		")
+		.append("	from	fix f, car c, member m, manufacturer mf		")
+		.append("	where f.mem_num=m.mem_num and m.car_num=c.car_num  and m.mfg_num=mf.mfg_num		")
 		.append("   order by f.fix_num desc")
 		;
 		
