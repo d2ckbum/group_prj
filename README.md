@@ -9,3 +9,5 @@
 ![image](https://github.com/user-attachments/assets/0f916243-c78f-4fbf-8383-abea5d24eccf)
 
 ## 결과 화면
+
+![images/슬라이드9.PNG]
